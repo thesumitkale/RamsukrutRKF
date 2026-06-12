@@ -20,19 +20,19 @@ export default function Home() {
         {/* Background video from the provided spec: fills the screen edge to edge with no extra
             zoom or blur, so the globe-and-hands footage stays as sharp as the source allows. */}
         <video
-          ref={(el) => { if (el) { el.playbackRate = 1.5; el.onloadeddata = () => { el.playbackRate = 1.5 } } }}
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          ref={(el) => { if (el) { el.playbackRate = 1.5; el.onloadeddata = () => { el.playbackRate = 1.5 }; el.onplaying = () => { el.style.opacity = 1 } } }}
+          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700"
           style={{ filter: 'contrast(1.12) saturate(1.12) brightness(.74)' }}
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4"
-          autoPlay muted loop playsInline preload="auto" poster="/img/stock-hero.jpg" aria-hidden="true" />
+          autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
         {/* gentle darkening at the base where the tagline now sits */}
         <div className="absolute inset-0 bg-[rgba(4,16,15,.30)]" aria-hidden="true" />
         <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(4,16,15,.34)_0%,rgba(4,16,15,.14)_34%,rgba(4,16,15,0)_56%)]" aria-hidden="true" />
         <div className="absolute inset-x-0 bottom-0 h-72 bg-[linear-gradient(0deg,rgba(4,16,15,.66),rgba(4,16,15,0))]" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-32 z-10 sm:bottom-40">
+        <div className="absolute inset-x-0 bottom-36 z-10 sm:bottom-40">
           <div className="container-x">
             <motion.h1 initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, ease: [0.22, 1, 0.36, 1] }}
-              className="display text-[2.15rem] leading-[1.12] tracking-[-0.015em] text-white drop-shadow-[0_3px_22px_rgba(0,0,0,.5)] sm:text-[2.9rem] md:text-[3.15rem] lg:text-[3.5rem]"
+              className="display text-[clamp(2.2rem,9.2vw,2.65rem)] leading-[1.12] tracking-[-0.015em] text-white drop-shadow-[0_3px_22px_rgba(0,0,0,.5)] sm:text-[2.9rem] md:text-[3.15rem] lg:text-[3.5rem]"
               dangerouslySetInnerHTML={{ __html: `${h.heroL1}<br/>${h.heroL2}` }} />
           </div>
         </div>
