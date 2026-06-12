@@ -1,0 +1,53 @@
+export const common = {
+  en: {
+    nav: { home: 'Home', about: 'About Us', work: 'Our Work', impact: 'Impact', media: 'Media', involved: 'Get Involved', contact: 'Contact', cta: 'Contact Us' },
+    toggleLabel: 'मराठी',
+    footer: {
+      blurb: 'RKF, Ramsukrut Kalyan Foundation, works to brighten the future of rural Maharashtra\u2019s youth and families through education, skills, health and community development.',
+      quickLinks: 'Quick Links',
+      getInvolved: 'Get Involved',
+      contact: 'Contact',
+      links: { volunteer: 'Become a Volunteer', csr: 'CSR Partnership', partner: 'Institutional Partnership', fund: 'Donate' },
+      address: 'Dawadi, Rajgurunagar, Tal. Khed, Dist. Pune, Maharashtra 410505',
+      hours: '9:00 AM to 6:00 PM',
+      rights: 'Ramsukrut Kalyan Foundation (RKF). All rights reserved.',
+      est: 'Established: 26 September 2024 \u00B7 Rajgurunagar, Pune',
+    },
+    waGreeting: '🙏 Hello, Ramsukrut Kalyan Foundation!',
+    learnMore: 'Learn more',
+    seeWork: 'See Our Work',
+    donate: 'Donate',
+    getInvolvedBtn: 'Get Involved',
+    contactUs: 'Contact Us',
+    volunteerBtn: 'Become a Volunteer',
+    whatsapp: 'Chat on WhatsApp',
+    seeImpact: 'See Our Impact',
+  },
+  mr: {
+    nav: { home: 'मुख्यपृष्ठ', about: 'आमच्याबद्दल', work: 'आमचे कार्य', impact: 'प्रभाव', media: 'माध्यमे', involved: 'सहभागी व्हा', contact: 'संपर्क', cta: 'संपर्क करा' },
+    toggleLabel: 'English',
+    footer: {
+      blurb: 'RKF, रामसुकृत कल्याण फाउंडेशन. शिक्षण, कौशल्य, आरोग्य आणि समाजविकासाद्वारे ग्रामीण महाराष्ट्रातील तरुणांचे आणि कुटुंबांचे भविष्य उज्ज्वल करण्यासाठी कार्यरत संस्था.',
+      quickLinks: 'महत्त्वाचे दुवे',
+      getInvolved: 'सहभागी व्हा',
+      contact: 'संपर्क',
+      links: { volunteer: 'स्वयंसेवक व्हा', csr: 'CSR भागीदारी', partner: 'संस्था भागीदारी', fund: 'योगदान द्या' },
+      address: 'दावडी, राजगुरुनगर, ता. खेड, जि. पुणे, महाराष्ट्र 410505',
+      hours: 'सकाळी 9:00 ते सायंकाळी 6:00',
+      rights: 'रामसुकृत कल्याण फाउंडेशन (RKF). सर्व हक्क राखीव.',
+      est: 'स्थापना: 26 सप्टेंबर 2024 \u00B7 राजगुरुनगर, पुणे',
+    },
+    waGreeting: '🙏 नमस्कार, रामसुकृत कल्याण फाउंडेशन!',
+    learnMore: 'अधिक जाणून घ्या',
+    seeWork: 'आमचे कार्य पहा',
+    donate: 'योगदान द्या',
+    getInvolvedBtn: 'सहभागी व्हा',
+    contactUs: 'संपर्क करा',
+    volunteerBtn: 'स्वयंसेवक व्हा',
+    whatsapp: 'WhatsApp वर बोला',
+    seeImpact: 'आमचा प्रभाव पाहा',
+  },
+}
+
+export const WA_NUMBER = '917277404040'
+export const VIDEOS = ['DR6d25GnP8U', 'f0aDKJjhsms', 'TPl4xxpEAI8', '37Z3gtIkJys']

@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { @apply bg-paper text-ink font-body antialiased; overflow-x: hidden; }
+#root { overflow-x: clip; }
+::selection { background: #10B6AC; color: #fff; }
+
+h1,h2,h3,h4 { @apply font-display; }
+
+::-webkit-scrollbar { width: 12px; }
+::-webkit-scrollbar-track { background: #F3ECDC; }
+::-webkit-scrollbar-thumb { background: #10B6AC; border-radius: 8px; border: 3px solid #F3ECDC; }
+
+@layer components {
+  .container-x { @apply mx-auto w-full max-w-[1220px] px-5 sm:px-8; }
+
+  /* TFI-style heading label: bold caps with a short orange underline */
+  .tfi-label { @apply relative inline-block font-display font-bold uppercase tracking-[.06em]; }
+  .tfi-label::after { content:""; @apply absolute -bottom-2 left-0 h-[3px] w-12 bg-orange; }
+
+  /* small eyebrow used elsewhere */
+  .eyebrow { @apply inline-flex items-center gap-2.5 font-sans font-bold uppercase; font-size:.74rem; letter-spacing:.14em; color:#0B928B; }
+  .eyebrow::before { content:""; @apply inline-block h-[3px] w-7 bg-orange; }
+  .eyebrow.center { @apply justify-center; }
+
+  .title-grad { color: #F26A1B; }
+  .display { @apply font-display font-extrabold leading-[1.04] tracking-[-.015em]; }
+
+  .btn { @apply relative inline-flex items-center justify-center gap-2.5 rounded-full font-sans font-semibold transition-all duration-300; font-size:.9rem; padding:.9rem 1.8rem; }
+  .btn-primary { @apply btn bg-orange text-white hover:bg-orange-deep hover:-translate-y-0.5; box-shadow:0 12px 30px -12px rgba(242,106,27,.6); }
+  .btn-teal    { @apply btn bg-teal text-white hover:bg-teal-deep hover:-translate-y-0.5; }
+  .btn-dark    { @apply btn bg-ink text-paper hover:bg-teal-ink hover:-translate-y-0.5; }
+  .btn-light   { @apply btn bg-ink text-paper hover:bg-teal hover:-translate-y-0.5; }
+  .btn-cream   { @apply btn bg-paper text-ink hover:bg-yellow hover:-translate-y-0.5; }
+  .btn-outline { @apply btn border-2 border-ink/25 text-ink hover:border-teal hover:text-teal hover:-translate-y-0.5; }
+  .btn-ghost   { @apply btn border-2 border-white/45 text-white hover:bg-white hover:text-ink hover:-translate-y-0.5; }
+  .btn-wa      { @apply btn bg-[#1fa84a] text-white hover:bg-[#178a3c] hover:-translate-y-0.5; }
+  .btn:active  { transform: translateY(0); }
+
+  .card { @apply bg-paper border border-sand rounded-[16px] transition-all duration-300; }
+  .card:hover { @apply shadow-card; transform: translateY(-5px); border-color: rgba(16,182,172,.5); }
+  .card-premium { @apply card; }
+
+  .section-tint { @apply bg-paper2; }
+
+  .img-frame { @apply overflow-hidden rounded-[12px] bg-sand; }
+  .img-frame > img { @apply block w-full; }
+
+  /* B&W photo cell that colourises on hover (TFI grid) */
+  .bw-cell { @apply relative overflow-hidden bg-teal-ink; }
+  .bw-cell > img { @apply h-full w-full object-cover transition-all duration-500; filter: grayscale(1) contrast(1.05); mix-blend-mode: luminosity; opacity:.92; }
+  .bw-cell:hover > img { filter: grayscale(0); mix-blend-mode: normal; opacity:1; transform: scale(1.05); }
+
+  .ico-tile { transition: transform .35s cubic-bezier(.34,1.4,.64,1); }
+  .card:hover .ico-tile, .group:hover .ico-tile { transform: translateY(-2px) rotate(-4deg); }
+
+  .rule { @apply h-px w-full bg-sand; }
+  .link-arrow { @apply inline-flex items-center gap-2 font-sans font-semibold text-orange transition-all; font-size:.85rem; }
+  .link-arrow:hover { gap:.8rem; }
+  .stat-num { @apply font-display font-extrabold leading-none tracking-[-.02em]; }
+
+  .navlink { @apply relative font-sans font-medium transition-colors; font-size:.93rem; }
+  .navlink::after { content:""; @apply absolute left-0 -bottom-1.5 h-[2.5px] w-0 bg-orange transition-all duration-300; }
+  .navlink:hover::after, .navlink.active::after { @apply w-full; }
+
+  .marquee { @apply flex overflow-hidden whitespace-nowrap; }
+  .marquee__track { @apply flex shrink-0 items-center gap-8 pr-8 animate-marquee; }
+
+  .hero-divider { display:none; }
+
+  /* deep-teal night backdrop for the homepage globe animation */
+  .hero-night { background: radial-gradient(120% 90% at 68% 55%, #11514D 0%, #0C3B39 38%, #07211F 78%, #04100F 100%); }
+  .play-pulse::before { content:none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+}
+@media (max-width: 768px) { .section-tint { background:#F3ECDC; } }
+
+.reel-slider { display:flex; gap:14px; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:14px; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.reel-slider::-webkit-scrollbar { display:none; }
+.reel-slide { flex:0 0 60%; max-width:60%; scroll-snap-align:center; }
+@media (min-width:480px){ .reel-slide{ flex-basis:44%; max-width:44%; } }
+@media (min-width:768px){ .reel-slider{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; overflow:visible; padding-bottom:0; } .reel-slide{ max-width:none; } }
+
+/* ---- liquid glass (per spec): blurred glass surface + gradient hairline border ---- */
+.liquid-glass {
+  background: rgba(255,255,255,0.01);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* hand-drawn brush underlines on highlighted words in big headings */
+h2 .text-orange,.display .text-orange{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M3 9 Q 30 3 60 7 T 117 5' fill='none' stroke='%23FFC42E' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat left bottom/100% .3em;padding-bottom:.14em}
