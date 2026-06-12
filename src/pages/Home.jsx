@@ -21,7 +21,7 @@ export default function Home() {
             zoom or blur, so the globe-and-hands footage stays as sharp as the source allows. */}
         <video
           ref={(el) => { if (el) { el.playbackRate = 1.5; el.onloadeddata = () => { el.playbackRate = 1.5 }; el.onplaying = () => { el.style.opacity = 1 } } }}
-          className="absolute inset-0 h-full w-full object-cover object-center opacity-0 transition-opacity duration-700"
+          className="hero-video absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700"
           style={{ filter: 'contrast(1.12) saturate(1.12) brightness(.74)' }}
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4"
           autoPlay muted loop playsInline preload="auto" aria-hidden="true" />

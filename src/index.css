@@ -112,3 +112,8 @@ h1,h2,h3,h4 { @apply font-display; }
 
 /* hand-drawn brush underlines on highlighted words in big headings */
 h2 .text-orange,.display .text-orange{background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 12' preserveAspectRatio='none'%3E%3Cpath d='M3 9 Q 30 3 60 7 T 117 5' fill='none' stroke='%23FFC42E' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat left bottom/100% .3em;padding-bottom:.14em}
+
+/* hero video framing: on phones, bias the crop so the globe + hand sit dead centre;
+   desktop keeps the natural centre of the footage */
+.hero-video{object-position:55.5% 44%}
+@media (min-width:640px){.hero-video{object-position:50% 50%}}
