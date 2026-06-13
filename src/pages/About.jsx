@@ -85,14 +85,14 @@ export default function About() {
           <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-3">
             {a.team.map(([img, name, role], i) => (
               <Reveal key={name} delay={(i % 3) * 0.08}>
-                <article className="group overflow-hidden rounded-[5px] card-premium transition-all duration-300 hover:-translate-y-1.5 hover:shadow-card">
-                  <div className="aspect-[1/1] overflow-hidden bg-beige">
+                <article className="group h-full overflow-hidden rounded-[18px] bg-white/70 ring-1 ring-teal-ink/10 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lift">
+                  <div className="aspect-[4/5] overflow-hidden bg-beige">
                     <img src={img} alt={name} loading="lazy"
                       className="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.06]" />
                   </div>
-                  <div className="p-6 text-center">
-                    <h3 className="text-lg font-semibold">{name}</h3>
-                    <p className="mt-1 font-display text-[.85rem] font-semibold uppercase tracking-wide text-gold">{role}</p>
+                  <div className="p-6">
+                    <h3 className="font-display text-[1.2rem] font-bold leading-tight">{name}</h3>
+                    <p className="mt-2 text-[.92rem] font-semibold leading-snug text-orange-deep">{role}</p>
                   </div>
                 </article>
               </Reveal>

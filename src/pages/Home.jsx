@@ -29,14 +29,14 @@ export default function Home() {
         <div className="absolute inset-0 bg-[rgba(4,16,15,.30)]" aria-hidden="true" />
         <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(4,16,15,.34)_0%,rgba(4,16,15,.14)_34%,rgba(4,16,15,0)_56%)]" aria-hidden="true" />
         <div className="absolute inset-x-0 bottom-0 h-72 bg-[linear-gradient(0deg,rgba(4,16,15,.66),rgba(4,16,15,0))]" aria-hidden="true" />
-        <div className="absolute inset-x-0 bottom-36 z-10 sm:bottom-40">
+        <div className="absolute inset-x-0 bottom-28 z-10 sm:bottom-40">
           <div className="container-x">
             <motion.h1 initial={{ opacity: 0, y: 26 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .9, ease: [0.22, 1, 0.36, 1] }}
-              className="display text-[clamp(2.2rem,9.2vw,2.65rem)] leading-[1.12] tracking-[-0.015em] text-white drop-shadow-[0_3px_22px_rgba(0,0,0,.5)] sm:text-[2.9rem] md:text-[3.15rem] lg:text-[3.5rem]"
+              className="display text-[clamp(1.9rem,8.2vw,2.45rem)] leading-[1.14] tracking-[-0.015em] text-white drop-shadow-[0_3px_22px_rgba(0,0,0,.5)] sm:text-[2.9rem] md:text-[3.15rem] lg:text-[3.5rem]"
               dangerouslySetInnerHTML={{ __html: `${h.heroL1}<br/>${h.heroL2}` }} />
           </div>
         </div>
-        <ScrollCue delay={1.4} />
+        <div className="hidden sm:block"><ScrollCue delay={1.4} /></div>
       </section>
 
       {/* ===================== IMPACT STAT BAND ===================== */}

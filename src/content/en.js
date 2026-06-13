@@ -176,12 +176,13 @@ export default {
   teamTitle: 'The <span class="title-grad">people</span> driving this work',
   teamSub: 'Experience from different fields and deep roots in the village. That is the strength of our team.',
   team: [
-   ['/img/leader-sanjay_ghare.jpg', 'Sanjay Ghare', 'Founder & Secretary'],
-   ['/img/leader-sambhaji_ghare.jpg', 'Sambhaji Ghare', 'President'],
-   ['/img/leader-ritu_thadhani.jpg', 'Ritu Thadhani', 'Education & Guidance'],
-   ['/img/leader-anurag_mittal.jpg', 'Anurag Mittal', 'Skills & Employment'],
-   ['/img/leader-dipak_ghare.jpg', 'Dipak Ghare', 'Health Camps & Medical Support'],
-   ['/img/leader-pratiksha_bhalerao.jpg', 'Pratiksha Bhalerao', 'Education & Guidance']
+   ['/img/leader-sambhaji_ghare.jpg', 'Sambhaji Ghare', 'Founder & President'],
+   ['/img/leader-ritu_thadhani.jpg', 'Ritu Thadhani', 'Co-Founder, Director'],
+   ['/img/leader-sanjay_ghare.jpg', 'Sanjay Ghare', 'Co-Founder, Director'],
+   ['/img/leader-dipak_ghare.jpg', 'Dipak Ghare', 'Director, Health Camps & Medical Support'],
+   ['/img/leader-prashant_chouhan.jpg', 'Prashant Chouhan', 'Volunteer Coordinator - Education'],
+   ['/img/leader-anurag_mittal.jpg', 'Anurag Mittal', 'Volunteer Coordinator - Skill Development & Jobs'],
+   ['/img/leader-pratiksha_bhalerao.jpg', 'Pratiksha Bhalerao', 'Volunteer Coordinator - Skill Development & Jobs']
   ],
   youthImg: '/img/team-photo.jpg',
   youthAlt: 'Skilled youth of Ramsukrut Kalyan Foundation',
@@ -286,6 +287,14 @@ export default {
   vidTitle: 'Stories of <span class="title-grad">change</span>',
   vidSub: 'A glimpse of our work on the ground, through our YouTube videos.',
   galEyebrow: 'Photo Gallery',
+  pressEyebrow: 'Press & Media',
+  pressTitle: 'Ramsukrut in the <span class="title-grad">news</span>',
+  pressSub: 'Our work and events as covered by local newspapers and the press.',
+  press: [
+    ['/img/press-1.jpg', 'Dainik Sandhya', '08 Apr 2026'],
+    ['/img/press-2.jpg', 'Pimpri Chinchwad Rokhthok', '05 Apr 2026'],
+    ['/img/press-3.jpg', 'Pimpri Chinchwad Rokhthok', '24 Mar 2026'],
+  ],
   galTitle: 'Moments from <span class="title-grad">our work</span>',
   galSub: 'Schools, camps, meetings and village visits. Our work captured on camera.',
   gallery: [

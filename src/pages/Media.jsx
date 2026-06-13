@@ -4,6 +4,7 @@ import SectionHead from '../components/SectionHead.jsx'
 import PageHero from '../components/PageHero.jsx'
 import Reel from '../components/Reel.jsx'
 import GalleryGrid from '../components/GalleryGrid.jsx'
+import PressGrid from '../components/PressGrid.jsx'
 import CtaBanner from '../components/CtaBanner.jsx'
 
 export default function Media() {
@@ -28,6 +29,13 @@ export default function Media() {
         <div className="container-x">
           <SectionHead eyebrow={m.galEyebrow} title={m.galTitle} sub={m.galSub} />
           <GalleryGrid items={m.gallery} />
+        </div>
+      </section>
+
+      <section className="py-16 md:py-24">
+        <div className="container-x">
+          <SectionHead eyebrow={m.pressEyebrow} title={m.pressTitle} sub={m.pressSub} />
+          <PressGrid items={m.press} />
         </div>
       </section>
 

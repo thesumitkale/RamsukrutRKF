@@ -19,7 +19,7 @@ export default function PageHero({ title, img }) {
             className="mt-6 h-1.5 w-24 origin-left rounded bg-yellow" />
         </motion.div>
       </div>
-      <ScrollCue delay={1.1} />
+      <div className="hidden sm:block"><ScrollCue delay={1.1} /></div>
     </section>
   )
 }

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useLang } from '../i18n.jsx'
 import Reveal from '../components/Reveal.jsx'
 import GhostEyebrow from '../components/GhostEyebrow.jsx'
@@ -23,6 +24,21 @@ const Rows = ({ rows }) => (
 export default function Involved() {
   const { t } = useLang()
   const v = t.involved
+
+  // Arriving with a hash (e.g. /involved#volunteer from a CTA on another page)
+  // should land on that section, not jump to the top.
+  useEffect(() => {
+    const id = window.location.hash.split('#')[2]
+    if (!id) return
+    let tries = 0
+    const tick = () => {
+      const el = document.getElementById(id)
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      else if (tries++ < 20) setTimeout(tick, 80)
+    }
+    setTimeout(tick, 120)
+  }, [])
+
   return (
     <>
       <PageHero title={v.h1} img={v.heroImg} />
