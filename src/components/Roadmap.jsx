@@ -35,9 +35,9 @@ export default function Roadmap({ phases }) {
                 {/* phase card */}
                 <article className={`group relative grow overflow-hidden rounded-[20px] p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-lift sm:p-7
                   ${last ? 'bg-gradient-to-br from-teal-ink to-[#072826] text-white' : 'bg-white/70 ring-1 ring-teal-ink/10'}`}>
-                  {/* ghost phase number */}
+                  {/* ghost phase number, kept inside the card */}
                   <span aria-hidden="true"
-                    className={`pointer-events-none absolute -right-2 -top-6 font-display text-[5.2rem] font-extrabold leading-none ${last ? 'text-white/[.07]' : 'text-teal-ink/[.06]'}`}>
+                    className={`pointer-events-none absolute right-3 top-2 font-display text-[3.4rem] font-extrabold leading-none sm:text-[4rem] ${last ? 'text-white/10' : 'text-teal-ink/[.08]'}`}>
                     {String(i + 1).padStart(2, '0')}
                   </span>
                   <span className={`inline-flex rounded-full px-3.5 py-1 font-sans text-[.72rem] font-bold uppercase tracking-[.12em] ${last ? 'bg-yellow text-ink' : 'bg-orange/10 text-orange-deep'}`}>
