@@ -413,7 +413,7 @@ export default {
   cards: [
    { icon: 'mappin', title: 'पत्ता', lines: ['रामसुकृत कल्याण फाउंडेशन,', 'दावडी, राजगुरुनगर, ता. खेड,', 'जि. पुणे, महाराष्ट्र 410505'] },
    { icon: 'phone', title: 'फोन व WhatsApp', lines: ['+91 72774 04040', 'WhatsApp वर थेट संदेश पाठवा'], tel: true },
-   { icon: 'mail', title: 'ई-मेल', lines: ['ramsukrutfoundation@gmail.com'], mail: true },
+   { icon: 'mail', title: 'ई-मेल', lines: ['contact@ramsukrut.com', 'speak@ramsukrut.com'], mail: true },
    { icon: 'clock', title: 'कार्यालयीन वेळ', lines: ['सोमवार ते शनिवार', 'सकाळी 9:00 ते सायंकाळी 6:00'] }
   ],
   form: {

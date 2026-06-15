@@ -405,7 +405,7 @@ export default {
   cards: [
    { icon: 'mappin', title: 'Address', lines: ['Ramsukrut Kalyan Foundation,', 'Dawadi, Rajgurunagar, Tal. Khed,', 'Dist. Pune, Maharashtra 410505'] },
    { icon: 'phone', title: 'Phone & WhatsApp', lines: ['+91 72774 04040', 'Message us directly on WhatsApp'], tel: true },
-   { icon: 'mail', title: 'Email', lines: ['ramsukrutfoundation@gmail.com'], mail: true },
+   { icon: 'mail', title: 'Email', lines: ['contact@ramsukrut.com', 'speak@ramsukrut.com'], mail: true },
    { icon: 'clock', title: 'Office Hours', lines: ['Monday to Saturday', '9:00 AM to 6:00 PM'] }
   ],
   form: {

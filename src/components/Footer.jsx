@@ -32,7 +32,7 @@ export default function Footer() {
           <div className="flex flex-col gap-3.5 text-[.93rem]">
             <span className="flex gap-3"><MapPin size={17} className="mt-0.5 shrink-0 text-clay-soft" />{f.addr}</span>
             <a className="flex gap-3 transition-colors hover:text-clay-soft" href="tel:+917277404040"><Phone size={17} className="mt-0.5 shrink-0 text-clay-soft" />+91 72774 04040</a>
-            <a className="flex gap-3 break-all transition-colors hover:text-clay-soft" href="mailto:ramsukrutfoundation@gmail.com"><Mail size={17} className="mt-0.5 shrink-0 text-clay-soft" />ramsukrutfoundation@gmail.com</a>
+            <div className="flex flex-col gap-1"><a className="flex gap-3 break-all transition-colors hover:text-clay-soft" href="mailto:contact@ramsukrut.com"><Mail size={17} className="mt-0.5 shrink-0 text-clay-soft" />contact@ramsukrut.com</a><a className="flex gap-3 break-all pl-[29px] transition-colors hover:text-clay-soft" href="mailto:speak@ramsukrut.com">speak@ramsukrut.com</a></div>
             <span className="flex gap-3"><Clock size={17} className="mt-0.5 shrink-0 text-clay-soft" />{f.hours}</span>
           </div>
         </div>

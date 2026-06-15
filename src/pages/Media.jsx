@@ -16,6 +16,13 @@ export default function Media() {
 
       <section className="py-16 md:py-24">
         <div className="container-x">
+          <SectionHead eyebrow={m.pressEyebrow} title={m.pressTitle} sub={m.pressSub} />
+          <PressGrid items={m.press} />
+        </div>
+      </section>
+
+      <section className="section-tint py-16 md:py-24">
+        <div className="container-x">
           <SectionHead eyebrow={m.vidEyebrow} title={m.vidTitle} sub={m.vidSub} />
           <div className="reel-slider mx-auto max-w-4xl">
             {t.home.reels.map(([id, title], i) => (
@@ -25,17 +32,10 @@ export default function Media() {
         </div>
       </section>
 
-      <section className="section-tint py-16 md:py-24">
+      <section className="py-16 md:py-24">
         <div className="container-x">
           <SectionHead eyebrow={m.galEyebrow} title={m.galTitle} sub={m.galSub} />
           <GalleryGrid items={m.gallery} />
-        </div>
-      </section>
-
-      <section className="py-16 md:py-24">
-        <div className="container-x">
-          <SectionHead eyebrow={m.pressEyebrow} title={m.pressTitle} sub={m.pressSub} />
-          <PressGrid items={m.press} />
         </div>
       </section>
 
