@@ -6,8 +6,8 @@ export default function Reel({ id, title }) {
   return (
     <div className="relative aspect-[9/16] overflow-hidden rounded-[5px] bg-forest shadow-card">
       {playing ? (
-        <iframe className="h-full w-full" src={`https://www.youtube.com/embed/${id}?autoplay=1&playsinline=1&rel=0`}
-          title={title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
+        <iframe className="h-full w-full" src={`https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3`}
+          title={title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen referrerPolicy="strict-origin-when-cross-origin" />
       ) : (
         <button type="button" onClick={() => setPlaying(true)} aria-label={title} className="group block h-full w-full">
           <img src={`https://i.ytimg.com/vi/${id}/oar2.jpg`} alt={title} loading="lazy"
