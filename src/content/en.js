@@ -100,7 +100,8 @@ export default {
    ['DR6d25GnP8U', 'Ramsukrut Foundation, story of change 1'],
    ['f0aDKJjhsms', 'Ramsukrut Foundation, story of change 2'],
    ['TPl4xxpEAI8', 'Ramsukrut Foundation, story of change 3'],
-   ['37Z3gtIkJys', 'Ramsukrut Foundation, story of change 4']
+   ['37Z3gtIkJys', 'Ramsukrut Foundation, story of change 4'],
+   ['LnryKtGP8DQ', 'Ramsukrut Foundation, story of change 5']
   ],
 
   initEyebrow: 'Key Initiatives',
@@ -291,6 +292,7 @@ export default {
   pressTitle: 'Ramsukrut in the <span class="title-grad">news</span>',
   pressSub: 'Our work and events as covered by local newspapers and the press.',
   press: [
+    ['/img/press-5.jpg', 'Sanvidhan News', '02 Jul 2026'],
     ['/img/press-4.jpg', 'Pudhari', '28 Jun 2026'],
     ['/img/press-1.jpg', 'Dainik Sandhya', '08 Apr 2026'],
     ['/img/press-2.jpg', 'Pimpri Chinchwad Rokhthok', '05 Apr 2026'],

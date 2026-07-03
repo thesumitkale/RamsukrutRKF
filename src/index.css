@@ -84,7 +84,7 @@ h1,h2,h3,h4 { @apply font-display; }
 .reel-slider::-webkit-scrollbar { display:none; }
 .reel-slide { flex:0 0 60%; max-width:60%; scroll-snap-align:center; }
 @media (min-width:480px){ .reel-slide{ flex-basis:44%; max-width:44%; } }
-@media (min-width:768px){ .reel-slider{ display:grid; grid-template-columns:repeat(4,1fr); gap:22px; overflow:visible; padding-bottom:0; } .reel-slide{ max-width:none; } }
+@media (min-width:768px){ .reel-slider{ display:grid; grid-template-columns:repeat(5,1fr); gap:18px; overflow:visible; padding-bottom:0; } .reel-slide{ max-width:none; } }
 
 /* ---- liquid glass (per spec): blurred glass surface + gradient hairline border ---- */
 .liquid-glass {
