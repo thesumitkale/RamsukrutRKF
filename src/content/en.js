@@ -1,5 +1,12 @@
 export default {
  nav: { home: 'Home', about: 'About Us', work: 'Work', impact: 'Impact', media: 'Media', involved: 'Get Involved', contact: 'Contact', cta: 'Contact Us' },
+ notFound: {
+  code: '404',
+  title: 'This page could not be found',
+  text: 'The link may be old, or something may have been mistyped. Use the buttons below to get back on track.',
+  home: 'Go to Home',
+  contact: 'Contact Us'
+ },
 
  footer: {
   blurb: 'RKF, Ramsukrut Kalyan Foundation, works to brighten the future of rural Maharashtra\u2019s youth and families through education, skills, health and community development.',
@@ -292,6 +299,8 @@ export default {
   pressTitle: 'Ramsukrut in the <span class="title-grad">news</span>',
   pressSub: 'Our work and events as covered by local newspapers and the press.',
   press: [
+    ['/img/press-7.jpg', 'Lokmat', '09 Aug 2026'],
+    ['/img/press-6.jpg', 'Sakal', '12 Jul 2026'],
     ['/img/press-5.jpg', 'Sanvidhan News', '02 Jul 2026'],
     ['/img/press-4.jpg', 'Pudhari', '28 Jun 2026'],
     ['/img/press-1.jpg', 'Dainik Sandhya', '08 Apr 2026'],

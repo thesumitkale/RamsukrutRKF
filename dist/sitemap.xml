@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  NOTE ON THE PAGE LIST BELOW
+
+  This site currently uses hash based addresses, for example
+      https://www.ramsukrut.com/#/about
+  Search engines ignore everything after the "#", so Google treats every page
+  as the same single address. That is why only the home page is listed here.
+
+  If the site is switched over to clean addresses such as
+      https://www.ramsukrut.com/about
+  then uncomment the block lower down so each page gets indexed separately.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.ramsukrut.com/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Activate these only after moving to clean addresses:
+  <url><loc>https://www.ramsukrut.com/about</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ramsukrut.com/work</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ramsukrut.com/impact</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ramsukrut.com/media</loc><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.ramsukrut.com/involved</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://www.ramsukrut.com/contact</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  -->
+</urlset>

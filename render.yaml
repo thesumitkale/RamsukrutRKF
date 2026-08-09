@@ -1,0 +1,84 @@
+# =============================================================================
+# Render configuration for the Ramsukrut Kalyan Foundation website.
+#
+# HOW TO APPLY THE SECURITY HEADERS BELOW
+# ---------------------------------------
+# Render reads this file when the service is deployed as a "Blueprint".
+# If your site was created by hand in the Render dashboard, this file is
+# IGNORED, and you must copy the headers in by hand instead:
+#     Render dashboard -> your static site -> Settings -> Headers -> Add
+# Add each Name/Value pair listed under "headers:" below, with path  /*
+#
+# Everything here is optional hardening. The site works without it, but
+# with it the site is far better protected against clickjacking, content
+# sniffing, and injected scripts.
+# =============================================================================
+
+services:
+  - type: web
+    name: ramsukrut-kalyan-foundation
+    runtime: static
+    buildCommand: npm ci && npm run build
+    staticPublishPath: ./dist
+
+    headers:
+      # ---- Stop other sites embedding this site in a frame (clickjacking) ----
+      - path: /*
+        name: X-Frame-Options
+        value: SAMEORIGIN
+
+      # ---- Stop the browser guessing file types (MIME sniffing attacks) ----
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+
+      # ---- Do not leak the full URL to other websites ----
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
+
+      # ---- Switch off device features the site never uses ----
+      - path: /*
+        name: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()
+
+      # ---- Force HTTPS for a year. Remove this line if you ever need plain HTTP ----
+      - path: /*
+        name: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains
+
+      # ---- Content Security Policy ----
+      # Only the domains the site genuinely uses are allowed:
+      #   fonts.googleapis / fonts.gstatic  -> Poppins, Inter, Mukta fonts
+      #   i.ytimg.com                       -> YouTube video thumbnails
+      #   youtube-nocookie.com              -> the video players
+      #   www.google.com / maps.google.com  -> the contact page map
+      #   d8j0ntlcm91z4.cloudfront.net      -> the homepage background video
+      # If you ever add a new external service, add its domain here too or it
+      # will be blocked.
+      - path: /*
+        name: Content-Security-Policy
+        value: >-
+          default-src 'self';
+          base-uri 'self';
+          object-src 'none';
+          form-action 'self';
+          frame-ancestors 'self';
+          script-src 'self';
+          style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+          font-src 'self' data: https://fonts.gstatic.com;
+          img-src 'self' data: blob: https://i.ytimg.com https://*.ytimg.com;
+          media-src 'self' https://d8j0ntlcm91z4.cloudfront.net;
+          frame-src https://www.youtube-nocookie.com https://www.youtube.com https://www.google.com https://maps.google.com;
+          connect-src 'self' https://d8j0ntlcm91z4.cloudfront.net;
+          upgrade-insecure-requests
+
+      # ---- Long cache for fingerprinted build files (safe: names change each deploy) ----
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

@@ -20,11 +20,12 @@ export default function Home() {
         {/* Background video from the provided spec: fills the screen edge to edge with no extra
             zoom or blur, so the globe-and-hands footage stays as sharp as the source allows. */}
         <video
-          ref={(el) => { if (el) { el.playbackRate = 1.5; el.onloadeddata = () => { el.playbackRate = 1.5 }; el.onplaying = () => { el.style.opacity = 1 } } }}
-          className="hero-video absolute inset-0 h-full w-full object-cover opacity-0 transition-opacity duration-700"
+          ref={(el) => { if (el) { el.playbackRate = 1.5; el.onloadeddata = () => { el.playbackRate = 1.5 } } }}
+          className="hero-video absolute inset-0 h-full w-full object-cover"
           style={{ filter: 'contrast(1.12) saturate(1.12) brightness(.74)' }}
+          poster="/img/hero-poster.jpg"
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260511_230229_7c9bc431-46cf-489a-948d-e8144d8eb5d4.mp4"
-          autoPlay muted loop playsInline preload="auto" aria-hidden="true" />
+          autoPlay muted loop playsInline preload="metadata" aria-hidden="true" />
         {/* gentle darkening at the base where the tagline now sits */}
         <div className="absolute inset-0 bg-[rgba(4,16,15,.30)]" aria-hidden="true" />
         <div className="absolute inset-0 bg-[linear-gradient(118deg,rgba(4,16,15,.34)_0%,rgba(4,16,15,.14)_34%,rgba(4,16,15,0)_56%)]" aria-hidden="true" />
@@ -90,10 +91,10 @@ export default function Home() {
           </div>
           <Reveal x={30} y={0}>
             <div className="grid grid-cols-3 grid-rows-2 gap-3" style={{ minHeight: 360 }}>
-              <div className="bw-cell rounded-[10px] row-span-2"><img src="/img/stock-bw1.jpg" alt="Rural school students" /></div>
+              <div className="bw-cell rounded-[10px] row-span-2"><img src="/img/stock-bw1.jpg" alt="Rural school students" loading="lazy" decoding="async" /></div>
               <div className="relative rounded-[10px] bg-yellow"><YellowCorner className="absolute bottom-0 right-0 h-10 w-10 rotate-180" color="#0C3B39" /></div>
-              <div className="bw-cell rounded-[10px]"><img src="/img/stock-bw2.jpg" alt="Students on their way to school" /></div>
-              <div className="bw-cell rounded-[10px]"><img src="/img/stock-bw3.jpg" alt="A smiling schoolboy holding his notebook" /></div>
+              <div className="bw-cell rounded-[10px]"><img src="/img/stock-bw2.jpg" alt="Students on their way to school" loading="lazy" decoding="async" /></div>
+              <div className="bw-cell rounded-[10px]"><img src="/img/stock-bw3.jpg" alt="A smiling schoolboy holding his notebook" loading="lazy" decoding="async" /></div>
               <div className="relative rounded-[10px] bg-orange"><YellowCorner className="absolute right-0 top-0 h-10 w-10" color="#FFC42E" /></div>
             </div>
           </Reveal>

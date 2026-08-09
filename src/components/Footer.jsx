@@ -9,7 +9,7 @@ export default function Footer() {
     <footer className="bg-forest text-paper/90">
       <div className="container-x grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1.4fr] md:py-20">
         <div>
-          <img src="/img/logo-light.png" alt="Ramsukrut Kalyan Foundation" className="mb-6 h-12 w-auto" />
+          <img src="/img/logo-light.png" alt="Ramsukrut Kalyan Foundation" loading="lazy" decoding="async" className="mb-6 h-12 w-auto" />
         </div>
         <div>
           <h4 className="mb-5 font-sans text-[.74rem] font-semibold uppercase tracking-[.16em] text-paper/45">{f.links}</h4>

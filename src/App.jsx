@@ -6,6 +6,7 @@ import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
 import WaFloat from './components/WaFloat.jsx'
 import ScrollTop from './components/ScrollTop.jsx'
+import ScrollProgress from './components/ScrollProgress.jsx'
 import Home from './pages/Home.jsx'
 
 const About = lazy(() => import('./pages/About.jsx'))
@@ -14,6 +15,7 @@ const Impact = lazy(() => import('./pages/Impact.jsx'))
 const Media = lazy(() => import('./pages/Media.jsx'))
 const Involved = lazy(() => import('./pages/Involved.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
+const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 const Loader = () => (
   <div className="grid min-h-[60vh] place-items-center">
@@ -41,6 +43,8 @@ function AnimatedRoutes() {
             <Route path="/media" element={<Media />} />
             <Route path="/involved" element={<Involved />} />
             <Route path="/contact" element={<Contact />} />
+            {/* Anything that does not match a real page lands here instead of a blank screen. */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </motion.div>
@@ -54,8 +58,12 @@ export default function App() {
       <MotionConfig reducedMotion="user">
         <HashRouter>
           <ScrollTop />
+          <ScrollProgress />
+          {/* Lets keyboard and screen reader users jump straight past the menu.
+              Invisible until it receives keyboard focus. */}
+          <a href="#main" className="skip-link">Skip to content</a>
           <Nav />
-          <main><AnimatedRoutes /></main>
+          <main id="main"><AnimatedRoutes /></main>
           <Footer />
           <WaFloat />
         </HashRouter>
