@@ -8,7 +8,7 @@ export default function SectionHead({ eyebrow, title, sub, center = true, light 
     <Reveal className={`relative ${center ? 'text-center mx-auto' : ''} max-w-3xl mb-12 md:mb-16`}>
       {eyebrow && (
         <span aria-hidden="true"
-          className="pointer-events-none block select-none whitespace-nowrap font-display text-[1.45rem] font-extrabold uppercase leading-none tracking-[.08em] sm:text-[2.3rem] md:text-[2.7rem]"
+          className="pointer-events-none block select-none font-display text-[clamp(0.98rem,4.6vw,1.45rem)] font-extrabold uppercase leading-none tracking-[.08em] sm:whitespace-nowrap sm:text-[2.3rem] md:text-[2.7rem]"
           style={{ color: 'transparent', WebkitTextStroke: light ? '1.7px rgba(255,255,255,.34)' : '1.7px rgba(11,33,79,.52)' }}>
           {eyebrow}
         </span>
