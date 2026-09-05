@@ -3,11 +3,13 @@
    Edit the words here; the layout lives in src/pages/JobFair.jsx
    ========================================================================== */
 
-/* PASTE THE GOOGLE APPS SCRIPT WEB APP URL BETWEEN THE QUOTES BELOW.
-   It looks like: https://script.google.com/macros/s/AKfy..../exec
-   Until it is filled in, the forms fall back to sending the details
-   over WhatsApp so no candidate is ever lost.                        */
-export const JOBFAIR_ENDPOINT = ''
+/* Submissions go to a small intake service that stores the file privately
+   and writes one row. The key below is a public client key by design: it can
+   only post a submission, never read anybody's details back out.
+   If the service is ever unreachable the form falls back to WhatsApp,
+   so no candidate is ever lost.                                      */
+export const JOBFAIR_ENDPOINT = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/rkf-jobfair-submit'
+export const JOBFAIR_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnc25pb2l5d2Fvd2FtZW1vY2NrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNDY4NjYsImV4cCI6MjEwMjYyMjg2Nn0.s5B71delf4udsazTVZdDILiIPvUL3M30cOfykaP3GLA'
 
 export const JOBFAIR_WA = '917277404040'
 export const JOBFAIR_PHONE = '+91 72774 04040'

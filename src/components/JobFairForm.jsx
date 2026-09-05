@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { JOBFAIR_ENDPOINT, JOBFAIR_WA } from '../content/jobfair.js'
+import { JOBFAIR_ENDPOINT, JOBFAIR_KEY, JOBFAIR_WA } from '../content/jobfair.js'
 import { Arrow, Wa } from './Icons.jsx'
 
 /* ---------------------------------------------------------------------------
@@ -96,21 +96,22 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
 
     setState('sending')
     try {
-      const file = data.get('attachment')
-      let filePayload = null
-      if (file && file.size) {
-        filePayload = { name: file.name, mimeType: file.type || 'application/octet-stream', data: await readAsBase64(file) }
-      }
+      /* Sent as multipart so the resume travels as a real file rather than
+         a base64 string, which keeps large uploads reliable on mobile data. */
+      const payload = new FormData()
+      payload.append('kind', kind)
+      payload.append('lang', lang)
+      payload.append('source', 'ramsukrut.com/#/job-fair')
+      Object.entries(values).forEach(([k, v]) => payload.append(k, v))
+      if (kind === 'corporate') payload.append('contact_name', values.name || '')
 
-      // text/plain keeps the browser from sending a CORS preflight that
-      // Apps Script cannot answer.
+      const file = data.get('attachment')
+      if (file && file.size) payload.append('file', file, file.name)
+
       const res = await fetch(JOBFAIR_ENDPOINT, {
         method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({
-          form: kind, lang, source: 'ramsukrut.com/#/job-fair',
-          fields: values, file: filePayload,
-        }),
+        headers: { Authorization: 'Bearer ' + JOBFAIR_KEY, apikey: JOBFAIR_KEY },
+        body: payload,
       })
       const out = await res.json().catch(() => ({ ok: res.ok }))
       if (!out.ok) throw new Error(out.error || 'rejected')
