@@ -5,10 +5,20 @@ import mr from './content/mr.js'
 const LangCtx = createContext(null)
 const DICTS = { en, mr }
 
+/* Some browsers (private mode, embedded frames, strict cookie settings) throw
+   on localStorage instead of returning null. The language choice is a nicety,
+   never a reason for the whole site to fail to render. */
+const readLang = () => {
+  try { return localStorage.getItem('rkf-lang') || 'en' } catch { return 'en' }
+}
+const writeLang = (v) => {
+  try { localStorage.setItem('rkf-lang', v) } catch { /* ignore */ }
+}
+
 export function LangProvider({ children }) {
-  const [lang, setLang] = useState(() => localStorage.getItem('rkf-lang') || 'en')
+  const [lang, setLang] = useState(readLang)
   useEffect(() => {
-    localStorage.setItem('rkf-lang', lang)
+    writeLang(lang)
     document.documentElement.lang = lang
   }, [lang])
   const toggle = () => setLang((l) => (l === 'en' ? 'mr' : 'en'))

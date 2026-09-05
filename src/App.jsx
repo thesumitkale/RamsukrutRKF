@@ -15,6 +15,7 @@ const Impact = lazy(() => import('./pages/Impact.jsx'))
 const Media = lazy(() => import('./pages/Media.jsx'))
 const Involved = lazy(() => import('./pages/Involved.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
+const JobFair = lazy(() => import('./pages/JobFair.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 const Loader = () => (
@@ -43,6 +44,8 @@ function AnimatedRoutes() {
             <Route path="/media" element={<Media />} />
             <Route path="/involved" element={<Involved />} />
             <Route path="/contact" element={<Contact />} />
+            {/* Ramsukrut Job Fair, 29 September 2026 */}
+            <Route path="/job-fair" element={<JobFair />} />
             {/* Anything that does not match a real page lands here instead of a blank screen. */}
             <Route path="*" element={<NotFound />} />
           </Routes>

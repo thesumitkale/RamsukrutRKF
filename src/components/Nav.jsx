@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
+import { jobfair } from '../content/jobfair.js'
 import { Phone, Mail, MapPin } from './Icons.jsx'
 
 export default function Nav() {
@@ -20,9 +21,12 @@ export default function Nav() {
 
   const glass = !scrolled && !open
 
+  const jf = jobfair[lang] || jobfair.en
   const links = [
     ['/', t.nav.home], ['/about', t.nav.about], ['/work', t.nav.work],
     ['/impact', t.nav.impact], ['/media', t.nav.media], ['/involved', t.nav.involved],
+    // Live event page, removed once the fair is over
+    ['/job-fair', jf.navLabel],
   ]
   const langLabel = lang === 'en' ? 'मराठी' : 'EN'
 
@@ -35,7 +39,7 @@ export default function Nav() {
               className={`w-auto transition-all duration-300 ${scrolled ? 'h-11' : 'h-12 md:h-[52px]'}`} />
           </Link>
 
-          <nav className="hidden items-center gap-8 lg:flex">
+          <nav className="hidden items-center gap-7 lg:flex">
             {links.map(([to, label]) => (
               <NavLink key={to} to={to} end={to === '/'}
                 className={({ isActive }) => `navlink ${glass ? 'text-white' : 'text-ink'} ${isActive ? (glass ? 'active' : 'active !text-orange') : glass ? 'hover:!text-yellow' : 'hover:!text-orange'}`}>
