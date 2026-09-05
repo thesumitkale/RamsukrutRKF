@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Ramsukrut Job Fair 2026 — all page text, English and Marathi.
+   Ramsukrut Job Fair 2026. All page text, English and Marathi.
    Edit the words here; the layout lives in src/pages/JobFair.jsx
    ========================================================================== */
 
@@ -32,13 +32,13 @@ export const jobfair = {
   en: {
     navLabel: 'Job Fair',
     meta: {
-      title: 'Ramsukrut Job Fair 2026 — 29 September, Rajgurunagar | Ramsukrut Kalyan Foundation',
+      title: 'Ramsukrut Job Fair 2026. 29 September, Rajgurunagar | Ramsukrut Kalyan Foundation',
       description: 'A free one day job fair on 29 September 2026, 10 AM to 7 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
-    h1: 'Walk in with a resume.<br/>Walk out with a job.',
-    heroSub: 'For once, the companies come to you. Hiring teams sit down in Rajgurunagar on 29 September \u2014 no bus fare to Pune, no day\u2019s wage lost, no middleman. Register online and your resume is on their desk before you arrive.',
-    heroCtaCandidate: 'Register free \u2014 takes 2 minutes',
+    h1: 'Bring a resume.<br/>Leave with a job that changes a household.',
+    heroSub: 'One interview in Pune costs a bus fare, a day\u2019s wage and a borrowed shirt. On 29 September the hiring teams sit in Rajgurunagar instead, from 10 in the morning to 7 at night, and they will have read your resume before you walk in.',
+    heroCtaCandidate: 'Register free in 2 minutes',
     heroCtaCorporate: 'Book a hiring desk',
     heroImg: '/img/students-campus.jpg',
 
@@ -79,7 +79,7 @@ export const jobfair = {
       note: 'Your details go only to Ramsukrut Kalyan Foundation and the recruiting companies at this fair.',
       btn: 'Submit my application',
       sending: 'Submitting...',
-      done: 'Registered. Keep your phone reachable — our team will call you with your slot before 29 September.',
+      done: 'Registered. Keep your phone reachable. Our team will call you with your slot before 29 September.',
       fail: 'Could not submit just now. Please send your details on WhatsApp instead.',
       fileLabel: 'Upload resume',
       fileHint: 'PDF, DOC or DOCX up to 5 MB. Not ready? Submit now and bring a printed copy on the day.',
@@ -142,13 +142,13 @@ export const jobfair = {
   mr: {
     navLabel: 'रोजगार मेळावा',
     meta: {
-      title: 'रामसुकृत रोजगार मेळावा २०२६ — २९ सप्टेंबर, राजगुरुनगर | रामसुकृत कल्याण फाउंडेशन',
+      title: 'रामसुकृत रोजगार मेळावा २०२६. २९ सप्टेंबर, राजगुरुनगर | रामसुकृत कल्याण फाउंडेशन',
       description: '२९ सप्टेंबर २०२६ रोजी सकाळी १० ते संध्याकाळी ७ पर्यंत मोफत रोजगार मेळावा. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
     badge: 'रामसुकृत रोजगार मेळावा 2026',
-    h1: 'रेझ्युमे घेऊन या.<br/>नोकरी घेऊन जा.',
-    heroSub: 'यावेळी कंपन्या तुमच्याकडे येत आहेत. 29 सप्टेंबरला भरती करणाऱ्या टीम राजगुरुनगरमध्येच बसणार आहेत — पुण्याचा प्रवास खर्च नाही, दिवसाची मजुरी बुडणार नाही, मध्यस्थ नाही. ऑनलाइन नोंदणी करा आणि तुम्ही पोहोचण्यापूर्वीच तुमचा रेझ्युमे त्यांच्या डेस्कवर असेल.',
-    heroCtaCandidate: 'मोफत नोंदणी करा — 2 मिनिटे',
+    h1: 'रेझ्युमे घेऊन या.<br/>संपूर्ण कुटुंब बदलणारी नोकरी घेऊन जा.',
+    heroSub: 'पुण्यात एका मुलाखतीसाठी बसभाडे, दिवसाची मजुरी आणि उसनवारीचा शर्ट लागतो. 29 सप्टेंबरला त्याऐवजी भरती करणाऱ्या टीम राजगुरुनगरमध्येच बसणार आहेत, सकाळी 10 ते रात्री 7, आणि तुम्ही आत येण्यापूर्वीच त्यांनी तुमचा रेझ्युमे वाचलेला असेल.',
+    heroCtaCandidate: '2 मिनिटांत मोफत नोंदणी करा',
     heroCtaCorporate: 'भरती डेस्क बुक करा',
     heroImg: '/img/students-campus.jpg',
 
@@ -164,7 +164,7 @@ export const jobfair = {
     aboutBody: 'खेड तालुक्यातील तरुणांमध्ये क्षमतेची कमतरता नाही, संधीची आहे. पुण्यातील प्रत्येक मुलाखतीसाठी एक दिवसाची मजुरी, बसचे भाडे आणि उसना शर्ट लागतो. रामसुकृत रोजगार मेळावा हे तिन्ही अडथळे दूर करतो. २९ सप्टेंबर रोजी भरती पथके तुमच्याच तालुक्यात बसतील, जागेवरच रेझ्युमे तपासतील आणि त्याच दिवशी ऑफर देतील.',
     aboutPoints: [
       { t: 'रेझ्युमे घेऊन थेट या', d: 'रेझ्युमेच्या तीन प्रती, आधार कार्डची प्रत आणि गुणपत्रके सोबत आणा. आधी ऑनलाइन नोंदणी केल्यास कंपन्या तुमची निवड आधीच करू शकतात.' },
-      { t: 'सर्व कंपन्या एकाच ठिकाणी', d: 'भरती करणाऱ्या प्रत्येक संस्थेचे स्वतंत्र डेस्क असेल. एक नोंदणी तुमचा रेझ्युमे सर्वांपर्यंत — नंतर जोडल्या जाणाऱ्या कंपन्यांपर्यंतही — पोहोचवते.' },
+      { t: 'सर्व कंपन्या एकाच ठिकाणी', d: 'भरती करणाऱ्या प्रत्येक संस्थेचे स्वतंत्र डेस्क असेल. एक नोंदणी तुमचा रेझ्युमे सर्वांपर्यंत पोहोचवते, नंतर जोडल्या जाणाऱ्या कंपन्यांपर्यंतही.' },
       { t: 'त्याच दिवशी मुलाखत', d: 'स्क्रीनिंग, मुलाखत आणि बऱ्याच पदांसाठी ऑफरची चर्चा त्याच दिवशी त्याच ठिकाणी होईल.' },
       { t: 'कोणतीही फी नाही', d: 'रामसुकृत उमेदवारांकडून एक रुपयाही घेत नाही. आमच्या नावाने कोणी पैसे मागितले तर खालील क्रमांकावर संपर्क करा.' },
     ],
@@ -189,7 +189,7 @@ export const jobfair = {
       note: 'तुमची माहिती केवळ रामसुकृत कल्याण फाउंडेशन आणि या मेळाव्यातील कंपन्यांपर्यंत जाते.',
       btn: 'माझा अर्ज पाठवा',
       sending: 'पाठवत आहे...',
-      done: 'नोंदणी झाली. फोन सुरू ठेवा — २९ सप्टेंबरपूर्वी आमची टीम तुम्हाला वेळ कळवेल.',
+      done: 'नोंदणी झाली. फोन सुरू ठेवा. २९ सप्टेंबरपूर्वी आमची टीम तुम्हाला वेळ कळवेल.',
       fail: 'आत्ता पाठवता आले नाही. कृपया तुमची माहिती WhatsApp वर पाठवा.',
       fileLabel: 'रेझ्युमे अपलोड करा',
       fileHint: 'PDF, DOC किंवा DOCX, ५ MB पर्यंत. तयार नाही? आता नोंदणी करा आणि मेळाव्याच्या दिवशी प्रत आणा.',

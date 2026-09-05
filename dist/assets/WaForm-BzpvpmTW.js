@@ -1,4 +1,4 @@
-import{r as c,j as t}from"./vendor-react-CLDEU_1T.js";import{u as x,A as u}from"./index-lk2vgWI_.js";const n="w-full border border-sand bg-paper px-4 py-3 text-[1rem] outline-none transition focus:border-clay rounded-[3px]";function j({form:s}){const{lang:l}=x(),[i,m]=c.useState(!1),p=e=>{e.preventDefault();const r=new FormData(e.currentTarget);let a=(l==="mr"?"नमस्कार, रामसुकृत कल्याण फाउंडेशन.":"Hello, Ramsukrut Kalyan Foundation.")+`
+import{r as c,j as t}from"./vendor-react-CLDEU_1T.js";import{u as x,A as u}from"./index-BzgeIrfp.js";const n="w-full border border-sand bg-paper px-4 py-3 text-[1rem] outline-none transition focus:border-clay rounded-[3px]";function j({form:s}){const{lang:l}=x(),[i,m]=c.useState(!1),p=e=>{e.preventDefault();const r=new FormData(e.currentTarget);let a=(l==="mr"?"नमस्कार, रामसुकृत कल्याण फाउंडेशन.":"Hello, Ramsukrut Kalyan Foundation.")+`
 
 `+s.waTitle+`
 `;r.forEach((o,d)=>{String(o).trim()&&(a+=`
