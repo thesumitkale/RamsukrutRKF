@@ -33,18 +33,18 @@ export const jobfair = {
     navLabel: 'Job Fair',
     meta: {
       title: 'Ramsukrut Job Fair 2026. 29 September, Rajgurunagar | Ramsukrut Kalyan Foundation',
-      description: 'A free one day job fair on 29 September 2026, 10 AM to 7 PM. Register as a candidate or book a hiring desk for your company.',
+      description: 'A free one day job fair on 29 September 2026. Reporting at 10:00 AM, process runs till 7:00 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
     h1: 'You don\u2019t need a reference.<br/>You need a resume.',
-    heroSub: 'On 29 September, Bosch, Akbar Travels, Dhiti Services and ZealConnect interview candidates in Rajgurunagar, and more companies are joining. Entry is free, walk in any time between 10 in the morning and 7 at night, and register now so they read your resume before you sit down.',
+    heroSub: 'On 29 September, Bosch, Akbar Travels, Dhiti Services and ZealConnect interview candidates in Rajgurunagar, and more companies are joining. Entry is free. Reporting is at 10:00 AM sharp and the selection process runs through the evening, so register now and they will have read your resume before you sit down.',
     heroCtaCandidate: 'Register free in 2 minutes',
     heroCtaCorporate: 'Book a hiring desk',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
       { k: 'Date', v: '29 September 2026' },
-      { k: 'Timing', v: '10:00 AM to 7:00 PM' },
+      { k: 'Reporting time', v: '10:00 AM sharp, process runs till 7:00 PM' },
       { k: 'Venue', v: 'Rajgurunagar, Tal. Khed, Dist. Pune' },
       { k: 'Entry', v: 'Free for all candidates' },
     ],
@@ -143,18 +143,18 @@ export const jobfair = {
     navLabel: 'रोजगार मेळावा',
     meta: {
       title: 'रामसुकृत रोजगार मेळावा २०२६. २९ सप्टेंबर, राजगुरुनगर | रामसुकृत कल्याण फाउंडेशन',
-      description: '२९ सप्टेंबर २०२६ रोजी सकाळी १० ते संध्याकाळी ७ पर्यंत मोफत रोजगार मेळावा. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
+      description: '२९ सप्टेंबर २०२६ रोजी मोफत रोजगार मेळावा. सकाळी १०:०० वाजता हजर राहा, प्रक्रिया सायंकाळी ७:०० पर्यंत चालेल. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
     badge: 'रामसुकृत रोजगार मेळावा 2026',
     h1: 'नोकरीसाठी ओळख लागत नाही.<br/>रेझ्युमे लागतो.',
-    heroSub: '29 सप्टेंबरला बॉश, अकबर ट्रॅव्हल्स, धिती सर्व्हिसेस आणि झीलकनेक्ट राजगुरुनगरमध्ये मुलाखती घेणार आहेत, आणि अजून कंपन्या जोडल्या जात आहेत. प्रवेश मोफत, सकाळी 10 ते रात्री 7 यादरम्यान कधीही या, आणि आता नोंदणी करा म्हणजे तुम्ही बसण्यापूर्वीच त्यांनी तुमचा रेझ्युमे वाचलेला असेल.',
+    heroSub: '29 सप्टेंबरला बॉश, अकबर ट्रॅव्हल्स, धिती सर्व्हिसेस आणि झीलकनेक्ट राजगुरुनगरमध्ये मुलाखती घेणार आहेत, आणि अजून कंपन्या जोडल्या जात आहेत. प्रवेश मोफत आहे. सकाळी 10:00 वाजता हजर राहणे आवश्यक आहे आणि निवड प्रक्रिया संध्याकाळपर्यंत चालेल, म्हणून आता नोंदणी करा, तुम्ही बसण्यापूर्वीच त्यांनी तुमचा रेझ्युमे वाचलेला असेल.',
     heroCtaCandidate: '2 मिनिटांत मोफत नोंदणी करा',
     heroCtaCorporate: 'भरती डेस्क बुक करा',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
       { k: 'दिनांक', v: '२९ सप्टेंबर २०२६' },
-      { k: 'वेळ', v: 'सकाळी १०:०० ते सायंकाळी ७:००' },
+      { k: 'हजर राहण्याची वेळ', v: 'सकाळी १०:०० वाजता, प्रक्रिया सायंकाळी ७:०० पर्यंत' },
       { k: 'ठिकाण', v: 'राजगुरुनगर, ता. खेड, जि. पुणे' },
       { k: 'प्रवेश', v: 'सर्व उमेदवारांसाठी नि:शुल्क' },
     ],
