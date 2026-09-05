@@ -19,11 +19,13 @@ const DEPTS_MR = ['आयटी / सॉफ्टवेअर', 'विक्र
 const EXP_EN = ['Fresher', '0 to 1 year', '1 to 3 years', '3 to 5 years', 'More than 5 years']
 const EXP_MR = ['फ्रेशर', '० ते १ वर्ष', '१ ते ३ वर्षे', '३ ते ५ वर्षे', '५ वर्षांपेक्षा जास्त']
 
+/* logoH is a Tailwind height class, tuned per mark so the logos read at the same
+   optical weight even though their artwork proportions differ. */
 const RECRUITERS = [
-  { name: 'Bosch', tag_en: 'Manufacturing & engineering roles', tag_mr: 'उत्पादन व अभियांत्रिकी पदे' },
-  { name: 'Akbar', tag_en: 'Travel, process & customer roles', tag_mr: 'ट्रॅव्हल, प्रोसेस व ग्राहक सेवा पदे' },
-  { name: 'Dhiti', tag_en: 'Services & operations roles', tag_mr: 'सेवा व ऑपरेशन्स पदे' },
-  { name: 'Zeal', tag_en: 'Sales & support roles', tag_mr: 'विक्री व सपोर्ट पदे' },
+  { name: 'Bosch', logo: '/img/recruiters/bosch.svg', logoH: 'h-8 sm:h-9', tag_en: 'Manufacturing & engineering roles', tag_mr: 'उत्पादन व अभियांत्रिकी पदे' },
+  { name: 'Akbar Travels', logo: '/img/recruiters/akbar-travels.svg', logoH: 'h-14 sm:h-16', tag_en: 'Travel, process & customer roles', tag_mr: 'ट्रॅव्हल, प्रोसेस व ग्राहक सेवा पदे' },
+  { name: 'Dhiti Services', logo: '/img/recruiters/dhiti-services.webp', logoH: 'h-9 sm:h-10', tag_en: 'Services & operations roles', tag_mr: 'सेवा व ऑपरेशन्स पदे' },
+  { name: 'Zeal Connect', logo: '/img/recruiters/zeal-connect.png', logoH: 'h-8 sm:h-9', tag_en: 'Sales & support roles', tag_mr: 'विक्री व सपोर्ट पदे' },
 ]
 
 export const jobfair = {
@@ -34,7 +36,7 @@ export const jobfair = {
       description: 'A free one day job fair on 29 September 2026, 10 AM to 7 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
-    h1: 'One day. Four recruiters.<br/>A job that changes a household.',
+    h1: 'One day. Real companies.<br/>A job that changes a household.',
     heroSub: 'Ramsukrut Kalyan Foundation brings hiring companies straight to Rajgurunagar, so rural youth do not have to spend money and days travelling to a city for an interview.',
     heroCtaCandidate: 'Register as a candidate',
     heroCtaCorporate: 'Participate as a recruiter',
@@ -52,7 +54,7 @@ export const jobfair = {
     aboutBody: 'Talent in Khed taluka is not short of ability, only of access. Every interview in Pune costs a day of wages, a bus fare and a borrowed shirt. The Ramsukrut Job Fair removes all three. On 29 September, recruiting teams sit across the table from candidates in their own taluka, screen resumes on the spot and make offers the same day.',
     aboutPoints: [
       { t: 'Walk in with a resume', d: 'Carry three printed copies of your resume, an Aadhaar copy and your marksheets. Register online first so companies can shortlist you before the day.' },
-      { t: 'Meet every company once', d: 'Four recruiting organisations, each with their own desk. One registration puts your resume in front of all of them.' },
+      { t: 'Meet every company once', d: 'Each recruiting organisation gets its own desk. One registration puts your resume in front of all of them, including companies confirmed after you apply.' },
       { t: 'Interviews the same day', d: 'Screening, interview and, for many roles, the offer discussion all happen on the same day at the venue.' },
       { t: 'No fee, ever', d: 'Ramsukrut charges candidates nothing. If anyone asks you for money in our name, call us on the number below.' },
     ],
@@ -60,7 +62,7 @@ export const jobfair = {
     recEyebrow: 'RECRUITING ORGANISATIONS',
     recTitle: 'Who is hiring on the day',
     recSub: 'More organisations are being confirmed. Register once and we will tell you as new companies join.',
-    recruiters: RECRUITERS.map((r) => ({ name: r.name, tag: r.tag_en })),
+    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, tag: r.tag_en })),
 
     deptEyebrow: 'ROLES ON OFFER',
     deptTitle: 'Departments hiring',
@@ -144,7 +146,7 @@ export const jobfair = {
       description: '२९ सप्टेंबर २०२६ रोजी सकाळी १० ते संध्याकाळी ७ पर्यंत मोफत रोजगार मेळावा. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
     badge: 'रामसुकृत रोजगार मेळावा २०२६',
-    h1: 'एक दिवस. चार कंपन्या.<br/>संपूर्ण कुटुंब बदलणारी नोकरी.',
+    h1: 'एक दिवस. खऱ्या कंपन्या.<br/>संपूर्ण कुटुंब बदलणारी नोकरी.',
     heroSub: 'रामसुकृत कल्याण फाउंडेशन भरती करणाऱ्या कंपन्या थेट राजगुरुनगरमध्ये आणत आहे, जेणेकरून ग्रामीण तरुणांना मुलाखतीसाठी शहरात पैसा आणि दिवस खर्च करावे लागणार नाहीत.',
     heroCtaCandidate: 'उमेदवार नोंदणी करा',
     heroCtaCorporate: 'कंपनी म्हणून सहभागी व्हा',
@@ -162,7 +164,7 @@ export const jobfair = {
     aboutBody: 'खेड तालुक्यातील तरुणांमध्ये क्षमतेची कमतरता नाही, संधीची आहे. पुण्यातील प्रत्येक मुलाखतीसाठी एक दिवसाची मजुरी, बसचे भाडे आणि उसना शर्ट लागतो. रामसुकृत रोजगार मेळावा हे तिन्ही अडथळे दूर करतो. २९ सप्टेंबर रोजी भरती पथके तुमच्याच तालुक्यात बसतील, जागेवरच रेझ्युमे तपासतील आणि त्याच दिवशी ऑफर देतील.',
     aboutPoints: [
       { t: 'रेझ्युमे घेऊन थेट या', d: 'रेझ्युमेच्या तीन प्रती, आधार कार्डची प्रत आणि गुणपत्रके सोबत आणा. आधी ऑनलाइन नोंदणी केल्यास कंपन्या तुमची निवड आधीच करू शकतात.' },
-      { t: 'सर्व कंपन्या एकाच ठिकाणी', d: 'चार भरती करणाऱ्या संस्था, प्रत्येकीचे स्वतंत्र डेस्क. एक नोंदणी तुमचा रेझ्युमे सर्वांपर्यंत पोहोचवते.' },
+      { t: 'सर्व कंपन्या एकाच ठिकाणी', d: 'भरती करणाऱ्या प्रत्येक संस्थेचे स्वतंत्र डेस्क असेल. एक नोंदणी तुमचा रेझ्युमे सर्वांपर्यंत — नंतर जोडल्या जाणाऱ्या कंपन्यांपर्यंतही — पोहोचवते.' },
       { t: 'त्याच दिवशी मुलाखत', d: 'स्क्रीनिंग, मुलाखत आणि बऱ्याच पदांसाठी ऑफरची चर्चा त्याच दिवशी त्याच ठिकाणी होईल.' },
       { t: 'कोणतीही फी नाही', d: 'रामसुकृत उमेदवारांकडून एक रुपयाही घेत नाही. आमच्या नावाने कोणी पैसे मागितले तर खालील क्रमांकावर संपर्क करा.' },
     ],
@@ -170,7 +172,7 @@ export const jobfair = {
     recEyebrow: 'भरती करणाऱ्या संस्था',
     recTitle: 'या दिवशी भरती करणाऱ्या कंपन्या',
     recSub: 'अधिक संस्थांची नावे निश्चित होत आहेत. एकदा नोंदणी करा, नवीन कंपन्या जोडल्या की आम्ही कळवू.',
-    recruiters: RECRUITERS.map((r) => ({ name: r.name, tag: r.tag_mr })),
+    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, tag: r.tag_mr })),
 
     deptEyebrow: 'उपलब्ध पदे',
     deptTitle: 'भरती होणारे विभाग',

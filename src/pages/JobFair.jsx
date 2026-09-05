@@ -154,10 +154,12 @@ export default function JobFair() {
             {v.recruiters.map((r, i) => (
               <Reveal key={r.name} delay={i * 0.08} className="h-full">
                 <article className="group flex h-full flex-col items-center rounded-[18px] border border-sand bg-paper p-7 text-center transition-all duration-300 hover:-translate-y-1.5 hover:border-clay hover:shadow-lift">
-                  <span className="grid h-16 w-16 place-items-center rounded-2xl bg-grad-dark font-display text-[1.5rem] font-extrabold text-yellow">
-                    {r.name.charAt(0)}
+                  {/* Fixed-height band so four logos of different proportions sit on one line. */}
+                  <span className="flex h-20 w-full items-center justify-center">
+                    <img src={r.logo} alt={r.name} loading="lazy" decoding="async"
+                      className={`${r.logoH} w-auto max-w-[80%] object-contain`} />
                   </span>
-                  <h3 className="mt-5 font-display text-[1.25rem] font-bold text-ink">{r.name}</h3>
+                  <h3 className="mt-4 font-display text-[1.15rem] font-bold text-ink">{r.name}</h3>
                   <p className="mt-2 text-[.94rem] leading-relaxed text-ink-2">{r.tag}</p>
                 </article>
               </Reveal>
