@@ -49,6 +49,7 @@ export default function Desk() {
   const [q, setQ] = useState('')
   const [dept, setDept] = useState('')
   const [busy, setBusy] = useState(false)
+  const [zip, setZip] = useState('')
 
   const load = async (theCode) => {
     setBusy(true)
@@ -95,6 +96,53 @@ export default function Desk() {
   }, [authed, code])
 
   const rows = data[tab]
+
+  /* Pulls every attached file for the rows currently on screen and hands back
+     one zip, named so the files sort in the order people registered. */
+  const grabFiles = async () => {
+    const key = tab === 'candidates' ? 'resume_url' : 'jd_url'
+    const nameKey = tab === 'candidates' ? 'name' : 'organization'
+    const fileKey = tab === 'candidates' ? 'resume_name' : 'jd_name'
+    const withFile = shown.filter((r) => r[key])
+    if (withFile.length === 0) { setZip('Nothing attached yet'); setTimeout(() => setZip(''), 2200); return }
+    setZip('Collecting 0 of ' + withFile.length)
+    try {
+      const JSZip = (await import('jszip')).default
+      const bag = new JSZip()
+      let done = 0
+      let failed = 0
+      for (let i = 0; i < withFile.length; i += 1) {
+        const r = withFile[i]
+        try {
+          const res = await fetch(r[key])
+          if (!res.ok) throw new Error('bad status')
+          const blob = await res.blob()
+          const raw = String(r[fileKey] || '')
+          const ext = raw.includes('.') ? raw.slice(raw.lastIndexOf('.')) : '.pdf'
+          const safe = String(r[nameKey] || 'unnamed').replace(/[^\p{L}\p{N} .-]/gu, ' ').trim().slice(0, 60)
+          bag.file(String(i + 1).padStart(3, '0') + ' ' + safe + ext, blob)
+        } catch (e) {
+          failed += 1
+        }
+        done += 1
+        setZip('Collecting ' + done + ' of ' + withFile.length)
+      }
+      setZip('Packing')
+      const out = await bag.generateAsync({ type: 'blob' })
+      const url = URL.createObjectURL(out)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = tab === 'candidates' ? 'rkf-resumes.zip' : 'rkf-job-descriptions.zip'
+      a.click()
+      URL.revokeObjectURL(url)
+      setZip(failed ? failed + ' could not be fetched' : '')
+      if (failed) setTimeout(() => setZip(''), 3000)
+      else setZip('')
+    } catch (e) {
+      setZip('Could not build the zip')
+      setTimeout(() => setZip(''), 3000)
+    }
+  }
 
   const depts = useMemo(() => {
     const s = new Set(data.candidates.map((r) => r.department).filter(Boolean))
@@ -229,6 +277,13 @@ export default function Desk() {
             {depts.map((d) => <option key={d} value={d}>{d}</option>)}
           </select>
         )}
+        <button
+          disabled={!!zip}
+          onClick={() => grabFiles()}
+          className="rounded-[4px] bg-forest px-4 py-2 text-[0.9rem] font-semibold text-white transition hover:bg-ink disabled:opacity-60"
+        >
+          {zip || (tab === 'candidates' ? 'Download all resumes' : 'Download all JDs')}
+        </button>
         <button
           onClick={() => {
             if (tab === 'candidates') {
