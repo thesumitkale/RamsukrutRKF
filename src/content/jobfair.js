@@ -36,10 +36,10 @@ export const jobfair = {
       description: 'A free one day job fair on 29 September 2026, 10 AM to 7 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
-    h1: 'One day. Real companies.<br/>A job that changes a household.',
-    heroSub: 'Ramsukrut Kalyan Foundation brings hiring companies straight to Rajgurunagar, so rural youth do not have to spend money and days travelling to a city for an interview.',
-    heroCtaCandidate: 'Register as a candidate',
-    heroCtaCorporate: 'Participate as a recruiter',
+    h1: 'Walk in with a resume.<br/>Walk out with a job.',
+    heroSub: 'For once, the companies come to you. Hiring teams sit down in Rajgurunagar on 29 September \u2014 no bus fare to Pune, no day\u2019s wage lost, no middleman. Register online and your resume is on their desk before you arrive.',
+    heroCtaCandidate: 'Register free \u2014 takes 2 minutes',
+    heroCtaCorporate: 'Book a hiring desk',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
@@ -145,11 +145,11 @@ export const jobfair = {
       title: 'रामसुकृत रोजगार मेळावा २०२६ — २९ सप्टेंबर, राजगुरुनगर | रामसुकृत कल्याण फाउंडेशन',
       description: '२९ सप्टेंबर २०२६ रोजी सकाळी १० ते संध्याकाळी ७ पर्यंत मोफत रोजगार मेळावा. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
-    badge: 'रामसुकृत रोजगार मेळावा २०२६',
-    h1: 'एक दिवस. खऱ्या कंपन्या.<br/>संपूर्ण कुटुंब बदलणारी नोकरी.',
-    heroSub: 'रामसुकृत कल्याण फाउंडेशन भरती करणाऱ्या कंपन्या थेट राजगुरुनगरमध्ये आणत आहे, जेणेकरून ग्रामीण तरुणांना मुलाखतीसाठी शहरात पैसा आणि दिवस खर्च करावे लागणार नाहीत.',
-    heroCtaCandidate: 'उमेदवार नोंदणी करा',
-    heroCtaCorporate: 'कंपनी म्हणून सहभागी व्हा',
+    badge: 'रामसुकृत रोजगार मेळावा 2026',
+    h1: 'रेझ्युमे घेऊन या.<br/>नोकरी घेऊन जा.',
+    heroSub: 'यावेळी कंपन्या तुमच्याकडे येत आहेत. 29 सप्टेंबरला भरती करणाऱ्या टीम राजगुरुनगरमध्येच बसणार आहेत — पुण्याचा प्रवास खर्च नाही, दिवसाची मजुरी बुडणार नाही, मध्यस्थ नाही. ऑनलाइन नोंदणी करा आणि तुम्ही पोहोचण्यापूर्वीच तुमचा रेझ्युमे त्यांच्या डेस्कवर असेल.',
+    heroCtaCandidate: 'मोफत नोंदणी करा — 2 मिनिटे',
+    heroCtaCorporate: 'भरती डेस्क बुक करा',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
