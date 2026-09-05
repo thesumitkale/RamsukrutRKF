@@ -11,6 +11,10 @@
 export const JOBFAIR_ENDPOINT = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/rkf-jobfair-submit'
 export const JOBFAIR_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFnc25pb2l5d2Fvd2FtZW1vY2NrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcwNDY4NjYsImV4cCI6MjEwMjYyMjg2Nn0.s5B71delf4udsazTVZdDILiIPvUL3M30cOfykaP3GLA'
 
+/* Read side, used only by the private volunteer desk at /#/desk. The
+   passcode is checked on the server, never stored in this file.        */
+export const JOBFAIR_DESK = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/rkf-jobfair-desk'
+
 export const JOBFAIR_WA = '917277404040'
 export const JOBFAIR_PHONE = '+91 72774 04040'
 
