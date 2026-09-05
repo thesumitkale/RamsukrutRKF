@@ -44,7 +44,7 @@ export const jobfair = {
     },
     badge: 'Ramsukrut Job Fair 2026',
     h1: 'You don\u2019t need a reference.<br/>You need a resume.',
-    heroSub: 'On 29 September, Bosch, Akbar Travels, Dhiti Services and ZealConnect interview candidates in Rajgurunagar, and more companies are joining. Entry is free. Reporting is at 10:00 AM sharp and the selection process runs through the evening, so register now and they will have read your resume before you sit down.',
+    heroSub: 'On 29 September, companies hiring across production, sales, IT, accounts, support, logistics and administration will interview in person. Entry is free, reporting is at 10:00 AM sharp, and screening, interview and offer are all completed the same day.',
     heroCtaCandidate: 'Register free in 2 minutes',
     heroCtaCorporate: 'Book a hiring desk',
     heroImg: '/img/students-campus.jpg',
@@ -58,7 +58,7 @@ export const jobfair = {
 
     aboutEyebrow: 'ABOUT THE FAIR',
     aboutTitle: 'Hiring brought to the doorstep of rural youth',
-    aboutBody: 'Talent in Khed taluka is not short of ability, only of access. Every interview in Pune costs a day of wages, a bus fare and a borrowed shirt. The Ramsukrut Job Fair removes all three. On 29 September, recruiting teams sit across the table from candidates in their own taluka, screen resumes on the spot and make offers the same day.',
+    aboutBody: 'The talent here has never been the problem. The opportunity has. Ability sits in these villages waiting for a company to notice it, and the companies have always been somewhere else. Ramsukrut Kalyan Foundation is bringing them to your door instead. There are openings across production, sales, IT, accounts, customer support, logistics and administration, so there is something to apply for whatever you have studied or done so far. Screening, interview and offer all happen on 29 September itself. Nobody is asked to come back another day.',
     aboutPoints: [
       { t: 'Walk in with a resume', d: 'Carry three printed copies of your resume, an Aadhaar copy and your marksheets. Register online first so companies can shortlist you before the day.' },
       { t: 'Meet every company once', d: 'Each recruiting organisation gets its own desk. One registration puts your resume in front of all of them, including companies confirmed after you apply.' },
@@ -158,7 +158,7 @@ export const jobfair = {
     },
     badge: 'रामसुकृत रोजगार मेळावा 2026',
     h1: 'नोकरीसाठी ओळख लागत नाही.<br/>रेझ्युमे लागतो.',
-    heroSub: '29 सप्टेंबरला बॉश, अकबर ट्रॅव्हल्स, धिती सर्व्हिसेस आणि झीलकनेक्ट राजगुरुनगरमध्ये मुलाखती घेणार आहेत, आणि अजून कंपन्या जोडल्या जात आहेत. प्रवेश मोफत आहे. सकाळी 10:00 वाजता हजर राहणे आवश्यक आहे आणि निवड प्रक्रिया संध्याकाळपर्यंत चालेल, म्हणून आता नोंदणी करा, तुम्ही बसण्यापूर्वीच त्यांनी तुमचा रेझ्युमे वाचलेला असेल.',
+    heroSub: '29 सप्टेंबरला उत्पादन, विक्री, आयटी, अकाउंट्स, ग्राहक सेवा, लॉजिस्टिक्स आणि प्रशासन अशा सर्व विभागांसाठी भरती करणाऱ्या कंपन्या प्रत्यक्ष मुलाखती घेतील. प्रवेश मोफत, सकाळी 10:00 वाजता हजर राहा, आणि स्क्रीनिंग, मुलाखत व ऑफर सर्व काही त्याच दिवशी पूर्ण होते.',
     heroCtaCandidate: '2 मिनिटांत मोफत नोंदणी करा',
     heroCtaCorporate: 'भरती डेस्क बुक करा',
     heroImg: '/img/students-campus.jpg',
@@ -172,7 +172,7 @@ export const jobfair = {
 
     aboutEyebrow: 'मेळाव्याविषयी',
     aboutTitle: 'भरती आता ग्रामीण तरुणांच्या दारात',
-    aboutBody: 'खेड तालुक्यातील तरुणांमध्ये क्षमतेची कमतरता नाही, संधीची आहे. पुण्यातील प्रत्येक मुलाखतीसाठी एक दिवसाची मजुरी, बसचे भाडे आणि उसना शर्ट लागतो. रामसुकृत रोजगार मेळावा हे तिन्ही अडथळे दूर करतो. २९ सप्टेंबर रोजी भरती पथके तुमच्याच तालुक्यात बसतील, जागेवरच रेझ्युमे तपासतील आणि त्याच दिवशी ऑफर देतील.',
+    aboutBody: 'येथील तरुणांमध्ये क्षमतेची कधीच कमतरता नव्हती. कमतरता संधीची होती. गुणवत्ता याच गावांमध्ये आहे, पण कंपन्या नेहमी दुसरीकडे राहिल्या. रामसुकृत कल्याण फाउंडेशन त्या कंपन्यांना तुमच्या दारात घेऊन येत आहे. उत्पादन, विक्री, आयटी, अकाउंट्स, ग्राहक सेवा, लॉजिस्टिक्स आणि प्रशासन अशा सर्व विभागांमध्ये जागा आहेत, म्हणजे तुम्ही जे शिकले असाल किंवा जे काम केले असेल, त्यासाठी अर्ज करण्याजोगे काहीतरी नक्की आहे. स्क्रीनिंग, मुलाखत आणि ऑफर सर्व काही २९ सप्टेंबरलाच होते. कोणालाही दुसऱ्या दिवशी परत बोलावले जात नाही.',
     aboutPoints: [
       { t: 'रेझ्युमे घेऊन थेट या', d: 'रेझ्युमेच्या तीन प्रती, आधार कार्डची प्रत आणि गुणपत्रके सोबत आणा. आधी ऑनलाइन नोंदणी केल्यास कंपन्या तुमची निवड आधीच करू शकतात.' },
       { t: 'सर्व कंपन्या एकाच ठिकाणी', d: 'भरती करणाऱ्या प्रत्येक संस्थेचे स्वतंत्र डेस्क असेल. एक नोंदणी तुमचा रेझ्युमे सर्वांपर्यंत पोहोचवते, नंतर जोडल्या जाणाऱ्या कंपन्यांपर्यंतही.' },
