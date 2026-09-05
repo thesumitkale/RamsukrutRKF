@@ -16,6 +16,13 @@ export const JOBFAIR_PHONE = '+91 72774 04040'
 const DEPTS_EN = ['IT / Software', 'Sales & Marketing', 'Process / Operations', 'Manufacturing / Production', 'Customer Support / BPO', 'Accounts & Finance', 'HR & Admin', 'Logistics & Warehouse', 'Other']
 const DEPTS_MR = ['आयटी / सॉफ्टवेअर', 'विक्री व मार्केटिंग', 'प्रोसेस / ऑपरेशन्स', 'उत्पादन / मॅन्युफॅक्चरिंग', 'ग्राहक सेवा / बीपीओ', 'अकाउंट्स व फायनान्स', 'एचआर व प्रशासन', 'लॉजिस्टिक्स व वेअरहाऊस', 'इतर']
 
+/* Recruiter dropdowns: headcount bands, salary bands and hiring departments */
+const POS_EN = ['1 to 5', '6 to 10', '11 to 25', '26 to 50', '51 to 100', 'More than 100']
+const POS_MR = ['१ ते ५', '६ ते १०', '११ ते २५', '२६ ते ५०', '५१ ते १००', '१०० पेक्षा जास्त']
+
+const COMP_EN = ['Up to 1.5 LPA', '1.5 to 2.5 LPA', '2.5 to 3.5 LPA', '3.5 to 5 LPA', '5 to 8 LPA', 'Above 8 LPA', 'Depends on the role']
+const COMP_MR = ['१.५ लाखांपर्यंत', '१.५ ते २.५ लाख', '२.५ ते ३.५ लाख', '३.५ ते ५ लाख', '५ ते ८ लाख', '८ लाखांपेक्षा जास्त', 'पदानुसार ठरेल']
+
 const EXP_EN = ['Fresher', '0 to 1 year', '1 to 3 years', '3 to 5 years', 'More than 5 years']
 const EXP_MR = ['फ्रेशर', '० ते १ वर्ष', '१ ते ३ वर्षे', '३ ते ५ वर्षे', '५ वर्षांपेक्षा जास्त']
 
@@ -116,10 +123,14 @@ export const jobfair = {
       },
       ph: {
         organization: 'Company or organisation', name: 'Your name', title: 'e.g. HR Manager',
-        email: 'name@company.com', mobile: '10 digit mobile number', positions: 'e.g. 15 to 20',
-        compensation: 'e.g. 1.8 to 3.6 LPA', departments: 'e.g. Process, Sales, Production',
+        email: 'name@company.com', mobile: '10 digit mobile number',
+        positions: 'Select number of positions', compensation: 'Select a salary range',
+        departments: 'Tick every department you are hiring for',
         notes: 'Interview panel size, space needed, arrival time',
       },
+      opts: { positions: POS_EN, compensation: COMP_EN, departments: DEPTS_EN },
+      multiHint: 'Choose one or more.',
+      multiError: 'Please choose at least one department.',
     },
 
     faqEyebrow: 'BEFORE YOU COME',
@@ -226,10 +237,14 @@ export const jobfair = {
       },
       ph: {
         organization: 'कंपनी किंवा संस्था', name: 'तुमचे नाव', title: 'उदा. एचआर मॅनेजर',
-        email: 'name@company.com', mobile: '१० अंकी मोबाइल क्रमांक', positions: 'उदा. १५ ते २०',
-        compensation: 'उदा. १.८ ते ३.६ लाख प्रतिवर्ष', departments: 'उदा. प्रोसेस, विक्री, उत्पादन',
+        email: 'name@company.com', mobile: '१० अंकी मोबाइल क्रमांक',
+        positions: 'पदांची संख्या निवडा', compensation: 'वेतन श्रेणी निवडा',
+        departments: 'भरती करायच्या सर्व विभागांवर खूण करा',
         notes: 'मुलाखत पॅनेल, आवश्यक जागा, येण्याची वेळ',
       },
+      opts: { positions: POS_MR, compensation: COMP_MR, departments: DEPTS_MR },
+      multiHint: 'एक किंवा अधिक निवडा.',
+      multiError: 'कृपया कमीत कमी एक विभाग निवडा.',
     },
 
     faqEyebrow: 'येण्यापूर्वी',

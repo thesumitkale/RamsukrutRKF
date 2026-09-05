@@ -30,9 +30,9 @@ const corporateFields = (c) => [
   { name: 'title', label: c.fields.title, ph: c.ph.title, req: true },
   { name: 'email', label: c.fields.email, ph: c.ph.email, req: true, type: 'email' },
   { name: 'mobile', label: c.fields.mobile, ph: c.ph.mobile, req: true, type: 'tel', inputMode: 'numeric', pattern: '[0-9+ ]{10,15}' },
-  { name: 'positions', label: c.fields.positions, ph: c.ph.positions, req: true },
-  { name: 'compensation', label: c.fields.compensation, ph: c.ph.compensation, req: true },
-  { name: 'departments', label: c.fields.departments, ph: c.ph.departments, req: true, full: true },
+  { name: 'positions', label: c.fields.positions, ph: c.ph.positions, req: true, type: 'select', options: c.opts.positions },
+  { name: 'compensation', label: c.fields.compensation, ph: c.ph.compensation, req: true, type: 'select', options: c.opts.compensation },
+  { name: 'departments', label: c.fields.departments, ph: c.ph.departments, req: true, type: 'multi', options: c.opts.departments, full: true },
   { name: 'notes', label: c.fields.notes, ph: c.ph.notes, type: 'textarea', full: true },
 ]
 

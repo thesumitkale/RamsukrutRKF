@@ -33,7 +33,20 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
   const [state, setState] = useState('idle') // idle | sending | done | fail
   const [fileName, setFileName] = useState('')
   const [fileError, setFileError] = useState('')
+  const [picked, setPicked] = useState({})   // multi-choice fields: name -> [values]
+  const [multiError, setMultiError] = useState('')
   const formRef = useRef(null)
+
+  /* Checkbox groups are not covered by the browser's required attribute, so
+     they are held in React state and validated by hand on submit. */
+  const togglePick = (field, value) => {
+    setMultiError('')
+    setPicked((prev) => {
+      const current = prev[field] || []
+      const next = current.includes(value) ? current.filter((x) => x !== value) : [...current, value]
+      return { ...prev, [field]: next }
+    })
+  }
 
   const openWhatsApp = (values) => {
     let msg = waIntro + '\n\n' + copy.heading
@@ -60,15 +73,26 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     const form = e.currentTarget
     const data = new FormData(form)
 
+    /* A required checkbox group with nothing ticked stops the submission. */
+    const missing = fields.find((f) => f.type === 'multi' && f.req && !(picked[f.name] || []).length)
+    if (missing) {
+      setMultiError(copy.multiError || '')
+      document.getElementById(`${kind}-${missing.name}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+
+    /* Ticked boxes travel as one comma separated cell so the sheet stays flat. */
+    const readField = (f) => (f.type === 'multi' ? (picked[f.name] || []).join(', ') : data.get(f.name) || '')
+
     // Human-labelled copy for the WhatsApp fallback message
     const labelled = {}
-    fields.forEach((f) => { labelled[f.label] = data.get(f.name) || '' })
+    fields.forEach((f) => { labelled[f.label] = readField(f) })
 
     // Machine-keyed copy for the spreadsheet
     const values = {}
-    fields.forEach((f) => { values[f.name] = data.get(f.name) || '' })
+    fields.forEach((f) => { values[f.name] = readField(f) })
 
-    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); return }
+    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); setPicked({}); return }
 
     setState('sending')
     try {
@@ -90,7 +114,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       })
       const out = await res.json().catch(() => ({ ok: res.ok }))
       if (!out.ok) throw new Error(out.error || 'rejected')
-      setState('done'); form.reset(); setFileName('')
+      setState('done'); form.reset(); setFileName(''); setPicked({})
     } catch (err) {
       setState('fail')
       openWhatsApp(labelled)
@@ -118,6 +142,26 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
                 <option value="" disabled>{f.ph}</option>
                 {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
               </select>
+            ) : f.type === 'multi' ? (
+              <div id={`${kind}-${f.name}`} role="group" aria-label={f.label}>
+                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {f.options.map((o) => {
+                    const on = (picked[f.name] || []).includes(o)
+                    return (
+                      <label key={o}
+                        className={`flex cursor-pointer items-start gap-2.5 rounded-[4px] border px-3 py-2.5 text-[.94rem] leading-snug transition ${on ? 'border-clay bg-clay/10 text-ink' : 'border-sand bg-paper text-ink-2 hover:border-clay/60'}`}>
+                        <input type="checkbox" checked={on} onChange={() => togglePick(f.name, o)}
+                          className="mt-[.15rem] h-4 w-4 shrink-0 rounded-[2px] border-sand"
+                          style={{ accentColor: '#F26A1B' }} />
+                        <span>{o}</span>
+                      </label>
+                    )
+                  })}
+                </div>
+                <p className={`mt-2 text-[.82rem] ${multiError ? 'font-semibold text-clay-deep' : 'text-ink-2/75'}`}>
+                  {multiError || copy.multiHint || f.ph}
+                </p>
+              </div>
             ) : (
               <input id={`${kind}-${f.name}`} name={f.name} type={f.type || 'text'} required={f.req}
                 placeholder={f.ph} inputMode={f.inputMode} pattern={f.pattern} className={cls} />
