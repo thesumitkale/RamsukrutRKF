@@ -8,14 +8,16 @@ import { Arrow, Wa } from './Icons.jsx'
 
    Where the data goes
    -------------------
-   Every submission is POSTed to the Google Apps Script web app whose URL sits
-   in src/content/jobfair.js. That script writes one row into the
-   "Ramsukrut Job Fair 2026 - Submissions" Google Sheet and drops the uploaded
-   resume or JD into a Drive folder, linking it from the row.
+   Every submission is POSTed as multipart form data to the rkf-jobfair-submit
+   Supabase edge function whose URL sits in src/content/jobfair.js. That
+   function writes one row into public.rkf_jobfair_candidates or
+   public.rkf_jobfair_corporates and drops the uploaded resume or JD into the
+   private rkf-jobfair storage bucket, linking it from the row through a signed
+   URL. An hourly job mirrors new rows into the internal Google Sheet.
 
-   If the URL has not been filled in yet, or the network call fails, the form
-   falls back to opening WhatsApp with the same details typed out, so a
-   candidate is never lost because of a technical problem.
+   If the endpoint URL has not been filled in yet, or the network call fails,
+   the form falls back to opening WhatsApp with the same details typed out, so
+   a candidate is never lost because of a technical problem.
 --------------------------------------------------------------------------- */
 
 const MAX_MB = 5

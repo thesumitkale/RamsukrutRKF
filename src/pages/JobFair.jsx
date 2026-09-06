@@ -20,7 +20,7 @@ const candidateFields = (c) => [
   { name: 'email', label: c.fields.email, ph: c.ph.email, type: 'email' },
   { name: 'city', label: c.fields.city, ph: c.ph.city, req: true },
   { name: 'department', label: c.fields.department, ph: c.ph.department, req: true, type: 'select', options: c.departments, full: true },
-  { name: 'qualification', label: c.fields.qualification, ph: c.ph.qualification, req: true },
+  { name: 'qualification', label: c.fields.qualification, ph: c.ph.qualification, req: true, type: 'select', options: c.qualifications },
   { name: 'experience', label: c.fields.experience, ph: c.ph.experience, req: true, type: 'select', options: c.experiences },
 ]
 

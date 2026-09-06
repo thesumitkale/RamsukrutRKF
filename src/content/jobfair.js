@@ -19,8 +19,60 @@ export const JOBFAIR_WA = '917277404040'
 export const JOBFAIR_PHONE = '+91 72774 04040'
 
 /* Departments shown in the candidate dropdown */
-const DEPTS_EN = ['IT / Software', 'Sales & Marketing', 'Process / Operations', 'Manufacturing / Production', 'Customer Support / BPO', 'Accounts & Finance', 'HR & Admin', 'Logistics & Warehouse', 'Other']
-const DEPTS_MR = ['आयटी / सॉफ्टवेअर', 'विक्री व मार्केटिंग', 'प्रोसेस / ऑपरेशन्स', 'उत्पादन / मॅन्युफॅक्चरिंग', 'ग्राहक सेवा / बीपीओ', 'अकाउंट्स व फायनान्स', 'एचआर व प्रशासन', 'लॉजिस्टिक्स व वेअरहाऊस', 'इतर']
+const DEPTS_EN = [
+  'IT / Software',
+  'Sales & Marketing',
+  'Field Sales (on ground)',
+  'Retail / Front desk',
+  'Customer Support / BPO',
+  'Process / Operations',
+  'Manufacturing / Production',
+  'Accounts & Finance',
+  'HR & Admin',
+  'Data Entry / Back Office',
+  'Logistics & Warehouse',
+  'Delivery / Driver',
+  'Housekeeping / Facility',
+  'Security',
+  'Helper / General worker',
+  'Other',
+]
+const DEPTS_MR = [
+  'आयटी / सॉफ्टवेअर',
+  'विक्री व मार्केटिंग',
+  'फील्ड सेल्स (बाहेरची विक्री)',
+  'रिटेल / फ्रंट डेस्क',
+  'ग्राहक सेवा / बीपीओ',
+  'प्रोसेस / ऑपरेशन्स',
+  'उत्पादन / मॅन्युफॅक्चरिंग',
+  'अकाउंट्स व फायनान्स',
+  'एचआर व प्रशासन',
+  'डेटा एंट्री / बॅक ऑफिस',
+  'लॉजिस्टिक्स व वेअरहाऊस',
+  'डिलिव्हरी / ड्राय्व्हर',
+  'हाउसकीपिंग / फॅसिलिटी',
+  'सुरक्षा / सिक्युरिटी',
+  'हेल्पर / सामान्य कामगार',
+  'इतर',
+]
+const QUALIF_EN = [
+  '10th (SSC)',
+  '12th (HSC)',
+  'ITI',
+  'Diploma',
+  'Graduate',
+  'Post Graduate',
+  'Other',
+]
+const QUALIF_MR = [
+  '१०वी (SSC)',
+  '१२वी (HSC)',
+  'आयटीआय (ITI)',
+  'डिप्लोमा',
+  'पदवीधर',
+  'पदव्युत्तर',
+  'इतर',
+]
 
 /* Recruiter dropdowns: headcount bands, salary bands and hiring departments */
 const POS_EN = ['1 to 5', '6 to 10', '11 to 25', '26 to 50', '51 to 100', 'More than 100']
@@ -104,10 +156,11 @@ export const jobfair = {
       },
       ph: {
         name: 'Your name as on Aadhaar', mobile: '10 digit mobile number', email: 'you@example.com',
-        department: 'Select a department', qualification: 'e.g. BA, B.Com, ITI, Diploma, 12th',
+        department: 'Select a department', qualification: 'Select your qualification',
         experience: 'Select your experience', city: 'e.g. Rajgurunagar',
       },
       departments: DEPTS_EN,
+      qualifications: QUALIF_EN,
       experiences: EXP_EN,
     },
 
@@ -218,10 +271,11 @@ export const jobfair = {
       },
       ph: {
         name: 'आधारवरील नाव', mobile: '१० अंकी मोबाइल क्रमांक', email: 'you@example.com',
-        department: 'विभाग निवडा', qualification: 'उदा. बीए, बीकॉम, आयटीआय, डिप्लोमा, १२वी',
+        department: 'विभाग निवडा', qualification: 'शिक्षण निवडा',
         experience: 'अनुभव निवडा', city: 'उदा. राजगुरुनगर',
       },
       departments: DEPTS_MR,
+      qualifications: QUALIF_MR,
       experiences: EXP_MR,
     },
 
