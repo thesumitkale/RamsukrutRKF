@@ -45,20 +45,20 @@ export const jobfair = {
   en: {
     navLabel: 'Job Fair',
     meta: {
-      title: 'Ramsukrut Job Fair 2026. 29 September, Rajgurunagar | Ramsukrut Kalyan Foundation',
-      description: 'A free one day job fair on 29 September 2026. Reporting at 10:00 AM, process runs till 7:00 PM. Register as a candidate or book a hiring desk for your company.',
+      title: 'Ramsukrut Job Fair 2026. 29 September, Dawadi, Khed, Pune | Ramsukrut Kalyan Foundation',
+      description: 'A free one day job fair on 29 September 2026. Reporting at 9:00 AM, process runs till 5:00 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
     h1: 'You have the talent.<br/>We are bringing the opportunity to your door.',
-    heroSub: 'The Ramsukrut Job Fair on 29 September brings companies hiring across production, sales, IT, accounts, support, logistics and administration to you. No reference needed, only a resume. Entry is free, reporting is at 10:00 AM sharp, and screening, interview and offer are all completed the same day.',
+    heroSub: 'The Ramsukrut Job Fair on 29 September brings companies hiring across production, sales, IT, accounts, support, logistics and administration to you. No reference needed, only a resume. Entry is free, reporting is at 9:00 AM sharp, and screening, interview and offer are all completed the same day.',
     heroCtaCandidate: 'Register free in 2 minutes',
     heroCtaCorporate: 'Book a hiring desk',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
       { k: 'Date', v: '29 September 2026' },
-      { k: 'Reporting time', v: '10:00 AM sharp, process runs till 7:00 PM' },
-      { k: 'Venue', v: 'Rajgurunagar, Tal. Khed, Dist. Pune' },
+      { k: 'Reporting time', v: '9:00 AM sharp, process runs till 5:00 PM' },
+      { k: 'Venue', v: 'Shreemant Maharaj Fattesingrao Gaikwad Mahavidyalay (and Jr. College), At post Dawadi, Tal. Khed, Dist. Pune' },
       { k: 'Entry', v: 'Free for all candidates' },
     ],
 
@@ -144,7 +144,7 @@ export const jobfair = {
     faqs: [
       { q: 'Is there any registration fee?', a: 'No. The fair is completely free for candidates. Ramsukrut Kalyan Foundation never charges for a job, an interview or a referral.' },
       { q: 'What should I bring?', a: 'Three printed copies of your resume, an Aadhaar card copy, your final marksheets and any experience letters. Dress as you would for an interview.' },
-      { q: 'I do not have a resume yet.', a: 'Register with your details anyway. Our volunteers will help you put a simple one-page resume together at the venue from 10:00 AM.' },
+      { q: 'I do not have a resume yet.', a: 'Register with your details anyway. Our volunteers will help you put a simple one-page resume together at the venue from 9:00 AM.' },
       { q: 'Can I come without registering online?', a: 'Yes, walk-ins are welcome. But registering online means companies see your resume in advance, so your interview is far quicker.' },
       { q: 'Who can I call for help?', a: 'Ring or WhatsApp the foundation on ' + JOBFAIR_PHONE + ' between 9:00 AM and 6:00 PM.' },
     ],
@@ -159,20 +159,20 @@ export const jobfair = {
   mr: {
     navLabel: 'रोजगार मेळावा',
     meta: {
-      title: 'रामसुकृत रोजगार मेळावा २०२६. २९ सप्टेंबर, राजगुरुनगर | रामसुकृत कल्याण फाउंडेशन',
-      description: '२९ सप्टेंबर २०२६ रोजी मोफत रोजगार मेळावा. सकाळी १०:०० वाजता हजर राहा, प्रक्रिया सायंकाळी ७:०० पर्यंत चालेल. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
+      title: 'रामसुकृत रोजगार मेळावा २०२६. २९ सप्टेंबर, दावडी, खेड, पुणे | रामसुकृत कल्याण फाउंडेशन',
+      description: '२९ सप्टेंबर २०२६ रोजी मोफत रोजगार मेळावा. सकाळी ९:०० वाजता हजर राहा, प्रक्रिया सायंकाळी ५:०० पर्यंत चालेल. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
     badge: 'रामसुकृत रोजगार मेळावा 2026',
     h1: 'क्षमता तुमच्याकडे आहे.<br/>संधी आम्ही तुमच्या दारात आणत आहोत.',
-    heroSub: 'रामसुकृत रोजगार मेळावा 29 सप्टेंबरला उत्पादन, विक्री, आयटी, अकाउंट्स, ग्राहक सेवा, लॉजिस्टिक्स आणि प्रशासन अशा सर्व विभागांसाठी भरती करणाऱ्या कंपन्या तुमच्यापर्यंत घेऊन येतो. ओळख नको, फक्त रेझ्युमे. प्रवेश मोफत, सकाळी 10:00 वाजता हजर राहा, आणि स्क्रीनिंग, मुलाखत व ऑफर सर्व काही त्याच दिवशी पूर्ण होते.',
+    heroSub: 'रामसुकृत रोजगार मेळावा 29 सप्टेंबरला उत्पादन, विक्री, आयटी, अकाउंट्स, ग्राहक सेवा, लॉजिस्टिक्स आणि प्रशासन अशा सर्व विभागांसाठी भरती करणाऱ्या कंपन्या तुमच्यापर्यंत घेऊन येतो. ओळख नको, फक्त रेझ्युमे. प्रवेश मोफत, सकाळी 9:00 वाजता हजर राहा, आणि स्क्रीनिंग, मुलाखत व ऑफर सर्व काही त्याच दिवशी पूर्ण होते.',
     heroCtaCandidate: '2 मिनिटांत मोफत नोंदणी करा',
     heroCtaCorporate: 'भरती डेस्क बुक करा',
     heroImg: '/img/students-campus.jpg',
 
     facts: [
       { k: 'दिनांक', v: '२९ सप्टेंबर २०२६' },
-      { k: 'हजर राहण्याची वेळ', v: 'सकाळी १०:०० वाजता, प्रक्रिया सायंकाळी ७:०० पर्यंत' },
-      { k: 'ठिकाण', v: 'राजगुरुनगर, ता. खेड, जि. पुणे' },
+      { k: 'हजर राहण्याची वेळ', v: 'सकाळी ९:०० वाजता, प्रक्रिया सायंकाळी ५:०० पर्यंत' },
+      { k: 'ठिकाण', v: 'श्रीमंत महाराज फत्तेसिंगराव गायकवाड महाविद्यालय (व कनिष्ठ महाविद्यालय), मु. पो. दावडी, ता. खेड, जि. पुणे' },
       { k: 'प्रवेश', v: 'सर्व उमेदवारांसाठी नि:शुल्क' },
     ],
 
@@ -258,7 +258,7 @@ export const jobfair = {
     faqs: [
       { q: 'नोंदणी शुल्क आहे का?', a: 'नाही. मेळावा उमेदवारांसाठी पूर्णपणे नि:शुल्क आहे. रामसुकृत कल्याण फाउंडेशन नोकरी, मुलाखत किंवा शिफारशीसाठी कधीही पैसे घेत नाही.' },
       { q: 'सोबत काय आणायचे?', a: 'रेझ्युमेच्या तीन प्रती, आधार कार्डची प्रत, अंतिम गुणपत्रके आणि अनुभव पत्रे. मुलाखतीसारखा पेहराव करा.' },
-      { q: 'माझा रेझ्युमे तयार नाही.', a: 'तरीही माहिती भरून नोंदणी करा. सकाळी १०:०० पासून आमचे स्वयंसेवक जागेवरच एक पानाचा साधा रेझ्युमे तयार करून देतील.' },
+      { q: 'माझा रेझ्युमे तयार नाही.', a: 'तरीही माहिती भरून नोंदणी करा. सकाळी ९:०० पासून आमचे स्वयंसेवक जागेवरच एक पानाचा साधा रेझ्युमे तयार करून देतील.' },
       { q: 'ऑनलाइन नोंदणीशिवाय येऊ शकतो का?', a: 'हो, थेट येऊ शकता. पण ऑनलाइन नोंदणी केल्यास कंपन्या तुमचा रेझ्युमे आधीच पाहतात आणि मुलाखत लवकर होते.' },
       { q: 'मदतीसाठी कोणाला फोन करावा?', a: 'सकाळी ९:०० ते सायंकाळी ६:०० या वेळेत ' + JOBFAIR_PHONE + ' या क्रमांकावर फोन किंवा WhatsApp करा.' },
     ],
