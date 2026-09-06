@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { JOBFAIR_ENDPOINT, JOBFAIR_KEY, JOBFAIR_WA } from '../content/jobfair.js'
 import { Arrow, Wa } from './Icons.jsx'
 
@@ -146,25 +146,16 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
                 {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
               </select>
             ) : f.type === 'multi' ? (
-              <div id={`${kind}-${f.name}`} role="group" aria-label={f.label}>
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {f.options.map((o) => {
-                    const on = (picked[f.name] || []).includes(o)
-                    return (
-                      <label key={o}
-                        className={`flex cursor-pointer items-start gap-2.5 rounded-[4px] border px-3 py-2.5 text-[.94rem] leading-snug transition ${on ? 'border-clay bg-clay/10 text-ink' : 'border-sand bg-paper text-ink-2 hover:border-clay/60'}`}>
-                        <input type="checkbox" checked={on} onChange={() => togglePick(f.name, o)}
-                          className="mt-[.15rem] h-4 w-4 shrink-0 rounded-[2px] border-sand"
-                          style={{ accentColor: '#F26A1B' }} />
-                        <span>{o}</span>
-                      </label>
-                    )
-                  })}
-                </div>
-                <p className={`mt-2 text-[.82rem] ${multiError ? 'font-semibold text-clay-deep' : 'text-ink-2/75'}`}>
-                  {multiError || copy.multiHint || f.ph}
-                </p>
-              </div>
+              <MultiDropdown
+                id={`${kind}-${f.name}`}
+                label={f.label}
+                placeholder={f.ph}
+                options={f.options}
+                selected={picked[f.name] || []}
+                onToggle={(v) => togglePick(f.name, v)}
+                error={multiError}
+                hint={copy.multiHint}
+              />
             ) : (
               <input id={`${kind}-${f.name}`} name={f.name} type={f.type || 'text'} required={f.req}
                 placeholder={f.ph} inputMode={f.inputMode} pattern={f.pattern} className={cls} />
@@ -216,5 +207,75 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
         </div>
       )}
     </form>
+  )
+}
+
+/* ---------------------------------------------------------------------------
+   MultiDropdown
+   A compact, keyboard friendly dropdown that lets a recruiter tick more than
+   one option. Behaves like a native select trigger: click to open, tap outside
+   to close, Escape to close. Selected values show as small chips in the
+   trigger so the choice stays visible when it is closed.
+--------------------------------------------------------------------------- */
+function MultiDropdown({ id, label, placeholder, options, selected, onToggle, error, hint }) {
+  const [open, setOpen] = useState(false)
+  const wrap = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const away = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false) }
+    const key = (e) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', away)
+    document.addEventListener('keydown', key)
+    return () => { document.removeEventListener('mousedown', away); document.removeEventListener('keydown', key) }
+  }, [open])
+
+  const count = selected.length
+  return (
+    <div id={id} ref={wrap} className="relative">
+      <button type="button" onClick={() => setOpen((v) => !v)} aria-haspopup="listbox" aria-expanded={open}
+        className={`flex w-full items-center justify-between gap-3 rounded-[4px] border bg-paper px-4 py-3 text-left text-[1rem] outline-none transition ${open ? 'border-clay' : 'border-sand hover:border-clay/60'}`}>
+        <span className={`min-w-0 flex-1 truncate ${count ? 'text-ink' : 'text-ink-2/70'}`}>
+          {count === 0 ? placeholder : count === 1 ? selected[0] : `${count} selected`}
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" className={`shrink-0 transition ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {count > 0 && (
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          {selected.map((s) => (
+            <span key={s} className="inline-flex items-center gap-1.5 rounded-full bg-clay/10 px-2.5 py-1 text-[.82rem] font-medium text-clay-deep">
+              {s}
+              <button type="button" onClick={() => onToggle(s)} aria-label={`Remove ${s}`}
+                className="grid h-4 w-4 place-items-center rounded-full text-clay-deep/80 hover:bg-clay/20 hover:text-clay-deep">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 6l12 12M18 6l-12 12" /></svg>
+              </button>
+            </span>
+          ))}
+        </div>
+      )}
+
+      {open && (
+        <div role="listbox" aria-label={label}
+          className="absolute z-30 mt-2 max-h-72 w-full overflow-auto rounded-[6px] border border-sand bg-paper p-1 shadow-soft">
+          {options.map((o) => {
+            const on = selected.includes(o)
+            return (
+              <button key={o} type="button" role="option" aria-selected={on} onClick={() => onToggle(o)}
+                className={`flex w-full items-center gap-3 rounded-[4px] px-3 py-2.5 text-left text-[.95rem] leading-snug transition ${on ? 'bg-clay/10 text-ink' : 'text-ink-2 hover:bg-paper2'}`}>
+                <span className={`grid h-4 w-4 shrink-0 place-items-center rounded-[3px] border ${on ? 'border-clay bg-clay text-white' : 'border-sand bg-paper'}`}>
+                  {on && <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>}
+                </span>
+                <span>{o}</span>
+              </button>
+            )
+          })}
+        </div>
+      )}
+
+      <p className={`mt-2 text-[.82rem] ${error ? 'font-semibold text-clay-deep' : 'text-ink-2/75'}`}>{error || hint || placeholder}</p>
+    </div>
   )
 }
