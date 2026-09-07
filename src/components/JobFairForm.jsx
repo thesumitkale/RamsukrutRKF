@@ -150,9 +150,9 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     <form ref={formRef} onSubmit={submit} className="rounded-[8px] border border-sand bg-paper p-6 shadow-soft md:p-8">
       <h3 className="font-display text-[1.3rem] font-bold text-ink">{copy.heading}</h3>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2">
+      <div className="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2">
         {fields.map((f) => (
-          <div key={f.name} className={f.full ? 'sm:col-span-2' : ''}>
+          <div key={f.name} className={`min-w-0 ${f.full ? 'sm:col-span-2' : ''}`}>
             <label htmlFor={`${kind}-${f.name}`} className="mb-1.5 block font-sans text-[.76rem] font-semibold uppercase tracking-wide text-ink-2">
               {f.label}{f.req && <span className="text-clay"> *</span>}
             </label>

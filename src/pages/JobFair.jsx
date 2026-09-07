@@ -61,10 +61,25 @@ export default function JobFair() {
     }
   }, [v])
 
+  /* Two ways to arrive straight at the form.
+     1. /#/job-fair#register, used by the hero buttons.
+     2. ?form=candidate or ?form=corporate, used by the printed QR codes so a
+        scan opens the right form already in view instead of the hero. The jump
+        is instant rather than smooth, because someone who just scanned a poster
+        should see the first field immediately. */
   useEffect(() => {
-    if (window.location.hash.split('#')[2] === 'register') {
-      setTimeout(() => document.getElementById('register')?.scrollIntoView({ behavior: 'smooth' }), 220)
-    }
+    let want = null
+    if (window.location.hash.split('#')[2] === 'register') want = 'smooth'
+    let which = null
+    try {
+      const f = new URLSearchParams(window.location.search).get('form')
+      if (f === 'candidate' || f === 'corporate') { which = f; want = 'auto' }
+    } catch { /* ignore malformed URLs */ }
+    if (!want) return
+    if (which) setTab(which)
+    setTimeout(() => {
+      document.getElementById('register')?.scrollIntoView({ behavior: want, block: 'start' })
+    }, 260)
   }, [])
 
   return (
