@@ -12,10 +12,22 @@ import { Arrow, Wa } from './Icons.jsx'
 --------------------------------------------------------------------------- */
 function readSource() {
   try {
-    const tag = new URLSearchParams(window.location.search).get('src')
+    const p = new URLSearchParams(window.location.search)
+    /* s is the short form used by printed QR codes, where every character
+       removed from the URL makes the printed pattern coarser and easier to
+       scan. src stays supported for links shared by hand. */
+    const tag = p.get('s') || p.get('src')
     if (tag) {
       const safe = tag.trim().slice(0, 40).replace(/[^a-zA-Z0-9_-]/g, '')
-      if (safe) return safe
+      /* Printed codes use very short tags to keep the pattern coarse. They are
+         expanded here so the sheet reads plainly instead of showing wa or rec. */
+      const friendly = {
+        poster: 'qr-poster',
+        clg: 'qr-college',
+        wa: 'qr-whatsapp',
+        rec: 'qr-recruiter',
+      }
+      if (safe) return friendly[safe] || safe
     }
   } catch { /* ignore malformed URLs and fall through */ }
   return 'ramsukrut.com/#/job-fair'

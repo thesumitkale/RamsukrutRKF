@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Mukta:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --forest: #0C3B39;
+    --forest-2: #0A302E;
+    --clay: #F26A1B;
+    --clay-deep: #D4530B;
+    --gold: #FFC42E;
+    --paper: #FBF7EE;
+    --ink: #10221F;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #555; }
+
+  .sheet {
+    position: relative;
+    width: 1080px;
+    height: 1527px;
+    overflow: hidden;
+    background: linear-gradient(158deg, #0E4A47 0%, #0A302E 100%);
+    color: #fff;
+    font-family: Inter, Mukta, sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 62px 70px 54px;
+  }
+
+  /* Soft light bloom behind the headline, keeps the flat colour from looking dead. */
+  .glow {
+    position: absolute;
+    width: 900px; height: 900px;
+    top: -320px; right: -300px;
+    background: radial-gradient(circle, rgba(16,182,172,.30) 0%, rgba(16,182,172,0) 62%);
+    pointer-events: none;
+  }
+  .glow-2 {
+    position: absolute;
+    width: 760px; height: 760px;
+    bottom: -340px; left: -280px;
+    background: radial-gradient(circle, rgba(242,106,27,.26) 0%, rgba(242,106,27,0) 64%);
+    pointer-events: none;
+  }
+  .rule {
+    position: absolute; left: 0; right: 0; top: 0; height: 10px;
+    background: linear-gradient(90deg, var(--clay) 0%, var(--gold) 52%, #10B6AC 100%);
+  }
+
+  header { position: relative; display: flex; align-items: center; justify-content: space-between; }
+  .logo { height: 74px; width: auto; display: block; }
+  .free {
+    font-family: Poppins, sans-serif;
+    font-size: 19px; font-weight: 700;
+    letter-spacing: .13em; text-transform: uppercase;
+    color: var(--ink);
+    background: linear-gradient(135deg, #FFD968, #FFC42E);
+    padding: 13px 24px; border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .eyebrow {
+    position: relative;
+    margin-top: 46px;
+    font-family: Poppins, sans-serif;
+    font-size: 24px; font-weight: 700;
+    letter-spacing: .19em; text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  h1 {
+    position: relative;
+    margin-top: 20px;
+    font-family: Poppins, sans-serif;
+    font-size: 92px; font-weight: 800;
+    line-height: .94; letter-spacing: -.028em;
+  }
+  h1 .accent {
+    background: linear-gradient(120deg, #FFD968, #FFC42E);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .mr {
+    position: relative;
+    margin-top: 16px;
+    font-family: Mukta, sans-serif;
+    font-size: 40px; font-weight: 600;
+    color: rgba(255,255,255,.94);
+    line-height: 1.28;
+  }
+  .lede {
+    position: relative;
+    margin-top: 16px;
+    font-size: 25px; line-height: 1.46; font-weight: 400;
+    color: rgba(255,255,255,.84);
+    max-width: 780px;
+  }
+
+  /* Facts strip */
+  .facts {
+    position: relative;
+    margin-top: 22px;
+    display: flex; gap: 0;
+    border-top: 1px solid rgba(255,255,255,.20);
+    border-bottom: 1px solid rgba(255,255,255,.20);
+    padding: 22px 0;
+  }
+  .fact { flex: 1 1 0; min-width: 0; padding-right: 26px; }
+  .fact + .fact { padding-left: 26px; border-left: 1px solid rgba(255,255,255,.20); }
+  .fact .k {
+    font-family: Poppins, sans-serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: .17em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .fact .val {
+    margin-top: 10px;
+    font-family: Poppins, sans-serif;
+    font-size: 26px; font-weight: 700; line-height: 1.2;
+    color: #fff;
+  }
+  .fact .val small { display: block; font-size: 19px; font-weight: 500; color: rgba(255,255,255,.78); margin-top: 5px; }
+
+  /* Roles strip. Fills the space between the facts and the scan card with
+     something a reader actually wants, rather than empty background. */
+  .roles { position: relative; margin-top: 20px; margin-bottom: 14px; }
+  .roles .k {
+    font-family: Poppins, sans-serif;
+    font-size: 16px; font-weight: 700;
+    letter-spacing: .17em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .chips { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 11px; }
+  .chips span {
+    border: 1px solid rgba(255,255,255,.26);
+    background: rgba(255,255,255,.07);
+    border-radius: 999px;
+    padding: 9px 19px;
+    font-size: 20px; font-weight: 500;
+    color: rgba(255,255,255,.93);
+  }
+
+  /* Scan block */
+  .scan {
+    position: relative;
+    margin-top: auto;
+    display: flex; align-items: center; gap: 34px;
+    background: rgba(255,255,255,.065);
+    border: 1px solid rgba(255,255,255,.17);
+    border-radius: 22px;
+    padding: 26px 32px;
+  }
+  .qr-card {
+    background: #fff; border-radius: 16px;
+    padding: 16px; flex: 0 0 auto;
+    box-shadow: 0 20px 50px -22px rgba(0,0,0,.55);
+  }
+  .qr-card img { width: 300px; height: 300px; display: block; }
+  .scan-copy { min-width: 0; }
+  .scan-copy .big {
+    font-family: Poppins, sans-serif;
+    font-size: 44px; font-weight: 800; line-height: 1.04;
+    letter-spacing: -.02em;
+  }
+  .scan-copy .sub {
+    margin-top: 12px;
+    font-size: 23px; line-height: 1.42; color: rgba(255,255,255,.85);
+  }
+  .scan-copy .mr-sm {
+    margin-top: 8px;
+    font-family: Mukta, sans-serif;
+    font-size: 25px; font-weight: 500; color: var(--gold);
+  }
+  .url {
+    display: inline-block; margin-top: 16px;
+    font-family: Poppins, sans-serif;
+    font-size: 21px; font-weight: 700; letter-spacing: .01em;
+    color: var(--ink);
+    background: linear-gradient(135deg, var(--clay), var(--clay-deep));
+    color: #fff;
+    padding: 11px 24px; border-radius: 999px;
+  }
+
+  footer {
+    position: relative;
+    margin-top: 26px;
+    display: flex; align-items: flex-end; justify-content: space-between; gap: 30px;
+    font-size: 20px; line-height: 1.4; color: rgba(255,255,255,.80);
+  }
+  footer .org { font-family: Poppins, sans-serif; font-weight: 600; color: #fff; }
+  footer .ph { font-family: Poppins, sans-serif; font-weight: 700; color: var(--gold); font-size: 23px; white-space: nowrap; }
+</style>
+</head>
+<body>
+  <div class="sheet" id="sheet">
+    <div class="rule"></div>
+    <div class="glow"></div>
+    <div class="glow-2"></div>
+
+    <header>
+      <img class="logo" src="logo-light.png" alt="Ramsukrut" />
+      <span class="free">Hiring desks open</span>
+    </header>
+
+    <div class="eyebrow">Ramsukrut Job Fair 2026</div>
+    <h1>Hire in<br /><span class="accent">one day.</span><br />Book a desk.</h1>
+    <div class="mr">रामसुकृत रोजगार मेळावा 2026. आजच डेस्क बुक करा.</div>
+
+    <p class="lede">Meet screened local candidates at your own desk. Interview, shortlist and offer on the same day, at no cost.</p>
+
+    <div class="facts">
+      <div class="fact">
+        <div class="k">Date</div>
+        <div class="val">29 September 2026<small>Tuesday</small></div>
+      </div>
+      <div class="fact">
+        <div class="k">Timing</div>
+        <div class="val">9 AM to 5 PM<small>Reporting 9 AM sharp</small></div>
+      </div>
+      <div class="fact">
+        <div class="k">Your cost</div>
+        <div class="val">No charge<small>Desk and setup included</small></div>
+      </div>
+    </div>
+
+    <div class="roles">
+      <div class="k">Candidates across</div>
+      <div class="chips">
+        <span>IT &amp; Software</span>
+        <span>Sales &amp; Marketing</span>
+        <span>Accounts &amp; Finance</span>
+        <span>Manufacturing &amp; Production</span>
+        <span>Logistics &amp; Warehouse</span>
+        <span>Office Staff</span>
+        <span>Supervisors &amp; Team Leads</span>
+        <span>General Staff</span>
+      </div>
+    </div>
+
+    <div class="scan">
+      <div class="qr-card"><img src="qr-rec.png" alt="Scan to book a hiring desk" /></div>
+      <div class="scan-copy">
+        <div class="big">Book a desk</div>
+        <div class="sub">Opens the recruiter form straight away. Our team confirms within two working days.</div>
+        <div class="mr-sm">डेस्क बुक करण्यासाठी स्कॅन करा.</div>
+        <span class="url">ramsukrut.com</span>
+      </div>
+    </div>
+
+    <footer>
+      <div class="org">Shreemant Maharaj Fattesingrao Gaikwad Mahavidyalay, Dawadi, Tal. Khed, Dist. Pune</div>
+      <div class="ph">+91 72774 04040</div>
+    </footer>
+  </div>
+
+<script>
+  /* The sheet is authored at 1080 wide. A print run needs the same layout at a
+     larger pixel size, so zoom scales the whole thing crisply rather than
+     upscaling a bitmap. Pass ?scale=2.2963 for A4 at 300 dpi. */
+  const s = new URLSearchParams(location.search).get('scale');
+  if (s) document.getElementById('sheet').style.zoom = s;
+</script>
+</body>
+</html>

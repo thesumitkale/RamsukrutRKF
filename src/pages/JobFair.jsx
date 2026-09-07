@@ -72,8 +72,11 @@ export default function JobFair() {
     if (window.location.hash.split('#')[2] === 'register') want = 'smooth'
     let which = null
     try {
-      const f = new URLSearchParams(window.location.search).get('form')
-      if (f === 'candidate' || f === 'corporate') { which = f; want = 'auto' }
+      const p = new URLSearchParams(window.location.search)
+      /* f=c and f=co are the short forms carried by printed QR codes. */
+      const raw = p.get('form') || p.get('f')
+      const map = { candidate: 'candidate', c: 'candidate', corporate: 'corporate', co: 'corporate' }
+      if (map[raw]) { which = map[raw]; want = 'auto' }
     } catch { /* ignore malformed URLs */ }
     if (!want) return
     if (which) setTab(which)
