@@ -3,6 +3,26 @@ import { JOBFAIR_ENDPOINT, JOBFAIR_KEY, JOBFAIR_WA } from '../content/jobfair.js
 import { Arrow, Wa } from './Icons.jsx'
 
 /* ---------------------------------------------------------------------------
+   readSource
+   Tags where a submission came from so printed posters, WhatsApp forwards and
+   direct visits can be told apart in the sheet. A visitor arriving from a QR
+   poster lands on a URL like ramsukrut.com/?src=qr-poster#/job-fair and the
+   tag is carried into the row. Falls back to the plain page when no tag is
+   present, and the value is sanitised so nothing odd reaches the database.
+--------------------------------------------------------------------------- */
+function readSource() {
+  try {
+    const tag = new URLSearchParams(window.location.search).get('src')
+    if (tag) {
+      const safe = tag.trim().slice(0, 40).replace(/[^a-zA-Z0-9_-]/g, '')
+      if (safe) return safe
+    }
+  } catch { /* ignore malformed URLs and fall through */ }
+  return 'ramsukrut.com/#/job-fair'
+}
+
+
+/* ---------------------------------------------------------------------------
    The registration form used twice on the Job Fair page: once for candidates,
    once for recruiting companies.
 
@@ -103,7 +123,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       const payload = new FormData()
       payload.append('kind', kind)
       payload.append('lang', lang)
-      payload.append('source', 'ramsukrut.com/#/job-fair')
+      payload.append('source', readSource())
       Object.entries(values).forEach(([k, v]) => payload.append(k, v))
       if (kind === 'corporate') payload.append('contact_name', values.name || '')
 
