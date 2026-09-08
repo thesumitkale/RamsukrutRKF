@@ -66,69 +66,9 @@ const QUALIF_MR = [
   'इतर',
 ]
 
-/* Talukas of Pune district, per the district administration list at pune.gov.in.
-   The four talukas of the Khed subdivision come first because the venue sits in
-   Khed and most candidates travel from there. The rest follow alphabetically. */
-const TALUKA_EN = [
-  'Khed',
-  'Ambegaon',
-  'Junnar',
-  'Shirur',
-  'Baramati',
-  'Bhor',
-  'Daund',
-  'Haveli',
-  'Indapur',
-  'Loni Kalbhor',
-  'Maval',
-  'Mulshi',
-  'Pimpri-Chinchwad',
-  'Pune City',
-  'Purandar',
-  'Velha',
-  'Other',
-]
-const TALUKA_MR = [
-  'खेड',
-  'आंबेगाव',
-  'जुन्नर',
-  'शिरूर',
-  'बारामती',
-  'भोर',
-  'दौंड',
-  'हवेली',
-  'इंदापूर',
-  'लोणी काळभोर',
-  'मावळ',
-  'मुळशी',
-  'पिंपरी चिंचवड',
-  'पुणे शहर',
-  'पुरंदर',
-  'वेल्हा',
-  'इतर',
-]
-
-/* Pune plus the six districts that border it, then Other. */
-const DISTRICT_EN = [
-  'Pune',
-  'Ahilyanagar (Ahmednagar)',
-  'Nashik',
-  'Thane',
-  'Raigad',
-  'Satara',
-  'Solapur',
-  'Other',
-]
-const DISTRICT_MR = [
-  'पुणे',
-  'अहिल्यानगर (अहमदनगर)',
-  'नाशिक',
-  'ठाणे',
-  'रायगड',
-  'सातारा',
-  'सोलापूर',
-  'इतर',
-]
+/* Every district and taluka of Maharashtra now lives in one place, with both
+   scripts on each entry, so the searchable dropdowns below can match Marathi
+   or Latin typing. See src/content/maharashtra.js. */
 
 /* Recruiter dropdowns: headcount bands, salary bands and hiring departments */
 const POS_EN = ['1 to 5', '6 to 10', '11 to 25', '26 to 50', '51 to 100', 'More than 100']
@@ -216,14 +156,21 @@ export const jobfair = {
         name: 'Your name as on Aadhaar', mobile: '10 digit mobile number', email: 'you@example.com',
         department: 'Select a department', qualification: 'Select your qualification',
         experience: 'Select your experience',
-        village: 'e.g. Dawadi', taluka: 'Select your taluka', district: 'Select your district',
+        village: 'e.g. Dawadi', taluka: 'Search your taluka', district: 'Search your district',
         talukaOther: 'Type your taluka', districtOther: 'Type your district',
       },
       departments: DEPTS_EN,
       qualifications: QUALIF_EN,
       experiences: EXP_EN,
-      talukas: TALUKA_EN,
-      districts: DISTRICT_EN,
+      /* Copy for the searchable district and taluka dropdowns */
+      search: {
+        ph: 'Type to search',
+        empty: 'No match. Pick Other and type the name.',
+        other: 'Other',
+        lockedTaluka: 'Choose your district first',
+        required: 'Please choose your district and taluka.',
+        count: (n) => `${n} options`,
+      },
     },
 
     corporate: {
@@ -337,14 +284,20 @@ export const jobfair = {
         name: 'आधारवरील नाव', mobile: '१० अंकी मोबाइल क्रमांक', email: 'you@example.com',
         department: 'विभाग निवडा', qualification: 'शिक्षण निवडा',
         experience: 'अनुभव निवडा',
-        village: 'उदा. दावडी', taluka: 'तालुका निवडा', district: 'जिल्हा निवडा',
+        village: 'उदा. दावडी', taluka: 'तालुका शोधा', district: 'जिल्हा शोधा',
         talukaOther: 'तालुका लिहा', districtOther: 'जिल्हा लिहा',
       },
       departments: DEPTS_MR,
       qualifications: QUALIF_MR,
       experiences: EXP_MR,
-      talukas: TALUKA_MR,
-      districts: DISTRICT_MR,
+      search: {
+        ph: 'शोधण्यासाठी लिहा',
+        empty: 'जुळणी नाही. इतर निवडून नाव लिहा.',
+        other: 'इतर',
+        lockedTaluka: 'आधी जिल्हा निवडा',
+        required: 'कृपया जिल्हा आणि तालुका निवडा.',
+        count: (n) => `${n} पर्याय`,
+      },
     },
 
     corporate: {

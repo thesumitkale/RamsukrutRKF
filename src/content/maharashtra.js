@@ -1,0 +1,585 @@
+/* ---------------------------------------------------------------------------
+   Maharashtra districts and talukas
+
+   All 36 districts and all 358 talukas of Maharashtra, in English and Marathi.
+   District-wise taluka lists follow the state's official district-wise taluka
+   record; Pune also carries Loni Kalbhor and Pimpri-Chinchwad, which the Pune
+   district administration lists separately.
+
+   Order is deliberate rather than alphabetical at the top: Pune comes first
+   because the venue is in Khed, then the six districts that border Pune, then
+   the rest of the state alphabetically. Inside Pune the four talukas of the
+   Khed subdivision lead. Everything else is alphabetical by English name.
+
+   Districts renamed by the state carry the former name in brackets so a
+   candidate searching either spelling finds the entry. Each taluka holds both
+   scripts, so the search box matches whether a candidate types Marathi or
+   Latin characters, whichever language the page is in.
+--------------------------------------------------------------------------- */
+export const MH = [
+  {
+    en: "Pune", mr: "पुणे",
+    talukas: [
+      { en: "Khed", mr: "खेड" },
+      { en: "Ambegaon", mr: "आंबेगाव" },
+      { en: "Junnar", mr: "जुन्नर" },
+      { en: "Shirur", mr: "शिरूर" },
+      { en: "Baramati", mr: "बारामती" },
+      { en: "Bhor", mr: "भोर" },
+      { en: "Daund", mr: "दौंड" },
+      { en: "Haveli", mr: "हवेली" },
+      { en: "Indapur", mr: "इंदापूर" },
+      { en: "Loni Kalbhor", mr: "लोणी काळभोर" },
+      { en: "Maval", mr: "मावळ" },
+      { en: "Mulshi", mr: "मुळशी" },
+      { en: "Pimpri-Chinchwad", mr: "पिंपरी चिंचवड" },
+      { en: "Pune City", mr: "पुणे शहर" },
+      { en: "Purandar (Saswad)", mr: "पुरंदर" },
+      { en: "Velha (Rajgad)", mr: "राजगड" },
+    ],
+  },
+  {
+    en: "Ahilyanagar (Ahmednagar)", mr: "अहिल्यानगर (अहमदनगर)",
+    talukas: [
+      { en: "Akole", mr: "अकोले" },
+      { en: "Jamkhed", mr: "जामखेड" },
+      { en: "Karjat", mr: "कर्जत" },
+      { en: "Kopargaon", mr: "कोपरगाव" },
+      { en: "Nagar", mr: "नगर" },
+      { en: "Nevasa", mr: "नेवासा" },
+      { en: "Parner", mr: "पारनेर" },
+      { en: "Pathardi", mr: "पाथर्डी" },
+      { en: "Rahata", mr: "राहाता" },
+      { en: "Rahuri", mr: "राहुरी" },
+      { en: "Sangamner", mr: "संगमनेर" },
+      { en: "Shevgaon", mr: "शेवगाव" },
+      { en: "Shrigonda", mr: "श्रीगोंदा" },
+      { en: "Shrirampur", mr: "श्रीरामपूर" },
+    ],
+  },
+  {
+    en: "Nashik", mr: "नाशिक",
+    talukas: [
+      { en: "Baglan (Satana)", mr: "सटाणा" },
+      { en: "Chandwad", mr: "चांदवड" },
+      { en: "Deola", mr: "देवळा" },
+      { en: "Dindori", mr: "दिंडोरी" },
+      { en: "Igatpuri", mr: "इगतपुरी" },
+      { en: "Kalwan", mr: "कळवण" },
+      { en: "Malegaon", mr: "मालेगाव" },
+      { en: "Nandgaon", mr: "नांदगाव" },
+      { en: "Nashik", mr: "नाशिक" },
+      { en: "Niphad", mr: "निफाड" },
+      { en: "Peth", mr: "पेठ" },
+      { en: "Sinnar", mr: "सिन्नर" },
+      { en: "Surgana", mr: "सुरगाणा" },
+      { en: "Trimbakeshwar", mr: "त्र्यंबकेश्वर" },
+      { en: "Yeola", mr: "येवला" },
+    ],
+  },
+  {
+    en: "Thane", mr: "ठाणे",
+    talukas: [
+      { en: "Ambarnath", mr: "अंबरनाथ" },
+      { en: "Bhiwandi", mr: "भिवंडी" },
+      { en: "Kalyan", mr: "कल्याण" },
+      { en: "Murbad", mr: "मुरबाड" },
+      { en: "Shahapur", mr: "शहापूर" },
+      { en: "Thane", mr: "ठाणे" },
+      { en: "Ulhasnagar", mr: "उल्हासनगर" },
+    ],
+  },
+  {
+    en: "Raigad", mr: "रायगड",
+    talukas: [
+      { en: "Alibag", mr: "अलिबाग" },
+      { en: "Karjat", mr: "कर्जत" },
+      { en: "Khalapur", mr: "खालापूर" },
+      { en: "Mahad", mr: "महाड" },
+      { en: "Mangaon", mr: "माणगाव" },
+      { en: "Mhasala", mr: "म्हसळा" },
+      { en: "Murud", mr: "मुरूड" },
+      { en: "Panvel", mr: "पनवेल" },
+      { en: "Pen", mr: "पेण" },
+      { en: "Poladpur", mr: "पोलादपूर" },
+      { en: "Roha", mr: "रोहा" },
+      { en: "Shrivardhan", mr: "श्रीवर्धन" },
+      { en: "Sudhagad-Pali", mr: "सुधागड" },
+      { en: "Tala", mr: "तळा" },
+      { en: "Uran", mr: "उरण" },
+    ],
+  },
+  {
+    en: "Satara", mr: "सातारा",
+    talukas: [
+      { en: "Jaoli", mr: "जावळी" },
+      { en: "Karad", mr: "कराड" },
+      { en: "Khandala", mr: "खंडाळा" },
+      { en: "Khatav", mr: "खटाव" },
+      { en: "Koregaon", mr: "कोरेगाव" },
+      { en: "Maan", mr: "माण" },
+      { en: "Mahabaleshwar", mr: "महाबळेश्वर" },
+      { en: "Patan", mr: "पाटण" },
+      { en: "Phaltan", mr: "फलटण" },
+      { en: "Satara", mr: "सातारा" },
+      { en: "Wai", mr: "वाई" },
+    ],
+  },
+  {
+    en: "Solapur", mr: "सोलापूर",
+    talukas: [
+      { en: "Akkalkot", mr: "अक्कलकोट" },
+      { en: "Barshi", mr: "बार्शी" },
+      { en: "Karmala", mr: "करमाळा" },
+      { en: "Madha", mr: "माढा" },
+      { en: "Malshiras", mr: "माळशिरस" },
+      { en: "Mangalvedhe", mr: "मंगळवेढा" },
+      { en: "Mohol", mr: "मोहोळ" },
+      { en: "Pandharpur", mr: "पंढरपूर" },
+      { en: "Sangole", mr: "सांगोला" },
+      { en: "Solapur North", mr: "सोलापूर उत्तर" },
+      { en: "Solapur South", mr: "सोलापूर दक्षिण" },
+    ],
+  },
+  {
+    en: "Akola", mr: "अकोला",
+    talukas: [
+      { en: "Akola", mr: "अकोला" },
+      { en: "Akot", mr: "अकोट" },
+      { en: "Balapur", mr: "बाळापूर" },
+      { en: "Barshitakli", mr: "बार्शीटाकळी" },
+      { en: "Murtajapur", mr: "मुर्तिजापूर" },
+      { en: "Patur", mr: "पातूर" },
+      { en: "Telhara", mr: "तेल्हारा" },
+    ],
+  },
+  {
+    en: "Amravati", mr: "अमरावती",
+    talukas: [
+      { en: "Achalpur", mr: "अचलपूर" },
+      { en: "Amravati", mr: "अमरावती" },
+      { en: "Anjangaon-Surji", mr: "अंजनगाव सुर्जी" },
+      { en: "Bhatkuli", mr: "भातकुली" },
+      { en: "Chandur Bazar", mr: "चांदुर बाजार" },
+      { en: "Chandur Railway", mr: "चांदुर रेल्वे" },
+      { en: "Chikhaldara", mr: "चिखलदरा" },
+      { en: "Daryapur", mr: "दर्यापूर" },
+      { en: "Dhamangaon Railway", mr: "धामणगाव रेल्वे" },
+      { en: "Dharni", mr: "धारणी" },
+      { en: "Morshi", mr: "मोर्शी" },
+      { en: "Nandgaon Khandeshwar", mr: "नांदगाव खंडेश्वर" },
+      { en: "Tiwsa", mr: "तिवसा" },
+      { en: "Warud", mr: "वरुड" },
+    ],
+  },
+  {
+    en: "Beed", mr: "बीड",
+    talukas: [
+      { en: "Ambajogai", mr: "अंबेजोगाई" },
+      { en: "Ashti", mr: "आष्टी" },
+      { en: "Beed", mr: "बीड" },
+      { en: "Dharur", mr: "धारूर" },
+      { en: "Georai", mr: "गेवराई" },
+      { en: "Kaij", mr: "केज" },
+      { en: "Majalgaon", mr: "माजलगाव" },
+      { en: "Parli Vaijnath", mr: "परळी वैजनाथ" },
+      { en: "Patoda", mr: "पाटोदा" },
+      { en: "Shirur-Kasar", mr: "शिरूर" },
+      { en: "Wadwani", mr: "वडवणी" },
+    ],
+  },
+  {
+    en: "Bhandara", mr: "भंडारा",
+    talukas: [
+      { en: "Bhandara", mr: "भंडारा" },
+      { en: "Lakhandur", mr: "लाखांदूर" },
+      { en: "Lakhani", mr: "लाखनी" },
+      { en: "Mohadi", mr: "मोहाडी" },
+      { en: "Pauni", mr: "पवनी" },
+      { en: "Sakoli", mr: "साकोली" },
+      { en: "Tumsar", mr: "तुमसर" },
+    ],
+  },
+  {
+    en: "Buldhana", mr: "बुलढाणा",
+    talukas: [
+      { en: "Buldhana", mr: "बुलढाणा" },
+      { en: "Chikhli", mr: "चिखली" },
+      { en: "Deulgaon Raja", mr: "देउळगाव राजा" },
+      { en: "Jalgaon Jamod", mr: "जळगाव जामोद" },
+      { en: "Khamgaon", mr: "खामगाव" },
+      { en: "Lonar", mr: "लोणार" },
+      { en: "Malkapur", mr: "मलकापूर" },
+      { en: "Mehkar", mr: "मेहकर" },
+      { en: "Motala", mr: "मोताळा" },
+      { en: "Nandura", mr: "नांदुरा" },
+      { en: "Sangrampur", mr: "संग्रामपूर" },
+      { en: "Shegaon", mr: "शेगाव" },
+      { en: "Sindkhed Raja", mr: "सिंदखेड राजा" },
+    ],
+  },
+  {
+    en: "Chandrapur", mr: "चंद्रपूर",
+    talukas: [
+      { en: "Ballarpur", mr: "बल्लारपूर" },
+      { en: "Bhadravati", mr: "भद्रावती" },
+      { en: "Bramhapuri", mr: "ब्रह्मपुरी" },
+      { en: "Chandrapur", mr: "चंद्रपूर" },
+      { en: "Chimur", mr: "चिमूर" },
+      { en: "Gondpimpri", mr: "गोंडपिपरी" },
+      { en: "Jiwati", mr: "जिवती" },
+      { en: "Korpana", mr: "कोरपना" },
+      { en: "Mul", mr: "मूल" },
+      { en: "Nagbhid", mr: "नागभीड" },
+      { en: "Pombhurna", mr: "पोंभुर्णा" },
+      { en: "Rajura", mr: "राजुरा" },
+      { en: "Saoli", mr: "सावली" },
+      { en: "Sindewahi", mr: "सिंदेवाही" },
+      { en: "Warora", mr: "वरोरा" },
+    ],
+  },
+  {
+    en: "Chhatrapati Sambhajinagar (Aurangabad)", mr: "छत्रपती संभाजीनगर (औरंगाबाद)",
+    talukas: [
+      { en: "Chhatrapati Sambhajinagar", mr: "छत्रपती संभाजीनगर" },
+      { en: "Gangapur", mr: "गंगापूर" },
+      { en: "Kannad", mr: "कन्नड" },
+      { en: "Khuldabad", mr: "खुलताबाद" },
+      { en: "Paithan", mr: "पैठण" },
+      { en: "Phulambri", mr: "फुलंब्री" },
+      { en: "Sillod", mr: "सिल्लोड" },
+      { en: "Soegaon", mr: "सोयगाव" },
+      { en: "Vaijapur", mr: "वैजापूर" },
+    ],
+  },
+  {
+    en: "Dharashiv (Osmanabad)", mr: "धाराशिव (उस्मानाबाद)",
+    talukas: [
+      { en: "Bhum", mr: "भूम" },
+      { en: "Dharashiv", mr: "धाराशिव" },
+      { en: "Kalamb", mr: "कळंब" },
+      { en: "Lohara", mr: "लोहारा" },
+      { en: "Paranda", mr: "परांडा" },
+      { en: "Tuljapur", mr: "तुळजापूर" },
+      { en: "Umarga", mr: "उमरगा" },
+      { en: "Washi", mr: "वाशी" },
+    ],
+  },
+  {
+    en: "Dhule", mr: "धुळे",
+    talukas: [
+      { en: "Dhule", mr: "धुळे" },
+      { en: "Sakri", mr: "साक्री" },
+      { en: "Shirpur", mr: "शिरपूर" },
+      { en: "Sindkheda", mr: "शिंदखेडा" },
+    ],
+  },
+  {
+    en: "Gadchiroli", mr: "गडचिरोली",
+    talukas: [
+      { en: "Aheri", mr: "अहेरी" },
+      { en: "Armori", mr: "आरमोरी" },
+      { en: "Bhamragad", mr: "भामरागड" },
+      { en: "Chamorshi", mr: "चामोर्शी" },
+      { en: "Desaiganj (Wadsa)", mr: "देसाईगंज (वडसा)" },
+      { en: "Dhanora", mr: "धानोरा" },
+      { en: "Etapalli", mr: "एटापल्ली" },
+      { en: "Gadchiroli", mr: "गडचिरोली" },
+      { en: "Korchi", mr: "कोरची" },
+      { en: "Kurkheda", mr: "कुरखेडा" },
+      { en: "Mulchera", mr: "मुलचेरा" },
+      { en: "Sironcha", mr: "सिरोंचा" },
+    ],
+  },
+  {
+    en: "Gondia", mr: "गोंदिया",
+    talukas: [
+      { en: "Amgaon", mr: "आमगाव" },
+      { en: "Arjuni-Morgaon", mr: "अर्जुनी मोरगाव" },
+      { en: "Deori", mr: "देवरी" },
+      { en: "Gondia", mr: "गोंदिया" },
+      { en: "Goregaon", mr: "गोरेगाव" },
+      { en: "Sadak-Arjuni", mr: "सडक अर्जुनी" },
+      { en: "Salekasa", mr: "सालेकसा" },
+      { en: "Tiroda", mr: "तिरोडा" },
+    ],
+  },
+  {
+    en: "Hingoli", mr: "हिंगोली",
+    talukas: [
+      { en: "Aundha Nagnath", mr: "औंढा नागनाथ" },
+      { en: "Basmath (Vasmat)", mr: "वसमत" },
+      { en: "Hingoli", mr: "हिंगोली" },
+      { en: "Kalamnuri", mr: "कळमनुरी" },
+      { en: "Sengaon", mr: "सेनगाव" },
+    ],
+  },
+  {
+    en: "Jalgaon", mr: "जळगाव",
+    talukas: [
+      { en: "Amalner", mr: "अमळनेर" },
+      { en: "Bhadgaon", mr: "भडगाव" },
+      { en: "Bhusawal", mr: "भुसावळ" },
+      { en: "Bodwad", mr: "बोदवड" },
+      { en: "Chalisgaon", mr: "चाळीसगाव" },
+      { en: "Chopda", mr: "चोपडा" },
+      { en: "Dharangaon", mr: "धरणगाव" },
+      { en: "Erandol", mr: "एरंडोल" },
+      { en: "Jalgaon", mr: "जळगाव" },
+      { en: "Jamner", mr: "जामनेर" },
+      { en: "Muktainagar", mr: "मुक्ताईनगर" },
+      { en: "Pachora", mr: "पाचोरा" },
+      { en: "Parola", mr: "पारोळा" },
+      { en: "Raver", mr: "रावेर" },
+      { en: "Yawal", mr: "यावल" },
+    ],
+  },
+  {
+    en: "Jalna", mr: "जालना",
+    talukas: [
+      { en: "Ambad", mr: "अंबड" },
+      { en: "Badnapur", mr: "बदनापूर" },
+      { en: "Bhokardan", mr: "भोकरदन" },
+      { en: "Ghansawangi", mr: "घनसावंगी" },
+      { en: "Jafrabad", mr: "जाफ्राबाद" },
+      { en: "Jalna", mr: "जालना" },
+      { en: "Mantha", mr: "मंठा" },
+      { en: "Partur", mr: "परतूर" },
+    ],
+  },
+  {
+    en: "Kolhapur", mr: "कोल्हापूर",
+    talukas: [
+      { en: "Ajra", mr: "आजरा" },
+      { en: "Bhudargad", mr: "भुदरगड" },
+      { en: "Chandgad", mr: "चंदगड" },
+      { en: "Gadhinglaj", mr: "गडहिंग्लज" },
+      { en: "Gaganbawada", mr: "गगनबावडा" },
+      { en: "Hatkanangale", mr: "हातकणंगले" },
+      { en: "Kagal", mr: "कागल" },
+      { en: "Karvir", mr: "करवीर" },
+      { en: "Panhala", mr: "पन्हाळा" },
+      { en: "Radhanagari", mr: "राधानगरी" },
+      { en: "Shahuwadi", mr: "शाहूवाडी" },
+      { en: "Shirol", mr: "शिरोळ" },
+    ],
+  },
+  {
+    en: "Latur", mr: "लातूर",
+    talukas: [
+      { en: "Ahmedpur", mr: "अहमदपूर" },
+      { en: "Ausa", mr: "औसा" },
+      { en: "Chakur", mr: "चाकूर" },
+      { en: "Deoni", mr: "देवणी" },
+      { en: "Jalkot", mr: "जळकोट" },
+      { en: "Latur", mr: "लातूर" },
+      { en: "Nilanga", mr: "निलंगा" },
+      { en: "Renapur", mr: "रेणापूर" },
+      { en: "Shirur Anantpal", mr: "शिरूर अनंतपाळ" },
+      { en: "Udgir", mr: "उदगीर" },
+    ],
+  },
+  {
+    en: "Mumbai City", mr: "मुंबई शहर",
+    talukas: [
+      { en: "Mumbai City", mr: "मुंबई शहर" },
+    ],
+  },
+  {
+    en: "Mumbai Suburban", mr: "मुंबई उपनगर",
+    talukas: [
+      { en: "Andheri", mr: "अंधेरी" },
+      { en: "Borivali", mr: "बोरीवली" },
+      { en: "Kurla", mr: "कुर्ला" },
+    ],
+  },
+  {
+    en: "Nagpur", mr: "नागपूर",
+    talukas: [
+      { en: "Bhiwapur", mr: "भिवापूर" },
+      { en: "Hingna", mr: "हिंगणा" },
+      { en: "Kalameshwar", mr: "कळमेश्वर" },
+      { en: "Kamptee", mr: "कामठी" },
+      { en: "Katol", mr: "काटोल" },
+      { en: "Kuhi", mr: "कुही" },
+      { en: "Mouda", mr: "मौदा" },
+      { en: "Nagpur Rural", mr: "नागपूर ग्रामीण" },
+      { en: "Nagpur Urban", mr: "नागपूर शहर" },
+      { en: "Narkhed", mr: "नरखेड" },
+      { en: "Parseoni", mr: "पारशिवनी" },
+      { en: "Ramtek", mr: "रामटेक" },
+      { en: "Savner", mr: "सावनेर" },
+      { en: "Umred", mr: "उमरेड" },
+    ],
+  },
+  {
+    en: "Nanded", mr: "नांदेड",
+    talukas: [
+      { en: "Ardhapur", mr: "अर्धापूर" },
+      { en: "Bhokar", mr: "भोकर" },
+      { en: "Biloli", mr: "बिलोली" },
+      { en: "Deglur", mr: "देगलूर" },
+      { en: "Dharmabad", mr: "धर्माबाद" },
+      { en: "Hadgaon", mr: "हदगाव" },
+      { en: "Himayatnagar", mr: "हिमायतनगर" },
+      { en: "Kandhar", mr: "कंधार" },
+      { en: "Kinwat", mr: "किनवट" },
+      { en: "Loha", mr: "लोहा" },
+      { en: "Mahur", mr: "माहूर" },
+      { en: "Mudkhed", mr: "मुदखेड" },
+      { en: "Mukhed", mr: "मुखेड" },
+      { en: "Naigaon", mr: "नायगाव" },
+      { en: "Nanded", mr: "नांदेड" },
+      { en: "Umri", mr: "उमरी" },
+    ],
+  },
+  {
+    en: "Nandurbar", mr: "नंदुरबार",
+    talukas: [
+      { en: "Akkalkuwa", mr: "अक्कलकुवा" },
+      { en: "Akrani (Dhadgaon)", mr: "अक्राणी" },
+      { en: "Nandurbar", mr: "नंदुरबार" },
+      { en: "Navapur", mr: "नवापूर" },
+      { en: "Shahada", mr: "शहादा" },
+      { en: "Talode", mr: "तळोदे" },
+    ],
+  },
+  {
+    en: "Palghar", mr: "पालघर",
+    talukas: [
+      { en: "Dahanu", mr: "डहाणू" },
+      { en: "Jawhar", mr: "जव्हार" },
+      { en: "Mokhada", mr: "मोखाडा" },
+      { en: "Palghar", mr: "पालघर" },
+      { en: "Talasari", mr: "तलासरी" },
+      { en: "Vada", mr: "वाडा" },
+      { en: "Vasai", mr: "वसई" },
+      { en: "Vikramgad", mr: "विक्रमगड" },
+    ],
+  },
+  {
+    en: "Parbhani", mr: "परभणी",
+    talukas: [
+      { en: "Gangakhed", mr: "गंगाखेड" },
+      { en: "Jintur", mr: "जिंतूर" },
+      { en: "Manwath", mr: "मानवत" },
+      { en: "Palam", mr: "पालम" },
+      { en: "Parbhani", mr: "परभणी" },
+      { en: "Pathri", mr: "पाथरी" },
+      { en: "Purna", mr: "पूर्णा" },
+      { en: "Sailu", mr: "सेलू" },
+      { en: "Sonpeth", mr: "सोनपेठ" },
+    ],
+  },
+  {
+    en: "Ratnagiri", mr: "रत्नागिरी",
+    talukas: [
+      { en: "Chiplun", mr: "चिपळूण" },
+      { en: "Dapoli", mr: "दापोली" },
+      { en: "Guhagar", mr: "गुहागर" },
+      { en: "Khed", mr: "खेड" },
+      { en: "Lanja", mr: "लांजा" },
+      { en: "Mandangad", mr: "मंडणगड" },
+      { en: "Rajapur", mr: "राजापूर" },
+      { en: "Ratnagiri", mr: "रत्नागिरी" },
+      { en: "Sangameshwar", mr: "संगमेश्वर" },
+    ],
+  },
+  {
+    en: "Sangli", mr: "सांगली",
+    talukas: [
+      { en: "Atpadi", mr: "आटपाडी" },
+      { en: "Jat", mr: "जत" },
+      { en: "Kadegaon", mr: "कडेगाव" },
+      { en: "Kavathemahankal", mr: "कवठेमहांकाळ" },
+      { en: "Khanapur (Vita)", mr: "खानापूर (विटा)" },
+      { en: "Miraj", mr: "मिरज" },
+      { en: "Palus", mr: "पलुस" },
+      { en: "Shirala", mr: "शिराळा" },
+      { en: "Tasgaon", mr: "तासगाव" },
+      { en: "Walwa", mr: "वाळवा" },
+    ],
+  },
+  {
+    en: "Sindhudurg", mr: "सिंधुदुर्ग",
+    talukas: [
+      { en: "Devgad", mr: "देवगड" },
+      { en: "Dodamarg", mr: "दोडामार्ग" },
+      { en: "Kankavli", mr: "कणकवली" },
+      { en: "Kudal", mr: "कुडाळ" },
+      { en: "Malwan", mr: "मालवण" },
+      { en: "Sawantwadi", mr: "सावंतवाडी" },
+      { en: "Vaibhavwadi", mr: "वैभववाडी" },
+      { en: "Vengurla", mr: "वेंगुर्ला" },
+    ],
+  },
+  {
+    en: "Wardha", mr: "वर्धा",
+    talukas: [
+      { en: "Arvi", mr: "आर्वी" },
+      { en: "Ashti", mr: "आष्टी" },
+      { en: "Deoli", mr: "देवळी" },
+      { en: "Hinganghat", mr: "हिंगणघाट" },
+      { en: "Karanja Ghadge", mr: "कारंजा घाडगे" },
+      { en: "Samudrapur", mr: "समुद्रपूर" },
+      { en: "Seloo", mr: "सेलू" },
+      { en: "Wardha", mr: "वर्धा" },
+    ],
+  },
+  {
+    en: "Washim", mr: "वाशिम",
+    talukas: [
+      { en: "Karanja Lad", mr: "कारंजा लाड" },
+      { en: "Malegaon", mr: "मालेगाव" },
+      { en: "Mangrulpir", mr: "मंगरुळपीर" },
+      { en: "Manora", mr: "मानोरा" },
+      { en: "Risod", mr: "रिसोड" },
+      { en: "Washim", mr: "वाशिम" },
+    ],
+  },
+  {
+    en: "Yavatmal", mr: "यवतमाळ",
+    talukas: [
+      { en: "Arni", mr: "आर्णी" },
+      { en: "Babhulgaon", mr: "बाभुळगाव" },
+      { en: "Darwha", mr: "दारव्हा" },
+      { en: "Digras", mr: "दिग्रस" },
+      { en: "Ghatanji", mr: "घाटंजी" },
+      { en: "Kalamb", mr: "कळंब" },
+      { en: "Kelapur", mr: "केळापूर" },
+      { en: "Mahagaon", mr: "महागाव" },
+      { en: "Maregaon", mr: "मारेगाव" },
+      { en: "Ner", mr: "नेर" },
+      { en: "Pusad", mr: "पुसद" },
+      { en: "Ralegaon", mr: "राळेगाव" },
+      { en: "Umarkhed", mr: "उमरखेड" },
+      { en: "Wani", mr: "वणी" },
+      { en: "Yavatmal", mr: "यवतमाळ" },
+      { en: "Zari Jamani", mr: "झरी जामणी" },
+    ],
+  },
+]
+
+/* Option lists for one language, with the other script kept as a search alias
+   so typing in either script finds the same place. */
+export const districtOptions = (lang) =>
+  MH.map((d) => ({ value: d[lang], alt: lang === 'mr' ? d.en : d.mr }))
+
+export const talukaOptions = (lang, districtValue) => {
+  const d = MH.find((x) => x.en === districtValue || x.mr === districtValue)
+  if (!d) return []
+  return d.talukas.map((t) => ({ value: t[lang], alt: lang === 'mr' ? t.en : t.mr }))
+}
+
+/* A place name typed on one language of the page, returned in the other, so a
+   candidate who picks a district and then switches language does not see an
+   English name sitting under a Marathi label. Write-in names are returned
+   untouched. */
+export const translatePlace = (value, lang) => {
+  if (!value) return value
+  for (const d of MH) {
+    if (d.en === value || d.mr === value) return d[lang]
+    for (const t of d.talukas) if (t.en === value || t.mr === value) return t[lang]
+  }
+  return value
+}

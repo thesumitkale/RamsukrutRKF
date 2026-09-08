@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
 import { jobfair, JOBFAIR_PHONE, JOBFAIR_WA } from '../content/jobfair.js'
+import { districtOptions, talukaOptions, translatePlace } from '../content/maharashtra.js'
 import Reveal from '../components/Reveal.jsx'
 import SectionHead from '../components/SectionHead.jsx'
 import GhostEyebrow from '../components/GhostEyebrow.jsx'
@@ -12,17 +13,28 @@ import { Arrow, Wa, Phone, Clock, Calendar, MapPin, Rupee, Briefcase, Users, Han
 const FACT_ICONS = [Calendar, Clock, MapPin, Rupee]
 const POINT_ICONS = [Briefcase, Users, Handshake, Shield]
 
+/* Carries an already chosen district or taluka across a language switch, Other
+   included, so the form keeps the answer instead of blanking it. */
+const place = (c, lang) => (value) =>
+  value === 'Other' || value === 'इतर' ? c.search.other : translatePlace(value, lang)
+
 /* Turns the labels and placeholders from the content file into the field list
    the shared form component understands. */
-const candidateFields = (c) => [
+const candidateFields = (c, lang) => [
   { name: 'name', label: c.fields.name, ph: c.ph.name, req: true },
   { name: 'mobile', label: c.fields.mobile, ph: c.ph.mobile, req: true, type: 'tel', inputMode: 'numeric', pattern: '[0-9+ ]{10,15}' },
   { name: 'email', label: c.fields.email, ph: c.ph.email, type: 'email' },
   { name: 'village', label: c.fields.village, ph: c.ph.village, req: true },
-  { name: 'taluka', label: c.fields.taluka, ph: c.ph.taluka, req: true, type: 'select', options: c.talukas,
-    otherLabel: c.fields.talukaOther, otherPh: c.ph.talukaOther },
-  { name: 'district', label: c.fields.district, ph: c.ph.district, req: true, type: 'select', options: c.districts,
+  /* District comes before taluka because the taluka list is filtered by the
+     chosen district. Both are searchable: 36 districts and 358 talukas are far
+     too many to scroll on a phone. */
+  { name: 'district', label: c.fields.district, ph: c.ph.district, req: true, type: 'search',
+    options: districtOptions(lang), search: c.search, translate: place(c, lang),
     otherLabel: c.fields.districtOther, otherPh: c.ph.districtOther },
+  { name: 'taluka', label: c.fields.taluka, ph: c.ph.taluka, req: true, type: 'search',
+    optionsFor: (district) => talukaOptions(lang, district), dependsOn: 'district',
+    search: c.search, translate: place(c, lang),
+    otherLabel: c.fields.talukaOther, otherPh: c.ph.talukaOther },
   { name: 'department', label: c.fields.department, ph: c.ph.department, req: true, type: 'select', options: c.departments, full: true },
   { name: 'qualification', label: c.fields.qualification, ph: c.ph.qualification, req: true, type: 'select', options: c.qualifications },
   { name: 'experience', label: c.fields.experience, ph: c.ph.experience, req: true, type: 'select', options: c.experiences },
@@ -221,7 +233,7 @@ export default function JobFair() {
           <div className="mx-auto max-w-3xl">
             {tab === 'candidate' ? (
               <JobFairForm key="candidate" kind="candidate" copy={v.candidate}
-                fields={candidateFields(v.candidate)} lang={lang} waIntro={v.waIntro} />
+                fields={candidateFields(v.candidate, lang)} lang={lang} waIntro={v.waIntro} />
             ) : (
               <JobFairForm key="corporate" kind="corporate" copy={v.corporate}
                 fields={corporateFields(v.corporate)} lang={lang} waIntro={v.waIntro} />

@@ -70,11 +70,52 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
   const [picked, setPicked] = useState({})   // multi-choice fields: name -> [values]
   const [multiError, setMultiError] = useState('')
   const [otherOn, setOtherOn] = useState({}) // selects showing their write in box
+  const [chosen, setChosen] = useState({})   // searchable dropdowns: name -> value
+  const [searchError, setSearchError] = useState('')
   const formRef = useRef(null)
 
   /* A dropdown that offers Other reveals a text box when Other is chosen.
      Other is always the last option in both languages. */
-  const isOther = (f, value) => Boolean(f.otherLabel) && value === f.options[f.options.length - 1]
+  const isOther = (f, value) =>
+    Boolean(f.otherLabel) && (f.type === 'search'
+      ? value === f.search.other
+      : value === f.options[f.options.length - 1])
+
+  /* Searchable dropdowns: the option list of a dependent field, such as the
+     talukas of the chosen district, and the reset that follows when the parent
+     changes so a Pune taluka can never sit under a Nashik district. */
+  const searchOptions = (f) => {
+    const base = f.optionsFor ? f.optionsFor(chosen[f.dependsOn] || '') : (f.options || [])
+    return f.otherLabel ? [...base, { value: f.search.other }] : base
+  }
+
+  const chooseSearch = (f, value) => {
+    setSearchError('')
+    setChosen((prev) => {
+      const next = { ...prev, [f.name]: value }
+      fields.forEach((other) => { if (other.dependsOn === f.name) next[other.name] = '' })
+      return next
+    })
+    setOtherOn((prev) => {
+      const next = { ...prev, [f.name]: isOther(f, value) }
+      fields.forEach((other) => { if (other.dependsOn === f.name) next[other.name] = false })
+      return next
+    })
+  }
+
+  /* Switching the page language rewrites every option list, so an already
+     chosen district or taluka is carried over into the new language rather
+     than being left behind in the old one. */
+  useEffect(() => {
+    setChosen((prev) => {
+      const next = { ...prev }
+      fields.forEach((f) => {
+        if (f.type === 'search' && f.translate && next[f.name]) next[f.name] = f.translate(next[f.name])
+      })
+      return next
+    })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang])
 
   /* Checkbox groups are not covered by the browser's required attribute, so
      they are held in React state and validated by hand on submit. */
@@ -120,10 +161,19 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       return
     }
 
+    /* Same for the searchable dropdowns, which hold their value in state
+       rather than in a native select the browser would validate for us. */
+    const blank = fields.find((f) => f.type === 'search' && f.req && !chosen[f.name])
+    if (blank) {
+      setSearchError(blank.search.required || '')
+      document.getElementById(`${kind}-${blank.name}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      return
+    }
+
     /* Ticked boxes travel as one comma separated cell so the sheet stays flat. */
     const readField = (f) => {
       if (f.type === 'multi') return (picked[f.name] || []).join(', ')
-      const v = data.get(f.name) || ''
+      const v = f.type === 'search' ? (chosen[f.name] || '') : (data.get(f.name) || '')
       /* When Other is chosen, the typed place name is what gets stored, so the
          sheet holds a real taluka or district rather than the word Other. */
       if (isOther(f, v)) return String(data.get(`${f.name}_other`) || '').trim() || v
@@ -138,7 +188,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     const values = {}
     fields.forEach((f) => { values[f.name] = readField(f) })
 
-    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({}); return }
+    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({}); setChosen({}); return }
 
     setState('sending')
     try {
@@ -161,7 +211,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       })
       const out = await res.json().catch(() => ({ ok: res.ok }))
       if (!out.ok) throw new Error(out.error || 'rejected')
-      setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({})
+      setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({}); setChosen({})
     } catch (err) {
       setState('fail')
       openWhatsApp(labelled)
@@ -195,6 +245,25 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
                   <option value="" disabled>{f.ph}</option>
                   {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
                 </select>
+                {f.otherLabel && otherOn[f.name] && (
+                  <input name={`${f.name}_other`} type="text" required aria-label={f.otherLabel}
+                    placeholder={f.otherPh} className={`${cls} mt-2.5`} />
+                )}
+              </>
+            ) : f.type === 'search' ? (
+              <>
+                <SearchSelect
+                  id={`${kind}-${f.name}`}
+                  label={f.label}
+                  placeholder={f.ph}
+                  searchPlaceholder={f.search.ph}
+                  emptyText={f.search.empty}
+                  lockedText={f.dependsOn && !chosen[f.dependsOn] ? f.search.lockedTaluka : ''}
+                  options={searchOptions(f)}
+                  value={chosen[f.name] || ''}
+                  onPick={(v) => chooseSearch(f, v)}
+                  error={searchError && !chosen[f.name] ? searchError : ''}
+                />
                 {f.otherLabel && otherOn[f.name] && (
                   <input name={`${f.name}_other`} type="text" required aria-label={f.otherLabel}
                     placeholder={f.otherPh} className={`${cls} mt-2.5`} />
@@ -262,6 +331,129 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
         </div>
       )}
     </form>
+  )
+}
+
+/* ---------------------------------------------------------------------------
+   SearchSelect
+   A single-choice dropdown with a search box, used for district and taluka
+   where the lists run to 36 and 358 entries. Typing filters the list; matching
+   is accent-free and works on either script, because every option carries its
+   name in the other language as a hidden alias. So a candidate reading the
+   Marathi page can type khed and still land on खेड.
+
+   Behaves like a native select otherwise: click to open, tap away or Escape to
+   close, arrow keys to move, Enter to choose. The panel is capped in height and
+   scrolls, and the search box only takes focus on pointer devices so a phone
+   keyboard does not cover the list the moment it opens.
+--------------------------------------------------------------------------- */
+/* Only one searchable dropdown should stand open at a time. Opening one
+   announces itself and the others close, so the district panel can never sit
+   on top of the taluka panel. */
+const OPEN_EVENT = 'rkf-select-open'
+
+function SearchSelect({ id, label, placeholder, searchPlaceholder, emptyText, lockedText, options, value, onPick, error }) {
+  const [open, setOpen] = useState(false)
+  const [q, setQ] = useState('')
+  const [active, setActive] = useState(0)
+  const wrap = useRef(null)
+  const input = useRef(null)
+  const listRef = useRef(null)
+
+  useEffect(() => {
+    if (!open) return
+    const away = (e) => { if (wrap.current && !wrap.current.contains(e.target)) setOpen(false) }
+    const key = (e) => { if (e.key === 'Escape') setOpen(false) }
+    document.addEventListener('mousedown', away)
+    document.addEventListener('keydown', key)
+    /* Only auto focus the search box where there is a physical keyboard. */
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches) input.current?.focus()
+    return () => { document.removeEventListener('mousedown', away); document.removeEventListener('keydown', key) }
+  }, [open])
+
+  useEffect(() => { if (!open) { setQ(''); setActive(0) } }, [open])
+
+  useEffect(() => {
+    const other = (e) => { if (e.detail !== id) setOpen(false) }
+    document.addEventListener(OPEN_EVENT, other)
+    return () => document.removeEventListener(OPEN_EVENT, other)
+  }, [id])
+
+  const toggle = () => {
+    setOpen((v) => {
+      if (!v) document.dispatchEvent(new CustomEvent(OPEN_EVENT, { detail: id }))
+      return !v
+    })
+  }
+
+  const norm = (s) => String(s || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '')
+  const needle = norm(q)
+  const shown = needle
+    ? options.filter((o) => norm(o.value).includes(needle) || norm(o.alt).includes(needle))
+    : options
+
+  const pick = (v) => { onPick(v); setOpen(false) }
+
+  const onKey = (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault()
+      setActive((i) => {
+        const next = e.key === 'ArrowDown' ? Math.min(i + 1, shown.length - 1) : Math.max(i - 1, 0)
+        listRef.current?.children[next]?.scrollIntoView({ block: 'nearest' })
+        return next
+      })
+    }
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      if (shown[active]) pick(shown[active].value)
+    }
+  }
+
+  const locked = Boolean(lockedText)
+
+  return (
+    <div id={id} ref={wrap} className="relative">
+      <button type="button" disabled={locked} onClick={toggle}
+        aria-haspopup="listbox" aria-expanded={open}
+        className={`flex w-full items-center justify-between gap-3 rounded-[4px] border bg-paper px-4 py-3 text-left text-[1rem] outline-none transition ${locked ? 'cursor-not-allowed border-sand bg-paper2/60' : open ? 'border-clay' : error ? 'border-clay-deep/60' : 'border-sand hover:border-clay/60'}`}>
+        <span className={`min-w-0 flex-1 truncate ${value ? 'text-ink' : 'text-ink-2/70'}`}>
+          {locked ? lockedText : value || placeholder}
+        </span>
+        <svg width="14" height="14" viewBox="0 0 24 24" className={`shrink-0 transition ${open ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
+      </button>
+
+      {open && !locked && (
+        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-[6px] border border-sand bg-paper shadow-soft">
+          <div className="border-b border-sand/80 p-2">
+            <input ref={input} type="text" value={q} onChange={(e) => { setQ(e.target.value); setActive(0) }}
+              onKeyDown={onKey} placeholder={searchPlaceholder} aria-label={searchPlaceholder}
+              className="w-full rounded-[4px] border border-sand bg-paper2/60 px-3 py-2.5 text-[.95rem] text-ink outline-none transition focus:border-clay" />
+          </div>
+          <div role="listbox" aria-label={label} ref={listRef} className="max-h-60 overflow-auto p-1">
+            {shown.length === 0 && (
+              <p className="px-3 py-3 text-[.9rem] leading-snug text-ink-2/80">{emptyText}</p>
+            )}
+            {shown.map((o, i) => {
+              const on = o.value === value
+              return (
+                <button key={o.value} type="button" role="option" aria-selected={on}
+                  onMouseEnter={() => setActive(i)} onClick={() => pick(o.value)}
+                  className={`flex w-full items-center justify-between gap-3 rounded-[4px] px-3 py-2.5 text-left text-[.95rem] leading-snug transition ${on ? 'bg-clay/10 font-semibold text-ink' : i === active ? 'bg-paper2 text-ink' : 'text-ink-2'}`}>
+                  <span className="min-w-0 truncate">{o.value}</span>
+                  {on && (
+                    <svg width="12" height="12" viewBox="0 0 24 24" className="shrink-0 text-clay" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+
+      {error && <p className="mt-2 text-[.82rem] font-semibold text-clay-deep">{error}</p>}
+    </div>
   )
 }
 
