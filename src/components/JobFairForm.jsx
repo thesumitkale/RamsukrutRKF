@@ -69,7 +69,12 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
   const [fileError, setFileError] = useState('')
   const [picked, setPicked] = useState({})   // multi-choice fields: name -> [values]
   const [multiError, setMultiError] = useState('')
+  const [otherOn, setOtherOn] = useState({}) // selects showing their write in box
   const formRef = useRef(null)
+
+  /* A dropdown that offers Other reveals a text box when Other is chosen.
+     Other is always the last option in both languages. */
+  const isOther = (f, value) => Boolean(f.otherLabel) && value === f.options[f.options.length - 1]
 
   /* Checkbox groups are not covered by the browser's required attribute, so
      they are held in React state and validated by hand on submit. */
@@ -116,7 +121,14 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     }
 
     /* Ticked boxes travel as one comma separated cell so the sheet stays flat. */
-    const readField = (f) => (f.type === 'multi' ? (picked[f.name] || []).join(', ') : data.get(f.name) || '')
+    const readField = (f) => {
+      if (f.type === 'multi') return (picked[f.name] || []).join(', ')
+      const v = data.get(f.name) || ''
+      /* When Other is chosen, the typed place name is what gets stored, so the
+         sheet holds a real taluka or district rather than the word Other. */
+      if (isOther(f, v)) return String(data.get(`${f.name}_other`) || '').trim() || v
+      return v
+    }
 
     // Human-labelled copy for the WhatsApp fallback message
     const labelled = {}
@@ -126,7 +138,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     const values = {}
     fields.forEach((f) => { values[f.name] = readField(f) })
 
-    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); setPicked({}); return }
+    if (!JOBFAIR_ENDPOINT) { openWhatsApp(labelled); setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({}); return }
 
     setState('sending')
     try {
@@ -149,7 +161,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       })
       const out = await res.json().catch(() => ({ ok: res.ok }))
       if (!out.ok) throw new Error(out.error || 'rejected')
-      setState('done'); form.reset(); setFileName(''); setPicked({})
+      setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({})
     } catch (err) {
       setState('fail')
       openWhatsApp(labelled)
@@ -173,10 +185,21 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
               <textarea id={`${kind}-${f.name}`} name={f.name} required={f.req} placeholder={f.ph}
                 className={`${cls} min-h-[104px] resize-y`} />
             ) : f.type === 'select' ? (
-              <select id={`${kind}-${f.name}`} name={f.name} required={f.req} defaultValue="" className={cls}>
-                <option value="" disabled>{f.ph}</option>
-                {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
-              </select>
+              <>
+                <select id={`${kind}-${f.name}`} name={f.name} required={f.req} defaultValue=""
+                  onChange={(e) => {
+                    if (!f.otherLabel) return
+                    setOtherOn((prev) => ({ ...prev, [f.name]: isOther(f, e.target.value) }))
+                  }}
+                  className={cls}>
+                  <option value="" disabled>{f.ph}</option>
+                  {f.options.map((o) => <option key={o} value={o}>{o}</option>)}
+                </select>
+                {f.otherLabel && otherOn[f.name] && (
+                  <input name={`${f.name}_other`} type="text" required aria-label={f.otherLabel}
+                    placeholder={f.otherPh} className={`${cls} mt-2.5`} />
+                )}
+              </>
             ) : f.type === 'multi' ? (
               <MultiDropdown
                 id={`${kind}-${f.name}`}

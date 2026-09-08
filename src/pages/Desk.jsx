@@ -48,6 +48,7 @@ export default function Desk() {
   const [err, setErr] = useState('')
   const [q, setQ] = useState('')
   const [dept, setDept] = useState('')
+  const [taluka, setTaluka] = useState('')
   const [busy, setBusy] = useState(false)
   const [zip, setZip] = useState('')
 
@@ -149,6 +150,12 @@ export default function Desk() {
     return [...s].sort()
   }, [data.candidates])
 
+  /* Built from the rows themselves, so a write in taluka appears here too. */
+  const talukas = useMemo(() => {
+    const s = new Set(data.candidates.map((r) => r.taluka).filter(Boolean))
+    return [...s].sort()
+  }, [data.candidates])
+
   const counts = useMemo(() => {
     const m = {}
     data.candidates.forEach((r) => { const k = r.department || 'Not stated'; m[k] = (m[k] || 0) + 1 })
@@ -159,10 +166,11 @@ export default function Desk() {
     const needle = q.trim().toLowerCase()
     return rows.filter((r) => {
       if (tab === 'candidates' && dept && r.department !== dept) return false
+      if (tab === 'candidates' && taluka && r.taluka !== taluka) return false
       if (!needle) return true
       return Object.values(r).some((v) => String(v ?? '').toLowerCase().includes(needle))
     })
-  }, [rows, q, dept, tab])
+  }, [rows, q, dept, taluka, tab])
 
   const today = useMemo(() => {
     const d = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Kolkata' })
@@ -201,7 +209,7 @@ export default function Desk() {
   }
 
   /* ---------------------------------------------------------------- desk */
-  const candHead = ['Time', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'City', 'Resume']
+  const candHead = ['Time', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'Village', 'Taluka', 'District', 'Resume']
   const corpHead = ['Time', 'Organization', 'Contact', 'Mobile', 'Positions', 'Departments', 'JD']
 
   return (
@@ -255,7 +263,7 @@ export default function Desk() {
           {[['candidates', 'Candidates'], ['corporates', 'Companies']].map(([k, label]) => (
             <button
               key={k}
-              onClick={() => { setTab(k); setQ(''); setDept('') }}
+              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka('') }}
               className={
                 'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
                 (tab === k ? 'bg-forest text-white' : 'text-ink2')
@@ -269,12 +277,18 @@ export default function Desk() {
           className={box + ' max-w-[280px]'}
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Search name, mobile, city"
+          placeholder="Search name, mobile, village"
         />
         {tab === 'candidates' && (
           <select className={box + ' max-w-[220px]'} value={dept} onChange={(e) => setDept(e.target.value)}>
             <option value="">All departments</option>
             {depts.map((d) => <option key={d} value={d}>{d}</option>)}
+          </select>
+        )}
+        {tab === 'candidates' && (
+          <select className={box + ' max-w-[200px]'} value={taluka} onChange={(e) => setTaluka(e.target.value)}>
+            <option value="">All talukas</option>
+            {talukas.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         )}
         <button
@@ -288,7 +302,7 @@ export default function Desk() {
           onClick={() => {
             if (tab === 'candidates') {
               download('rkf-candidates.csv', candHead.concat(['Email', 'Resume file']),
-                shown.map((r) => [fmt(r.created_at), r.name, r.mobile, r.department, r.qualification, r.experience, r.city, r.resume_url, r.email, r.resume_name]))
+                shown.map((r) => [fmt(r.created_at), r.name, r.mobile, r.department, r.qualification, r.experience, r.village || r.city, r.taluka, r.district, r.resume_url, r.email, r.resume_name]))
             } else {
               download('rkf-companies.csv', corpHead.concat(['Email', 'Title', 'Compensation', 'Notes']),
                 shown.map((r) => [fmt(r.created_at), r.organization, r.contact_name, r.mobile, r.positions, r.departments, r.jd_url, r.email, r.title, r.compensation, r.notes]))
@@ -330,7 +344,11 @@ export default function Desk() {
                       <td className="px-4 py-3">{r.department}</td>
                       <td className="px-4 py-3">{r.qualification}</td>
                       <td className="whitespace-nowrap px-4 py-3">{r.experience}</td>
-                      <td className="px-4 py-3">{r.city}</td>
+                      {/* Rows taken before the location fields split still
+                          carry a single city value, so it stands in here. */}
+                      <td className="px-4 py-3">{r.village || r.city}</td>
+                      <td className="whitespace-nowrap px-4 py-3">{r.taluka}</td>
+                      <td className="whitespace-nowrap px-4 py-3">{r.district}</td>
                       <td className="px-4 py-3">
                         {r.resume_url
                           ? <a className="font-semibold text-clay underline decoration-sand" href={r.resume_url} target="_blank" rel="noopener noreferrer">Open</a>

@@ -66,6 +66,70 @@ const QUALIF_MR = [
   'इतर',
 ]
 
+/* Talukas of Pune district, per the district administration list at pune.gov.in.
+   The four talukas of the Khed subdivision come first because the venue sits in
+   Khed and most candidates travel from there. The rest follow alphabetically. */
+const TALUKA_EN = [
+  'Khed',
+  'Ambegaon',
+  'Junnar',
+  'Shirur',
+  'Baramati',
+  'Bhor',
+  'Daund',
+  'Haveli',
+  'Indapur',
+  'Loni Kalbhor',
+  'Maval',
+  'Mulshi',
+  'Pimpri-Chinchwad',
+  'Pune City',
+  'Purandar',
+  'Velha',
+  'Other',
+]
+const TALUKA_MR = [
+  'खेड',
+  'आंबेगाव',
+  'जुन्नर',
+  'शिरूर',
+  'बारामती',
+  'भोर',
+  'दौंड',
+  'हवेली',
+  'इंदापूर',
+  'लोणी काळभोर',
+  'मावळ',
+  'मुळशी',
+  'पिंपरी चिंचवड',
+  'पुणे शहर',
+  'पुरंदर',
+  'वेल्हा',
+  'इतर',
+]
+
+/* Pune plus the six districts that border it, then Other. */
+const DISTRICT_EN = [
+  'Pune',
+  'Ahilyanagar (Ahmednagar)',
+  'Nashik',
+  'Thane',
+  'Raigad',
+  'Satara',
+  'Solapur',
+  'Other',
+]
+const DISTRICT_MR = [
+  'पुणे',
+  'अहिल्यानगर (अहमदनगर)',
+  'नाशिक',
+  'ठाणे',
+  'रायगड',
+  'सातारा',
+  'सोलापूर',
+  'इतर',
+]
+
 /* Recruiter dropdowns: headcount bands, salary bands and hiring departments */
 const POS_EN = ['1 to 5', '6 to 10', '11 to 25', '26 to 50', '51 to 100', 'More than 100']
 const POS_MR = ['१ ते ५', '६ ते १०', '११ ते २५', '२६ ते ५०', '५१ ते १००', '१०० पेक्षा जास्त']
@@ -144,16 +208,22 @@ export const jobfair = {
       fields: {
         name: 'Full name', mobile: 'Mobile number', email: 'Email (optional)',
         department: 'Department you are applying for', qualification: 'Highest qualification',
-        experience: 'Experience', city: 'City or village',
+        experience: 'Experience',
+        village: 'Village or town', taluka: 'Taluka', district: 'District',
+        talukaOther: 'Name your taluka', districtOther: 'Name your district',
       },
       ph: {
         name: 'Your name as on Aadhaar', mobile: '10 digit mobile number', email: 'you@example.com',
         department: 'Select a department', qualification: 'Select your qualification',
-        experience: 'Select your experience', city: 'e.g. Rajgurunagar',
+        experience: 'Select your experience',
+        village: 'e.g. Dawadi', taluka: 'Select your taluka', district: 'Select your district',
+        talukaOther: 'Type your taluka', districtOther: 'Type your district',
       },
       departments: DEPTS_EN,
       qualifications: QUALIF_EN,
       experiences: EXP_EN,
+      talukas: TALUKA_EN,
+      districts: DISTRICT_EN,
     },
 
     corporate: {
@@ -259,16 +329,22 @@ export const jobfair = {
       fields: {
         name: 'संपूर्ण नाव', mobile: 'मोबाइल क्रमांक', email: 'ईमेल (ऐच्छिक)',
         department: 'कोणत्या विभागासाठी अर्ज', qualification: 'सर्वोच्च शिक्षण',
-        experience: 'अनुभव', city: 'गाव किंवा शहर',
+        experience: 'अनुभव',
+        village: 'गाव किंवा शहर', taluka: 'तालुका', district: 'जिल्हा',
+        talukaOther: 'तुमचा तालुका लिहा', districtOther: 'तुमचा जिल्हा लिहा',
       },
       ph: {
         name: 'आधारवरील नाव', mobile: '१० अंकी मोबाइल क्रमांक', email: 'you@example.com',
         department: 'विभाग निवडा', qualification: 'शिक्षण निवडा',
-        experience: 'अनुभव निवडा', city: 'उदा. राजगुरुनगर',
+        experience: 'अनुभव निवडा',
+        village: 'उदा. दावडी', taluka: 'तालुका निवडा', district: 'जिल्हा निवडा',
+        talukaOther: 'तालुका लिहा', districtOther: 'जिल्हा लिहा',
       },
       departments: DEPTS_MR,
       qualifications: QUALIF_MR,
       experiences: EXP_MR,
+      talukas: TALUKA_MR,
+      districts: DISTRICT_MR,
     },
 
     corporate: {
