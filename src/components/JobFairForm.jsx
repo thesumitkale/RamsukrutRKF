@@ -52,19 +52,27 @@ function readSource() {
    a candidate is never lost because of a technical problem.
 --------------------------------------------------------------------------- */
 
-const MAX_MB = 5
+/* Candidates on phones rarely hold a tidy PDF. Most have a photo of a printed
+   resume, a scan, or a Word file forwarded on WhatsApp. The ceiling is generous
+   because a camera photo from a modern phone is routinely several megabytes. */
+const MAX_MB = 15
+
+/* Kept deliberately wide. A narrow accept list makes the Android picker hide
+   the gallery and camera entirely, so a candidate whose resume is a photo has
+   no way to attach it and abandons the form. */
+const FILE_ACCEPT = [
+  '.pdf', '.doc', '.docx', '.odt', '.rtf', '.txt',
+  '.jpg', '.jpeg', '.png', '.heic', '.heif', '.webp',
+  'application/pdf',
+  'application/msword',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'image/*',
+].join(',')
+
 const cls = 'w-full rounded-[4px] border border-sand bg-paper px-4 py-3 text-[1rem] text-ink outline-none transition focus:border-clay'
 
-const readAsBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const r = new FileReader()
-    r.onload = () => resolve(String(r.result).split(',')[1] || '')
-    r.onerror = () => reject(new Error('read failed'))
-    r.readAsDataURL(file)
-  })
-
 export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
-  const [state, setState] = useState('idle') // idle | sending | done | fail
+  const [state, setState] = useState('idle') // idle | sending | done | doneNoFile | fail
   const [fileName, setFileName] = useState('')
   const [fileError, setFileError] = useState('')
   const [picked, setPicked] = useState({})   // multi-choice fields: name -> [values]
@@ -139,8 +147,10 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
     const f = e.target.files?.[0]
     setFileError('')
     if (!f) { setFileName(''); return }
+    /* Over the ceiling the file is dropped rather than the whole registration.
+       The candidate is told plainly, and the form stays ready to submit. */
     if (f.size > MAX_MB * 1024 * 1024) {
-      setFileError(copy.fileHint)
+      setFileError(copy.fileTooBig || copy.fileHint)
       e.target.value = ''
       setFileName('')
       return
@@ -202,16 +212,41 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
       if (kind === 'corporate') payload.append('contact_name', values.name || '')
 
       const file = data.get('attachment')
-      if (file && file.size) payload.append('file', file, file.name)
+      const hadFile = Boolean(file && file.size)
+      if (hadFile) payload.append('file', file, file.name)
 
-      const res = await fetch(JOBFAIR_ENDPOINT, {
+      const send = (body) => fetch(JOBFAIR_ENDPOINT, {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + JOBFAIR_KEY, apikey: JOBFAIR_KEY },
-        body: payload,
+        body,
       })
-      const out = await res.json().catch(() => ({ ok: res.ok }))
-      if (!out.ok) throw new Error(out.error || 'rejected')
-      setState('done'); form.reset(); setFileName(''); setPicked({}); setOtherOn({}); setChosen({})
+
+      let out
+      try {
+        const res = await send(payload)
+        out = await res.json().catch(() => ({ ok: res.ok }))
+        if (!out.ok) throw new Error(out.error || 'rejected')
+      } catch (first) {
+        /* Almost every failure here is the attachment: an odd file type, a slow
+           upload dropping on mobile data, a photo the phone reports strangely.
+           The person and their details matter more than the file, so the same
+           submission is retried once without it rather than being lost. */
+        if (!hadFile) throw first
+        const retry = new FormData()
+        for (const [k, v] of payload.entries()) if (k !== 'file') retry.append(k, v)
+        const res2 = await send(retry)
+        const out2 = await res2.json().catch(() => ({ ok: res2.ok }))
+        if (!out2.ok) throw new Error(out2.error || 'rejected')
+        out = { ...out2, resume_saved: false }
+      }
+
+      /* The function reports whether the attachment itself reached storage, so
+         the confirmation can tell a candidate to bring a printed copy instead
+         of implying the resume is on file when it is not. */
+      const savedFlag = kind === 'corporate' ? out.jd_saved : out.resume_saved
+      const fileMissing = hadFile && savedFlag === false
+      setState(fileMissing && copy.doneNoFile ? 'doneNoFile' : 'done')
+      form.reset(); setFileName(''); setFileError(''); setPicked({}); setOtherOn({}); setChosen({})
     } catch (err) {
       setState('fail')
       openWhatsApp(labelled)
@@ -298,13 +333,13 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
               {copy.fileLabel}
             </span>
             <span className="min-w-0 flex-1 truncate text-[.92rem] text-ink-2">
-              {fileName ? `${copy.fileChosen}: ${fileName}` : <span className="hidden sm:inline">{`PDF / DOC / DOCX · ${MAX_MB} MB`}</span>}
+              {fileName ? `${copy.fileChosen}: ${fileName}` : <span className="hidden sm:inline">{`${copy.fileShort || 'PDF / DOC / DOCX'} · ${MAX_MB} MB`}</span>}
             </span>
           </label>
           <input id={`${kind}-attachment`} name="attachment" type="file" onChange={onFile} className="sr-only"
-            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document" />
+            accept={FILE_ACCEPT} />
           <p className={`mt-2 text-[.82rem] leading-relaxed ${fileError ? 'font-semibold text-clay-deep' : 'text-ink-2/75'}`}>
-            {copy.fileHint}
+            {fileError || copy.fileHint}
           </p>
         </div>
       </div>
@@ -316,9 +351,9 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
 
       <p className="mt-4 text-center text-[.84rem] leading-relaxed text-ink-2/75">{copy.note}</p>
 
-      {state === 'done' && (
+      {(state === 'done' || state === 'doneNoFile') && (
         <p role="status" className="mt-4 rounded-[4px] border border-teal-deep/30 bg-teal/10 px-4 py-3 text-center text-[1rem] font-medium text-teal-ink">
-          {copy.done}
+          {state === 'doneNoFile' ? copy.doneNoFile : copy.done}
         </p>
       )}
       {state === 'fail' && (
