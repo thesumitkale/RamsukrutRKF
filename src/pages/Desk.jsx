@@ -3,8 +3,10 @@
    site and not in the sitemap. Reachable only at /#/desk with the passcode.
 
    It reads through the rkf-jobfair-desk service, which checks the passcode
-   on the server and can only read. Nothing on this page can edit or delete a
-   submission, so a tired volunteer at 4pm cannot lose anybody's details.
+   on the server. Junk and duplicate entries can be removed from the list, but
+   removal only hides a row: it stays in the table, appears under Removed, and
+   goes back with one tap. A tired volunteer at 4pm cannot lose anybody's
+   details, which is why there is no hard delete anywhere on this page.
    ========================================================================== */
 
 import { useEffect, useMemo, useState } from 'react'
@@ -51,6 +53,11 @@ export default function Desk() {
   const [taluka, setTaluka] = useState('')
   const [busy, setBusy] = useState(false)
   const [zip, setZip] = useState('')
+  const [view, setView] = useState('live')      // live | removed
+  const [armed, setArmed] = useState('')        // row id waiting for a second tap
+  const [acting, setActing] = useState('')      // row id currently being written
+  const [actErr, setActErr] = useState('')
+  const [data2, setData2] = useState({ candidates: [], corporates: [] }) // removed rows
 
   const load = async (theCode) => {
     setBusy(true)
@@ -61,7 +68,9 @@ export default function Desk() {
           Authorization: 'Bearer ' + JOBFAIR_KEY,
           apikey: JOBFAIR_KEY,
           'x-desk-code': theCode,
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ action: 'list' }),
       })
       if (res.status === 401) {
         setBusy(false)
@@ -70,6 +79,7 @@ export default function Desk() {
       const out = await res.json()
       if (!out.ok) throw new Error('read failed')
       setData({ candidates: out.candidates || [], corporates: out.corporates || [] })
+      setData2({ candidates: out.removed_candidates || [], corporates: out.removed_corporates || [] })
       setAt(new Date())
       setErr('')
       setBusy(false)
@@ -96,7 +106,41 @@ export default function Desk() {
     return () => clearInterval(t)
   }, [authed, code])
 
-  const rows = data[tab]
+  /* An armed row disarms itself, so a tap left behind on a shared laptop
+     cannot be completed by whoever sits down next. */
+  useEffect(() => {
+    if (!armed) return
+    const t = setTimeout(() => setArmed(''), 6000)
+    return () => clearTimeout(t)
+  }, [armed])
+
+  const rows = view === 'removed' ? data2[tab] : data[tab]
+
+  /* Remove hides a row from the working list. Restore brings it back. Both go
+     through the server with the passcode, and the row itself is never deleted. */
+  const act = async (action, id) => {
+    setActing(id)
+    setActErr('')
+    setArmed('')
+    try {
+      const res = await fetch(JOBFAIR_DESK, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + JOBFAIR_KEY,
+          apikey: JOBFAIR_KEY,
+          'x-desk-code': code.trim(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action, which: tab, id }),
+      })
+      const out = await res.json().catch(() => ({ ok: false }))
+      if (!out.ok) throw new Error(out.error || 'failed')
+      await load(code.trim())
+    } catch (e) {
+      setActErr(action === 'remove' ? 'Could not remove that entry. Try again.' : 'Could not put that entry back. Try again.')
+    }
+    setActing('')
+  }
 
   /* Pulls every attached file for the rows currently on screen and hands back
      one zip, named so the files sort in the order people registered. */
@@ -211,6 +255,7 @@ export default function Desk() {
   /* ---------------------------------------------------------------- desk */
   const candHead = ['Time', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'Village', 'Taluka', 'District', 'Resume']
   const corpHead = ['Time', 'Organization', 'Contact', 'Mobile', 'Positions', 'Departments', 'JD']
+  const removedCount = data2[tab].length
 
   return (
     <section className="mx-auto max-w-[1180px] px-5 pb-14 pt-28 md:pt-32">
@@ -240,6 +285,7 @@ export default function Desk() {
       </header>
 
       {err && <p className="mt-4 rounded-[4px] border border-sand bg-paper2 px-4 py-2 text-[0.88rem] text-ink2">{err}</p>}
+      {actErr && <p className="mt-4 rounded-[4px] border border-clay/40 bg-clay/10 px-4 py-2 text-[0.88rem] font-medium text-clay-deep">{actErr}</p>}
 
       {counts.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-2">
@@ -263,10 +309,24 @@ export default function Desk() {
           {[['candidates', 'Candidates'], ['corporates', 'Companies']].map(([k, label]) => (
             <button
               key={k}
-              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka('') }}
+              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr('') }}
               className={
                 'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
                 (tab === k ? 'bg-forest text-white' : 'text-ink2')
+              }
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="flex rounded-[4px] border border-sand bg-paper p-1">
+          {[['live', 'Working list'], ['removed', removedCount ? 'Removed ' + removedCount : 'Removed']].map(([k, label]) => (
+            <button
+              key={k}
+              onClick={() => { setView(k); setArmed(''); setActErr('') }}
+              className={
+                'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
+                (view === k ? 'bg-clay text-white' : 'text-ink2')
               }
             >
               {label}
@@ -318,9 +378,11 @@ export default function Desk() {
       <div className="mt-5 overflow-x-auto rounded-[8px] border border-sand bg-paper shadow-soft">
         {shown.length === 0 ? (
           <p className="px-5 py-12 text-center text-[0.95rem] text-muted">
-            {rows.length === 0
-              ? 'No registrations yet. This list fills itself the moment somebody submits the form.'
-              : 'Nothing matches that search.'}
+            {rows.length > 0
+              ? 'Nothing matches that search.'
+              : view === 'removed'
+                ? 'Nothing has been removed. Entries you remove from the working list collect here.'
+                : 'No registrations yet. This list fills itself the moment somebody submits the form.'}
           </p>
         ) : (
           <table className="w-full border-collapse text-left text-[0.9rem]">
@@ -329,11 +391,16 @@ export default function Desk() {
                 {(tab === 'candidates' ? candHead : corpHead).map((h) => (
                   <th key={h} className="whitespace-nowrap px-4 py-3 font-semibold">{h}</th>
                 ))}
+                {/* Pinned to the right edge so the control stays reachable on a
+                    phone without scrolling the whole table across. */}
+                <th className="sticky right-0 whitespace-nowrap border-l border-sand bg-paper2 px-4 py-3 text-right font-semibold">
+                  {view === 'removed' ? 'Put back' : 'Remove'}
+                </th>
               </tr>
             </thead>
             <tbody>
               {shown.map((r, i) => (
-                <tr key={i} className="border-t border-sand align-top">
+                <tr key={r.id || i} className="border-t border-sand align-top">
                   <td className="whitespace-nowrap px-4 py-3 text-muted">{fmt(r.created_at)}</td>
                   {tab === 'candidates' ? (
                     <>
@@ -371,6 +438,46 @@ export default function Desk() {
                       </td>
                     </>
                   )}
+                  {/* Removing takes two taps. The first arms this one row and
+                      nothing else, so a stray tap while scrolling a phone at
+                      the venue does nothing. */}
+                  <td className="sticky right-0 whitespace-nowrap border-l border-sand bg-paper px-4 py-3 text-right">
+                    {!r.id ? (
+                      <span className="text-[0.8rem] text-muted">—</span>
+                    ) : view === 'removed' ? (
+                      <button
+                        disabled={acting === r.id}
+                        onClick={() => act('restore', r.id)}
+                        className="rounded-[4px] border border-forest px-3 py-1.5 text-[0.82rem] font-semibold text-forest transition hover:bg-forest hover:text-white disabled:opacity-50"
+                      >
+                        {acting === r.id ? 'Working' : 'Put back'}
+                      </button>
+                    ) : armed === r.id ? (
+                      <span className="inline-flex items-center gap-2">
+                        <button
+                          disabled={acting === r.id}
+                          onClick={() => act('remove', r.id)}
+                          className="rounded-[4px] bg-clay-deep px-3 py-1.5 text-[0.82rem] font-semibold text-white transition hover:bg-ink disabled:opacity-50"
+                        >
+                          {acting === r.id ? 'Removing' : 'Yes, remove'}
+                        </button>
+                        <button
+                          onClick={() => setArmed('')}
+                          className="text-[0.82rem] text-muted underline decoration-sand"
+                        >
+                          Keep
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => setArmed(r.id)}
+                        aria-label={'Remove ' + (r.name || r.organization || 'this entry')}
+                        className="rounded-[4px] border border-sand px-3 py-1.5 text-[0.82rem] font-semibold text-ink2 transition hover:border-clay hover:text-clay-deep"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -378,8 +485,11 @@ export default function Desk() {
         )}
       </div>
 
-      <p className="mt-4 text-[0.82rem] text-muted">
-        This page can only read. Nothing here can change or delete a registration.
+      <p className="mt-4 text-[0.82rem] leading-relaxed text-muted">
+        Removing an entry only hides it from the working list. It moves to Removed and
+        goes back with one tap, so nothing a candidate typed is ever destroyed from this
+        page. Rows already copied into the Google Sheet stay there and need clearing in
+        the sheet as well.
       </p>
     </section>
   )
