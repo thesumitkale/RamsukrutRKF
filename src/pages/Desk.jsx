@@ -443,7 +443,7 @@ export default function Desk() {
                       the venue does nothing. */}
                   <td className="sticky right-0 whitespace-nowrap border-l border-sand bg-paper px-4 py-3 text-right">
                     {!r.id ? (
-                      <span className="text-[0.8rem] text-muted">—</span>
+                      <span className="text-[0.8rem] text-muted">.</span>
                     ) : view === 'removed' ? (
                       <button
                         disabled={acting === r.id}
