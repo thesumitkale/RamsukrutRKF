@@ -184,11 +184,13 @@ export default function JobFair() {
       <section className="section-tint py-16 md:py-24">
         <div className="container-x">
           <SectionHead eyebrow={v.recEyebrow} title={v.recTitle} sub={v.recSub} />
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Flex-wrap rather than a grid so a part-filled last row stays centred
+             as the recruiter count grows. */}
+          <div className="flex flex-wrap justify-center gap-6">
             {v.recruiters.map((r, i) => (
-              <Reveal key={r.name} delay={i * 0.08} className="h-full">
+              <Reveal key={r.name} delay={i * 0.06} className="w-full sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-4.5rem)/4)]">
                 <article className="group flex h-full flex-col items-center rounded-[18px] border border-sand bg-paper p-7 text-center transition-all duration-300 hover:-translate-y-1.5 hover:border-clay hover:shadow-lift">
-                  {/* Fixed-height band so four logos of different proportions sit on one line. */}
+                  {/* Fixed-height band so logos of different proportions sit on one line. */}
                   <span className="flex h-20 w-full items-center justify-center">
                     <img src={r.logo} alt={r.name} loading="lazy" decoding="async"
                       className={`${r.logoH} w-auto max-w-[80%] object-contain`} />

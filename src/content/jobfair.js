@@ -84,8 +84,15 @@ const EXP_MR = ['फ्रेशर', '० ते १ वर्ष', '१ ते
    optical weight even though their artwork proportions differ. */
 const RECRUITERS = [
   { name: 'Bosch', logo: '/img/recruiters/bosch.svg', logoH: 'h-8 sm:h-9', tag_en: 'Manufacturing & engineering roles', tag_mr: 'उत्पादन व अभियांत्रिकी पदे' },
+  { name: 'CII', logo: '/img/recruiters/cii.png', logoH: 'h-12 sm:h-14', tag_en: 'Member companies hiring across functions', tag_mr: 'सर्व विभागांत सदस्य कंपन्यांची भरती' },
+  { name: 'Endurance Technologies', logo: '/img/recruiters/endurance.png', logoH: 'h-9 sm:h-10', tag_en: 'Manufacturing & plant roles', tag_mr: 'उत्पादन व प्लांट पदे' },
   { name: 'Akbar Travels', logo: '/img/recruiters/akbar-travels.svg', logoH: 'h-14 sm:h-16', tag_en: 'Travel, process & customer roles', tag_mr: 'ट्रॅव्हल, प्रोसेस व ग्राहक सेवा पदे' },
+  { name: 'ZentrumHub', logo: '/img/recruiters/zentrumhub.png', logoH: 'h-9 sm:h-10', tag_en: 'IT & software roles', tag_mr: 'आयटी व सॉफ्टवेअर पदे' },
+  { name: 'Techspian', logo: '/img/recruiters/techspian.svg', logoH: 'h-7 sm:h-8', tag_en: 'Engineering & software roles', tag_mr: 'अभियांत्रिकी व सॉफ्टवेअर पदे' },
+  { name: 'Hi-tech Services', logo: '/img/recruiters/hi-tech-services.png', logoH: 'h-9 sm:h-10', tag_en: 'Manufacturing & production roles', tag_mr: 'उत्पादन व प्रॉडक्शन पदे' },
+  { name: 'GAPS Energy', logo: '/img/recruiters/gaps-energy.png', logoH: 'h-14 sm:h-16', tag_en: 'Production & administration roles', tag_mr: 'उत्पादन व प्रशासन पदे' },
   { name: 'Dhiti Services', logo: '/img/recruiters/dhiti-services.webp', logoH: 'h-9 sm:h-10', tag_en: 'Services & operations roles', tag_mr: 'सेवा व ऑपरेशन्स पदे' },
+  { name: 'Resonance', logo: '/img/recruiters/resonance.png', logoH: 'h-12 sm:h-14', tag_en: 'Roles across IT, accounts & logistics', tag_mr: 'आयटी, अकाउंट्स व लॉजिस्टिक्स पदे' },
   { name: 'Zeal Connect', logo: '/img/recruiters/zeal-connect.png', logoH: 'h-8 sm:h-9', tag_en: 'Sales & support roles', tag_mr: 'विक्री व सपोर्ट पदे' },
 ]
 
