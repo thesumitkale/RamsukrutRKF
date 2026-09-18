@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import { JOBFAIR_DESK, JOBFAIR_KEY } from '../content/jobfair.js'
+import DeskMatch from '../components/DeskMatch.jsx'
 
 const REFRESH_MS = 15000
 
@@ -114,7 +115,9 @@ export default function Desk() {
     return () => clearTimeout(t)
   }, [armed])
 
-  const rows = view === 'removed' ? data2[tab] : data[tab]
+  /* Matching has no working list of its own, so it falls back to an empty
+     set here and renders its own view further down. */
+  const rows = (view === 'removed' ? data2[tab] : data[tab]) || []
 
   /* Remove hides a row from the working list. Restore brings it back. Both go
      through the server with the passcode, and the row itself is never deleted. */
@@ -255,7 +258,8 @@ export default function Desk() {
   /* ---------------------------------------------------------------- desk */
   const candHead = ['Time', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'Village', 'Taluka', 'District', 'Resume']
   const corpHead = ['Time', 'Organization', 'Contact', 'Mobile', 'Positions', 'Departments', 'JD']
-  const removedCount = data2[tab].length
+  const removedCount = (data2[tab] || []).length
+  const matching = tab === 'match'
 
   return (
     <section className="mx-auto max-w-[1180px] px-5 pb-14 pt-28 md:pt-32">
@@ -287,7 +291,7 @@ export default function Desk() {
       {err && <p className="mt-4 rounded-[4px] border border-sand bg-paper2 px-4 py-2 text-[0.88rem] text-ink2">{err}</p>}
       {actErr && <p className="mt-4 rounded-[4px] border border-clay/40 bg-clay/10 px-4 py-2 text-[0.88rem] font-medium text-clay-deep">{actErr}</p>}
 
-      {counts.length > 0 && (
+      {counts.length > 0 && !matching && (
         <div className="mt-6 flex flex-wrap gap-2">
           {counts.map(([k, n]) => (
             <button
@@ -306,10 +310,10 @@ export default function Desk() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <div className="flex rounded-[4px] border border-sand bg-paper p-1">
-          {[['candidates', 'Candidates'], ['corporates', 'Companies']].map(([k, label]) => (
+          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['match', 'Matching']].map(([k, label]) => (
             <button
               key={k}
-              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr('') }}
+              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr(''); setView('live') }}
               className={
                 'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
                 (tab === k ? 'bg-forest text-white' : 'text-ink2')
@@ -319,26 +323,30 @@ export default function Desk() {
             </button>
           ))}
         </div>
-        <div className="flex rounded-[4px] border border-sand bg-paper p-1">
-          {[['live', 'Working list'], ['removed', removedCount ? 'Removed ' + removedCount : 'Removed']].map(([k, label]) => (
-            <button
-              key={k}
-              onClick={() => { setView(k); setArmed(''); setActErr('') }}
-              className={
-                'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
-                (view === k ? 'bg-clay text-white' : 'text-ink2')
-              }
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-        <input
-          className={box + ' max-w-[280px]'}
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          placeholder="Search name, mobile, village"
-        />
+        {!matching && (
+          <div className="flex rounded-[4px] border border-sand bg-paper p-1">
+            {[['live', 'Working list'], ['removed', removedCount ? 'Removed ' + removedCount : 'Removed']].map(([k, label]) => (
+              <button
+                key={k}
+                onClick={() => { setView(k); setArmed(''); setActErr('') }}
+                className={
+                  'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
+                  (view === k ? 'bg-clay text-white' : 'text-ink2')
+                }
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
+        {!matching && (
+          <input
+            className={box + ' max-w-[280px]'}
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search name, mobile, village"
+          />
+        )}
         {tab === 'candidates' && (
           <select className={box + ' max-w-[220px]'} value={dept} onChange={(e) => setDept(e.target.value)}>
             <option value="">All departments</option>
@@ -351,6 +359,7 @@ export default function Desk() {
             {talukas.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         )}
+        {!matching && (
         <button
           disabled={!!zip}
           onClick={() => grabFiles()}
@@ -358,6 +367,8 @@ export default function Desk() {
         >
           {zip || (tab === 'candidates' ? 'Download all resumes' : 'Download all JDs')}
         </button>
+        )}
+        {!matching && (
         <button
           onClick={() => {
             if (tab === 'candidates') {
@@ -372,9 +383,13 @@ export default function Desk() {
         >
           Download CSV
         </button>
-        <span className="text-[0.85rem] text-muted">{shown.length} shown</span>
+        )}
+        {!matching && <span className="text-[0.85rem] text-muted">{shown.length} shown</span>}
       </div>
 
+      {matching && <DeskMatch candidates={data.candidates} corporates={data.corporates} />}
+
+      {!matching && (
       <div className="mt-5 overflow-x-auto rounded-[8px] border border-sand bg-paper shadow-soft">
         {shown.length === 0 ? (
           <p className="px-5 py-12 text-center text-[0.95rem] text-muted">
@@ -484,13 +499,16 @@ export default function Desk() {
           </table>
         )}
       </div>
+      )}
 
+      {!matching && (
       <p className="mt-4 text-[0.82rem] leading-relaxed text-muted">
         Removing an entry only hides it from the working list. It moves to Removed and
         goes back with one tap, so nothing a candidate typed is ever destroyed from this
         page. Rows already copied into the Google Sheet stay there and need clearing in
         the sheet as well.
       </p>
+      )}
     </section>
   )
 }
