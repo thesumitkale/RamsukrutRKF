@@ -12,6 +12,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { JOBFAIR_DESK, JOBFAIR_KEY } from '../content/jobfair.js'
 import DeskMatch from '../components/DeskMatch.jsx'
+import DeskCandidate from '../components/DeskCandidate.jsx'
 
 const REFRESH_MS = 15000
 
@@ -59,6 +60,7 @@ export default function Desk() {
   const [acting, setActing] = useState('')      // row id currently being written
   const [actErr, setActErr] = useState('')
   const [data2, setData2] = useState({ candidates: [], corporates: [] }) // removed rows
+  const [interviews, setInterviews] = useState([])  // which processes each candidate signed up for
 
   const load = async (theCode) => {
     setBusy(true)
@@ -81,6 +83,7 @@ export default function Desk() {
       if (!out.ok) throw new Error('read failed')
       setData({ candidates: out.candidates || [], corporates: out.corporates || [] })
       setData2({ candidates: out.removed_candidates || [], corporates: out.removed_corporates || [] })
+      setInterviews(out.interviews || [])
       setAt(new Date())
       setErr('')
       setBusy(false)
@@ -260,6 +263,50 @@ export default function Desk() {
   const corpHead = ['Time', 'Organization', 'Contact', 'Mobile', 'Positions', 'Departments', 'JD']
   const removedCount = (data2[tab] || []).length
   const matching = tab === 'match'
+  const sitting = tab === 'sit'
+  /* Matching and Sign ups render their own screens, so the shared filter bar,
+     table and downloads below are all held back for them. */
+  const plain = !matching && !sitting
+
+  /* One candidate choosing one company process. Its own table on the server,
+     so nothing a candidate or a company typed can be changed from here.
+
+     The screen is updated the moment the server says yes, rather than waiting
+     on a fresh read of every registration. At a desk with a queue behind it a
+     two second pause after each tap reads as a broken button. The next poll
+     reconciles against the server anyway. */
+  const sit = async (payload) => {
+    try {
+      const res = await fetch(JOBFAIR_DESK, {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + JOBFAIR_KEY,
+          apikey: JOBFAIR_KEY,
+          'x-desk-code': code.trim(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ action: 'sit', ...payload }),
+      })
+      const out = await res.json()
+      if (!out.ok) return false
+      setInterviews((prev) => {
+        const rest = prev.filter(
+          (x) => !(x.candidate_id === payload.candidate_id && x.corporate_id === payload.corporate_id),
+        )
+        if (!payload.on) return rest
+        return [...rest, {
+          candidate_id: payload.candidate_id,
+          corporate_id: payload.corporate_id,
+          fit: payload.fit,
+          band: payload.band,
+          created_at: new Date().toISOString(),
+        }]
+      })
+      return true
+    } catch (e) {
+      return false
+    }
+  }
 
   return (
     <section className="mx-auto max-w-[1180px] px-5 pb-14 pt-28 md:pt-32">
@@ -291,7 +338,7 @@ export default function Desk() {
       {err && <p className="mt-4 rounded-[4px] border border-sand bg-paper2 px-4 py-2 text-[0.88rem] text-ink2">{err}</p>}
       {actErr && <p className="mt-4 rounded-[4px] border border-clay/40 bg-clay/10 px-4 py-2 text-[0.88rem] font-medium text-clay-deep">{actErr}</p>}
 
-      {counts.length > 0 && !matching && (
+      {counts.length > 0 && plain && (
         <div className="mt-6 flex flex-wrap gap-2">
           {counts.map(([k, n]) => (
             <button
@@ -310,7 +357,7 @@ export default function Desk() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <div className="flex rounded-[4px] border border-sand bg-paper p-1">
-          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['match', 'Matching']].map(([k, label]) => (
+          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['match', 'Matching'], ['sit', 'Sign ups']].map(([k, label]) => (
             <button
               key={k}
               onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr(''); setView('live') }}
@@ -323,7 +370,7 @@ export default function Desk() {
             </button>
           ))}
         </div>
-        {!matching && (
+        {plain && (
           <div className="flex rounded-[4px] border border-sand bg-paper p-1">
             {[['live', 'Working list'], ['removed', removedCount ? 'Removed ' + removedCount : 'Removed']].map(([k, label]) => (
               <button
@@ -339,7 +386,7 @@ export default function Desk() {
             ))}
           </div>
         )}
-        {!matching && (
+        {plain && (
           <input
             className={box + ' max-w-[280px]'}
             value={q}
@@ -359,7 +406,7 @@ export default function Desk() {
             {talukas.map((t) => <option key={t} value={t}>{t}</option>)}
           </select>
         )}
-        {!matching && (
+        {plain && (
         <button
           disabled={!!zip}
           onClick={() => grabFiles()}
@@ -368,7 +415,7 @@ export default function Desk() {
           {zip || (tab === 'candidates' ? 'Download all resumes' : 'Download all JDs')}
         </button>
         )}
-        {!matching && (
+        {plain && (
         <button
           onClick={() => {
             if (tab === 'candidates') {
@@ -384,12 +431,22 @@ export default function Desk() {
           Download CSV
         </button>
         )}
-        {!matching && <span className="text-[0.85rem] text-muted">{shown.length} shown</span>}
+        {plain && <span className="text-[0.85rem] text-muted">{shown.length} shown</span>}
       </div>
 
-      {matching && <DeskMatch candidates={data.candidates} corporates={data.corporates} />}
+      {matching && (
+        <DeskMatch candidates={data.candidates} corporates={data.corporates} interviews={interviews} />
+      )}
+      {sitting && (
+        <DeskCandidate
+          candidates={data.candidates}
+          corporates={data.corporates}
+          interviews={interviews}
+          onSit={sit}
+        />
+      )}
 
-      {!matching && (
+      {plain && (
       <div className="mt-5 overflow-x-auto rounded-[8px] border border-sand bg-paper shadow-soft">
         {shown.length === 0 ? (
           <p className="px-5 py-12 text-center text-[0.95rem] text-muted">
@@ -501,7 +558,7 @@ export default function Desk() {
       </div>
       )}
 
-      {!matching && (
+      {plain && (
       <p className="mt-4 text-[0.82rem] leading-relaxed text-muted">
         Removing an entry only hides it from the working list. It moves to Removed and
         goes back with one tap, so nothing a candidate typed is ever destroyed from this

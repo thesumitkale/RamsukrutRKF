@@ -133,27 +133,96 @@ Deno.serve(async (req) => {
     return json({ ok: true, action, id });
   }
 
+  // A candidate picking which company processes to sit for. Its own table, so
+  // nothing a candidate or a company typed is ever touched by this write. An
+  // untick stamps removed_at rather than deleting, same habit as the rest of
+  // the desk, and ticking again clears the stamp.
+  if (action === "sit") {
+    const candidate_id = String(body.candidate_id || "");
+    const corporate_id = String(body.corporate_id || "");
+    const on = body.on !== false;
+    if (!candidate_id || !corporate_id) return json({ ok: false, error: "bad_request" }, 400);
+
+    const fit = Number.isFinite(Number(body.fit)) ? Math.round(Number(body.fit)) : null;
+    const band = body.band ? String(body.band).slice(0, 24) : null;
+    const now = new Date().toISOString();
+
+    const { error } = await db
+      .from("rkf_jobfair_interviews")
+      .upsert(
+        {
+          candidate_id,
+          corporate_id,
+          fit,
+          band,
+          updated_at: now,
+          removed_at: on ? null : now,
+        },
+        { onConflict: "candidate_id,corporate_id" },
+      );
+
+    if (error) {
+      console.error("desk sit failed", candidate_id, corporate_id, error.message);
+      return json({ ok: false, error: "write_failed" }, 500);
+    }
+    console.log("desk sit", on ? "on" : "off", candidate_id, corporate_id, fit);
+    return json({ ok: true, action, candidate_id, corporate_id, on });
+  }
+
   if (action !== "list") return json({ ok: false, error: "unknown_action" }, 400);
 
-  const read = (which: Which) =>
-    db
-      .from(TABLES[which].table)
-      .select(TABLES[which].cols)
-      .order("created_at", { ascending: false })
-      .limit(TABLES[which].limit);
+  // PostgREST caps a single response at its own max rows, which is well below
+  // the number of registrations now in the table. Asking for a bigger limit
+  // does not lift that cap, it just silently truncates, so read in pages and
+  // stop when a page comes back short.
+  const PAGE = 900;
+  const readAll = async (
+    table: string,
+    cols: string,
+    cap: number,
+    order: string,
+    tune?: (q: any) => any,
+  ) => {
+    const rows: Record<string, unknown>[] = [];
+    for (let from = 0; from < cap; from += PAGE) {
+      let q = db.from(table).select(cols).order(order, { ascending: false });
+      if (tune) q = tune(q);
+      const { data, error } = await q.range(from, from + PAGE - 1);
+      if (error) return { rows, error };
+      const page = (data ?? []) as Record<string, unknown>[];
+      rows.push(...page);
+      if (page.length < PAGE) break;
+    }
+    return { rows, error: null };
+  };
 
-  const [cand, corp] = await Promise.all([read("candidates"), read("corporates")]);
+  const read = (which: Which) =>
+    readAll(TABLES[which].table, TABLES[which].cols, TABLES[which].limit, "created_at");
+
+  const [cand, corp, sits] = await Promise.all([
+    read("candidates"),
+    read("corporates"),
+    readAll(
+      "rkf_jobfair_interviews",
+      "candidate_id,corporate_id,fit,band,created_at",
+      20000,
+      "created_at",
+      (q) => q.is("removed_at", null),
+    ),
+  ]);
 
   if (cand.error || corp.error) {
     console.error("desk read failed", cand.error?.message, corp.error?.message);
     return json({ ok: false, error: "read_failed" }, 500);
   }
+  // A missing interviews table must not take the whole desk down.
+  if (sits.error) console.error("desk interviews read failed", sits.error.message);
 
   const live = (rows: Record<string, unknown>[]) => rows.filter((r) => !r.removed_at);
   const gone = (rows: Record<string, unknown>[]) => rows.filter((r) => r.removed_at);
 
-  const candRows = (cand.data ?? []) as Record<string, unknown>[];
-  const corpRows = (corp.data ?? []) as Record<string, unknown>[];
+  const candRows = cand.rows;
+  const corpRows = corp.rows;
 
   return json({
     ok: true,
@@ -162,5 +231,6 @@ Deno.serve(async (req) => {
     corporates: live(corpRows),
     removed_candidates: gone(candRows),
     removed_corporates: gone(corpRows),
+    interviews: sits.rows,
   });
 });
