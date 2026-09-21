@@ -1,6 +1,14 @@
 // Ramsukrut Job Fair 2026 intake.
 // Accepts one form submission, stores the file privately, writes one row.
 // It cannot read anything back out.
+//
+// One person is one row. People resubmit constantly: they fix a spelling, they
+// come back with a resume they did not have on the first try, a helper at a
+// college fills the form again on their behalf. Earlier every one of those made
+// a new row, so the headline count was wrong by a quarter. Now a repeat on the
+// same mobile updates the row we already hold and never creates a second one.
+// A partial unique index on the live rows enforces the same thing underneath,
+// so even a race between two taps cannot get two rows in.
 
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 
@@ -64,6 +72,40 @@ async function storeFile(kind: string, file: File): Promise<[string, string]> {
   return [`${URL_}/storage/v1${signedURL}`, file.name];
 }
 
+// Only overwrite with something. A resubmitted form that leaves a field blank
+// must not wipe an answer the person already gave us.
+function merge(
+  existing: Record<string, unknown>,
+  incoming: Record<string, unknown>,
+): Record<string, unknown> {
+  const patch: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(incoming)) {
+    if (v === "" || v === null || v === undefined) continue;
+    if (String(existing[k] ?? "") === String(v)) continue;
+    patch[k] = v;
+  }
+  return patch;
+}
+
+async function findLive(table: string, query: string) {
+  const r = await fetch(`${URL_}/rest/v1/${table}?${query}&removed_at=is.null&limit=1`, {
+    headers: { ...auth },
+  });
+  if (!r.ok) return null;
+  const rows = await r.json();
+  return Array.isArray(rows) && rows.length ? rows[0] : null;
+}
+
+async function updateRow(table: string, id: string, patch: Record<string, unknown>) {
+  if (!Object.keys(patch).length) return;
+  const r = await fetch(`${URL_}/rest/v1/${table}?id=eq.${id}`, {
+    method: "PATCH",
+    headers: { ...auth, "Content-Type": "application/json", Prefer: "return=minimal" },
+    body: JSON.stringify(patch),
+  });
+  if (!r.ok) throw new Error(`update_failed:${r.status}:${await r.text()}`);
+}
+
 async function insertRow(table: string, row: Record<string, unknown>) {
   const r = await fetch(`${URL_}/rest/v1/${table}`, {
     method: "POST",
@@ -104,7 +146,7 @@ Deno.serve(async (req: Request) => {
       const village = clean(fd.get("village"), 120);
       const taluka = clean(fd.get("taluka"), 120);
       const district = clean(fd.get("district"), 120);
-      await insertRow("rkf_jobfair_candidates", {
+      const row: Record<string, unknown> = {
         name,
         mobile,
         email: clean(fd.get("email"), 160),
@@ -116,11 +158,34 @@ Deno.serve(async (req: Request) => {
         district,
         // city is retained so the older rows and any hand shared link keep working.
         city: clean(fd.get("city"), 120),
-        resume_url,
-        resume_name,
         lang,
         source: clean(fd.get("source"), 120) || "website",
-      });
+      };
+      // The resume only moves if they actually attached one this time.
+      if (resume_url) {
+        row.resume_url = resume_url;
+        row.resume_name = resume_name;
+      }
+
+      const digits = mobile.replace(/\D/g, "").slice(-10);
+      const seen = await findLive("rkf_jobfair_candidates", `mobile10=eq.${digits}&select=*`);
+      if (seen) {
+        await updateRow("rkf_jobfair_candidates", String(seen.id), merge(seen, row));
+        return reply(200, { ok: true, updated: true });
+      }
+
+      if (!resume_url) { row.resume_url = ""; row.resume_name = ""; }
+      try {
+        await insertRow("rkf_jobfair_candidates", row);
+      } catch (e) {
+        // Two taps in the same instant. The index caught the second one, so
+        // treat it as the update it always meant to be.
+        if (!String((e as Error).message).includes("23505")) throw e;
+        const now = await findLive("rkf_jobfair_candidates", `mobile10=eq.${digits}&select=*`);
+        if (!now) throw e;
+        await updateRow("rkf_jobfair_candidates", String(now.id), merge(now, row));
+        return reply(200, { ok: true, updated: true });
+      }
       return reply(200, { ok: true });
     }
 
@@ -132,21 +197,54 @@ Deno.serve(async (req: Request) => {
       }
       let jd_url = "", jd_name = "";
       if (hasFile) [jd_url, jd_name] = await storeFile("jds", file as File);
-      await insertRow("rkf_jobfair_corporates", {
+      const mobile = clean(fd.get("mobile"), 20);
+      const email = clean(fd.get("email"), 160);
+      const row: Record<string, unknown> = {
         organization,
         contact_name,
         title: clean(fd.get("title"), 120),
-        email: clean(fd.get("email"), 160),
-        mobile: clean(fd.get("mobile"), 20),
+        email,
+        mobile,
         positions: clean(fd.get("positions"), 100),
         compensation: clean(fd.get("compensation"), 100),
         departments: clean(fd.get("departments"), 400),
-        jd_url,
-        jd_name,
         notes: clean(fd.get("notes"), 2000),
         lang,
         source: clean(fd.get("source"), 120) || "website",
-      });
+      };
+      if (jd_url) { row.jd_url = jd_url; row.jd_name = jd_name; }
+
+      // No index here. Employers spell their own name three ways and two real
+      // desks can share a head office switchboard, so this matches on the
+      // things that are actually the same desk and leaves the rest alone.
+      const norm = (v: unknown) =>
+        String(v ?? "").toLowerCase().replace(/[^a-z0-9]+/g, " ")
+          .replace(/\b(pvt|private|ltd|limited|llp|inc|co|company|india)\b/g, " ")
+          .replace(/\s+/g, " ").trim();
+      const tail = (v: unknown) => String(v ?? "").replace(/\D/g, "").slice(-10);
+
+      const all = await fetch(
+        `${URL_}/rest/v1/rkf_jobfair_corporates?removed_at=is.null&select=*`,
+        { headers: { ...auth } },
+      );
+      const liveRows = all.ok ? await all.json() : [];
+      const wantOrg = norm(organization);
+      const wantTail = tail(mobile);
+      const seen = Array.isArray(liveRows)
+        ? liveRows.find((c: Record<string, unknown>) =>
+          (wantOrg && norm(c.organization) === wantOrg) ||
+          (wantTail.length === 10 && tail(c.mobile) === wantTail) ||
+          (!!email && String(c.email ?? "").toLowerCase() === email.toLowerCase())
+        )
+        : null;
+
+      if (seen) {
+        await updateRow("rkf_jobfair_corporates", String(seen.id), merge(seen, row));
+        return reply(200, { ok: true, updated: true });
+      }
+
+      if (!jd_url) { row.jd_url = ""; row.jd_name = ""; }
+      await insertRow("rkf_jobfair_corporates", row);
       return reply(200, { ok: true });
     }
 

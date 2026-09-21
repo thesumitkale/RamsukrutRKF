@@ -72,7 +72,7 @@ const FILE_ACCEPT = [
 const cls = 'w-full rounded-[4px] border border-sand bg-paper px-4 py-3 text-[1rem] text-ink outline-none transition focus:border-clay'
 
 export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
-  const [state, setState] = useState('idle') // idle | sending | done | doneNoFile | fail
+  const [state, setState] = useState('idle') // idle | sending | done | doneUpdated | doneNoFile | fail
   const [fileName, setFileName] = useState('')
   const [fileError, setFileError] = useState('')
   const [picked, setPicked] = useState({})   // multi-choice fields: name -> [values]
@@ -245,7 +245,16 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
          of implying the resume is on file when it is not. */
       const savedFlag = kind === 'corporate' ? out.jd_saved : out.resume_saved
       const fileMissing = hadFile && savedFlag === false
-      setState(fileMissing && copy.doneNoFile ? 'doneNoFile' : 'done')
+      /* A repeat on the same mobile updates the row we already hold. Saying so
+         stops the person wondering whether the first one counted, which is
+         what made them submit again in the first place. */
+      setState(
+        fileMissing && copy.doneNoFile
+          ? 'doneNoFile'
+          : out.updated && copy.doneUpdated
+            ? 'doneUpdated'
+            : 'done',
+      )
       form.reset(); setFileName(''); setFileError(''); setPicked({}); setOtherOn({}); setChosen({})
     } catch (err) {
       setState('fail')
@@ -351,9 +360,9 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
 
       <p className="mt-4 text-center text-[.84rem] leading-relaxed text-ink-2/75">{copy.note}</p>
 
-      {(state === 'done' || state === 'doneNoFile') && (
+      {(state === 'done' || state === 'doneUpdated' || state === 'doneNoFile') && (
         <p role="status" className="mt-4 rounded-[4px] border border-teal-deep/30 bg-teal/10 px-4 py-3 text-center text-[1rem] font-medium text-teal-ink">
-          {state === 'doneNoFile' ? copy.doneNoFile : copy.done}
+          {state === 'doneNoFile' ? copy.doneNoFile : state === 'doneUpdated' ? copy.doneUpdated : copy.done}
         </p>
       )}
       {state === 'fail' && (

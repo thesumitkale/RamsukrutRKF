@@ -143,7 +143,16 @@ export default function Desk() {
       if (!out.ok) throw new Error(out.error || 'failed')
       await load(code.trim())
     } catch (e) {
-      setActErr(action === 'remove' ? 'Could not remove that entry. Try again.' : 'Could not put that entry back. Try again.')
+      /* Restoring a duplicate is refused on purpose, so name the reason
+         rather than telling someone to try again at something that will
+         never work. */
+      setActErr(
+        String(e.message) === 'already_registered'
+          ? 'That person is already on the working list under the same mobile number. This entry is the duplicate, so it stays here.'
+          : action === 'remove'
+            ? 'Could not remove that entry. Try again.'
+            : 'Could not put that entry back. Try again.',
+      )
     }
     setActing('')
   }

@@ -126,6 +126,13 @@ Deno.serve(async (req) => {
 
     const { error } = await db.from(spec.table).update(patch).eq("id", id);
     if (error) {
+      // A live row already holds this mobile. Putting this one back would put
+      // the same person on the list twice, which is the thing the index exists
+      // to stop, so say that plainly instead of a generic failure.
+      if (String(error.code) === "23505" || /duplicate key/i.test(error.message)) {
+        console.log("desk restore blocked as duplicate", which, id);
+        return json({ ok: false, error: "already_registered" }, 409);
+      }
       console.error("desk restore failed", which, id, error.message);
       return json({ ok: false, error: "write_failed" }, 500);
     }
