@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { JOBFAIR_ENDPOINT, JOBFAIR_KEY, JOBFAIR_WA } from '../content/jobfair.js'
 import { Arrow, Wa } from './Icons.jsx'
@@ -71,7 +72,7 @@ const FILE_ACCEPT = [
 
 const cls = 'w-full rounded-[4px] border border-sand bg-paper px-4 py-3 text-[1rem] text-ink outline-none transition focus:border-clay'
 
-export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
+export default function JobFairForm({ kind, copy, fields, lang, waIntro, nextCta }) {
   const [state, setState] = useState('idle') // idle | sending | done | doneUpdated | doneNoFile | fail
   const [fileName, setFileName] = useState('')
   const [fileError, setFileError] = useState('')
@@ -364,6 +365,14 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro }) {
         <p role="status" className="mt-4 rounded-[4px] border border-teal-deep/30 bg-teal/10 px-4 py-3 text-center text-[1rem] font-medium text-teal-ink">
           {state === 'doneNoFile' ? copy.doneNoFile : state === 'doneUpdated' ? copy.doneUpdated : copy.done}
         </p>
+      )}
+      {/* The obvious next question after registering is "so which companies
+          will see me". It is answered one tap away rather than by a phone call. */}
+      {kind === 'candidate' && (state === 'done' || state === 'doneUpdated' || state === 'doneNoFile') && nextCta && (
+        <Link to="/my-options"
+          className="mt-3 flex items-center justify-center gap-2 rounded-[4px] bg-teal-ink px-4 py-3.5 text-center font-sans text-[.95rem] font-bold text-white transition hover:brightness-110">
+          {nextCta}
+        </Link>
       )}
       {state === 'fail' && (
         <div className="mt-4 rounded-[4px] border border-clay/40 bg-clay/10 px-4 py-3 text-center">

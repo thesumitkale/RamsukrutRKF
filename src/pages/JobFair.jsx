@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
 import { jobfair, JOBFAIR_PHONE, JOBFAIR_WA } from '../content/jobfair.js'
@@ -238,6 +239,31 @@ export default function JobFair() {
         </div>
       </section>
 
+      {/* ------------------------------------------- Already registered strip
+          Sits between the company list and the form on purpose. Somebody who
+          has just read the seventeen names and thinks "which of these is for
+          me" gets the answer here instead of scrolling into a form they have
+          already filled in. */}
+      <section className="pb-4">
+        <div className="container-x">
+          <Reveal>
+            <div className="flex flex-col gap-5 rounded-[6px] border border-sand bg-forest px-6 py-7 text-white sm:px-8 md:flex-row md:items-center md:justify-between">
+              <div className="max-w-xl">
+                <h3 className="font-display text-[1.2rem] font-bold leading-snug md:text-[1.4rem]">{v.mine.bannerTitle}</h3>
+                <p className="mt-2 text-[.95rem] leading-relaxed text-white/80">{v.mine.bannerBody}</p>
+              </div>
+              <Link
+                to="/my-options"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-[4px] bg-clay px-6 py-3.5 font-display text-[.95rem] font-bold text-white transition hover:bg-clay-deep"
+              >
+                {v.mine.checkCta}
+                <Arrow className="h-4 w-4" />
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
       {/* -------------------------------------------------------------- Forms */}
       <section id="register" className="scroll-mt-24 py-16 md:py-24">
         <div className="container-x">
@@ -255,7 +281,7 @@ export default function JobFair() {
 
           <div className="mx-auto max-w-3xl">
             {tab === 'candidate' ? (
-              <JobFairForm key="candidate" kind="candidate" copy={v.candidate}
+              <JobFairForm key="candidate" kind="candidate" copy={v.candidate} nextCta={v.mine.checkCta}
                 fields={candidateFields(v.candidate, lang)} lang={lang} waIntro={v.waIntro} />
             ) : (
               <JobFairForm key="corporate" kind="corporate" copy={v.corporate}

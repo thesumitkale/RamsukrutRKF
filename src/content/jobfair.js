@@ -15,6 +15,10 @@ export const JOBFAIR_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXB
    passcode is checked on the server, never stored in this file.        */
 export const JOBFAIR_DESK = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/rkf-jobfair-desk'
 
+/* Public read for a candidate who already registered. Keyed on their own
+   mobile number, no passcode, returns only their own row. */
+export const JOBFAIR_ME = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/rkf-jobfair-me'
+
 export const JOBFAIR_WA = '917277404040'
 export const JOBFAIR_PHONE = '+91 72774 04040'
 
@@ -101,6 +105,29 @@ const RECRUITERS = [
   { name: 'Diamond Pipe Supports', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production and supervisor roles', tag_mr: 'उत्पादन व सुपरवायझर पदे' },
   { name: 'Techsham Stamping', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
 ]
+
+/* The answer a candidate chose is stored exactly as they picked it, in the
+   language they registered in. These lists are index aligned, so a stored
+   answer can be shown back in whichever language the reader is using now,
+   without rewriting anything in the database. */
+const ANSWER_PAIRS = [
+  [DEPTS_EN, DEPTS_MR],
+  [QUALIF_EN, QUALIF_MR],
+  [EXP_EN, EXP_MR],
+  [POS_EN, POS_MR],
+]
+
+export function localizeAnswer(value, lang) {
+  const v = String(value || '').trim()
+  if (!v) return v
+  for (const [en, mr] of ANSWER_PAIRS) {
+    const from = lang === 'mr' ? en : mr
+    const to = lang === 'mr' ? mr : en
+    const i = from.indexOf(v)
+    if (i >= 0) return to[i] || v
+  }
+  return v
+}
 
 export const jobfair = {
   en: {
@@ -233,6 +260,55 @@ export const jobfair = {
       { q: 'Can I come without registering online?', a: 'Yes, walk-ins are welcome. But registering online means companies see your resume in advance, so your interview is far quicker.' },
       { q: 'Who can I call for help?', a: 'Ring or WhatsApp the foundation on ' + JOBFAIR_PHONE + ' between 9:00 AM and 6:00 PM.' },
     ],
+
+    mine: {
+      navLabel: 'My options',
+      checkCta: 'See which companies you match with',
+      bannerTitle: 'Already registered?',
+      bannerBody: 'Enter your mobile number and see which of the confirmed companies you match with, and pick the ones you want to sit for on the day.',
+      metaTitle: 'Check your interview options | Ramsukrut Job Fair 2026',
+      metaDesc: 'Already registered for the Ramsukrut Job Fair? Enter your mobile number to see which companies you match with on 29 September and choose the ones you want to sit for.',
+      badge: 'For registered candidates',
+      h1: 'See which companies<br/>you can sit for',
+      sub: 'Type the mobile number you registered with. You will see every company coming on 29 September that fits what you have studied and done, strongest match first, and you can pick the ones you want to appear for.',
+      inputLabel: 'Your registered mobile number',
+      inputPh: '10 digit number',
+      cta: 'Show my companies',
+      loading: 'Checking',
+      errShort: 'Enter the 10 digit mobile number you registered with.',
+      errNet: 'That did not go through. Check your network and try again.',
+      notFoundTitle: 'No registration on this number',
+      notFoundBody: 'We could not find anyone registered on this number. If you used a different number, try that one. If you have not registered yet, it takes two minutes and it is free.',
+      notFoundCta: 'Register now',
+      hello: 'Hello',
+      youAre: 'Registered for',
+      from: 'From',
+      change: 'Use a different number',
+      strongTitle: 'Strong matches',
+      strongSub: 'These companies are hiring for what you have studied and done. Start here.',
+      okTitle: 'Other options worth trying',
+      okSub: 'A weaker fit, but the desk will still see you. Pick these as backups.',
+      showMore: 'Show weaker options',
+      showLess: 'Hide weaker options',
+      noneTitle: 'No company matches yet',
+      noneBody: 'More companies are confirming every week. We will call you when one matches what you are looking for. You can still walk in on the day.',
+      bandStrong: 'Strong match',
+      bandOk: 'Good option',
+      bandWeak: 'Backup option',
+      openings: 'openings',
+      pick: 'I want to sit for this',
+      picked: 'You are signed up',
+      saving: 'Saving',
+      chosenNone: 'You have not picked any company yet. Tap the companies you want to appear for.',
+      chosenOne: 'You are signed up for 1 company.',
+      chosenMany: 'You are signed up for {n} companies.',
+      chosenHint: 'Nothing else to do now. Reach the venue by 9:00 AM on 29 September with three copies of your resume and an Aadhaar copy. Show this screen at the help desk and they will point you to your first company.',
+      noResume: 'You have not attached a resume. Bring three printed copies on the day, or reach by 9:00 AM and our volunteers will make one for you at the venue for free.',
+      why: 'Why this match',
+      helpTitle: 'Something look wrong?',
+      helpBody: 'If your details are out of date, register again with the same number and the new answers will replace the old ones. For anything else, call or WhatsApp us.',
+      privacy: 'Only your own registration is shown. Your resume and email are never displayed on this screen.',
+    },
 
     ctaTitle: 'A job here is a future for a whole family',
     ctaSub: 'Register today, tell a friend who is looking, and be at the venue on 29 September.',
@@ -370,6 +446,55 @@ export const jobfair = {
       { q: 'ऑनलाइन नोंदणीशिवाय येऊ शकतो का?', a: 'हो, थेट येऊ शकता. पण ऑनलाइन नोंदणी केल्यास कंपन्या तुमचा रेझ्युमे आधीच पाहतात आणि मुलाखत लवकर होते.' },
       { q: 'मदतीसाठी कोणाला फोन करावा?', a: 'सकाळी ९:०० ते सायंकाळी ६:०० या वेळेत ' + JOBFAIR_PHONE + ' या क्रमांकावर फोन किंवा WhatsApp करा.' },
     ],
+
+    mine: {
+      navLabel: 'माझे पर्याय',
+      checkCta: 'तुमच्याशी कोणत्या कंपन्या जुळतात ते पाहा',
+      bannerTitle: 'नोंदणी आधीच केली आहे का?',
+      bannerBody: 'तुमचा मोबाइल क्रमांक टाका आणि निश्चित झालेल्या कंपन्यांपैकी तुमच्याशी कोणत्या जुळतात ते पाहा, आणि त्या दिवशी कोणत्या कंपन्यांमध्ये बसायचे ते निवडा.',
+      metaTitle: 'तुमच्या मुलाखतीच्या संधी पाहा | रामसुकृत रोजगार मेळावा 2026',
+      metaDesc: 'रामसुकृत रोजगार मेळाव्यासाठी नोंदणी केली आहे का? तुमचा मोबाइल क्रमांक टाका आणि 29 सप्टेंबरला कोणत्या कंपन्यांशी तुमचे जुळते ते पाहा.',
+      badge: 'नोंदणी केलेल्या उमेदवारांसाठी',
+      h1: 'तुम्ही कोणत्या कंपन्यांमध्ये<br/>बसू शकता ते पाहा',
+      sub: 'तुम्ही ज्या मोबाइल क्रमांकावरून नोंदणी केली तो टाका. 29 सप्टेंबरला येणाऱ्या ज्या कंपन्या तुमच्या शिक्षणाशी आणि अनुभवाशी जुळतात त्या सर्व दिसतील, सर्वात जुळणारी आधी, आणि तुम्ही हव्या त्या कंपन्या निवडू शकता.',
+      inputLabel: 'नोंदणी केलेला मोबाइल क्रमांक',
+      inputPh: '10 अंकी क्रमांक',
+      cta: 'माझ्या कंपन्या दाखवा',
+      loading: 'तपासत आहोत',
+      errShort: 'नोंदणी केलेला 10 अंकी मोबाइल क्रमांक टाका.',
+      errNet: 'हे पाठवता आले नाही. नेटवर्क तपासा आणि पुन्हा प्रयत्न करा.',
+      notFoundTitle: 'या क्रमांकावर नोंदणी आढळली नाही',
+      notFoundBody: 'या क्रमांकावर कोणाचीही नोंदणी सापडली नाही. तुम्ही दुसरा क्रमांक वापरला असेल तर तो टाकून पाहा. अजून नोंदणी केली नसेल तर ती फक्त दोन मिनिटांची आहे आणि नि:शुल्क आहे.',
+      notFoundCta: 'आता नोंदणी करा',
+      hello: 'नमस्कार',
+      youAre: 'नोंदणी केली आहे',
+      from: 'गाव',
+      change: 'दुसरा क्रमांक वापरा',
+      strongTitle: 'पक्के जुळणारे पर्याय',
+      strongSub: 'तुम्ही जे शिकला आहात आणि जे काम केले आहे त्यासाठीच या कंपन्या भरती करत आहेत. इथून सुरुवात करा.',
+      okTitle: 'इतर पर्याय, प्रयत्न करण्यासारखे',
+      okSub: 'जुळणी थोडी कमी आहे, पण डेस्क तुम्हाला भेटेलच. हे राखीव पर्याय म्हणून निवडा.',
+      showMore: 'कमी जुळणारे पर्याय दाखवा',
+      showLess: 'कमी जुळणारे पर्याय लपवा',
+      noneTitle: 'अजून कोणतीही कंपनी जुळत नाही',
+      noneBody: 'दर आठवड्याला आणखी कंपन्या निश्चित होत आहेत. तुमच्यासाठी योग्य कंपनी आली की आम्ही फोन करू. तुम्ही त्या दिवशी थेट येऊ शकताच.',
+      bandStrong: 'पक्की जुळणी',
+      bandOk: 'चांगला पर्याय',
+      bandWeak: 'राखीव पर्याय',
+      openings: 'जागा',
+      pick: 'मला इथे बसायचे आहे',
+      picked: 'तुमची नोंद झाली आहे',
+      saving: 'नोंदवत आहोत',
+      chosenNone: 'तुम्ही अजून कोणतीही कंपनी निवडलेली नाही. ज्या कंपन्यांमध्ये बसायचे आहे त्यावर टॅप करा.',
+      chosenOne: 'तुमची 1 कंपनीसाठी नोंद झाली आहे.',
+      chosenMany: 'तुमची {n} कंपन्यांसाठी नोंद झाली आहे.',
+      chosenHint: 'आता दुसरे काही करायचे नाही. 29 सप्टेंबरला सकाळी 9:00 पर्यंत रेझ्युमेच्या तीन प्रती आणि आधार कार्डाची प्रत घेऊन ठिकाणी पोहोचा. मदत कक्षात ही स्क्रीन दाखवा, ते तुम्हाला पहिल्या कंपनीकडे पाठवतील.',
+      noResume: 'तुम्ही रेझ्युमे जोडलेला नाही. त्या दिवशी छापील तीन प्रती आणा, किंवा सकाळी 9:00 पर्यंत पोहोचा, आमचे स्वयंसेवक जागेवरच नि:शुल्क रेझ्युमे तयार करून देतील.',
+      why: 'ही जुळणी का',
+      helpTitle: 'काही चुकीचे वाटते आहे का?',
+      helpBody: 'तुमची माहिती जुनी असेल तर त्याच क्रमांकाने पुन्हा नोंदणी करा, नवी उत्तरे जुन्यांच्या जागी येतील. इतर कशासाठीही आम्हाला फोन किंवा WhatsApp करा.',
+      privacy: 'फक्त तुमचीच नोंदणी दाखवली जाते. तुमचा रेझ्युमे आणि ईमेल या स्क्रीनवर कधीही दिसत नाहीत.',
+    },
 
     ctaTitle: 'येथील एक नोकरी संपूर्ण कुटुंबाचे भविष्य घडवते',
     ctaSub: 'आज नोंदणी करा, नोकरी शोधणाऱ्या मित्राला सांगा आणि २९ सप्टेंबरला मेळाव्याला उपस्थित राहा.',

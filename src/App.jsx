@@ -16,6 +16,7 @@ const Media = lazy(() => import('./pages/Media.jsx'))
 const Involved = lazy(() => import('./pages/Involved.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
 const JobFair = lazy(() => import('./pages/JobFair.jsx'))
+const MyOptions = lazy(() => import('./pages/MyOptions.jsx'))
 const Desk = lazy(() => import('./pages/Desk.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
@@ -47,6 +48,8 @@ function AnimatedRoutes() {
             <Route path="/contact" element={<Contact />} />
             {/* Ramsukrut Job Fair, 29 September 2026 */}
             <Route path="/job-fair" element={<JobFair />} />
+            {/* Candidate facing match check. Public, keyed on the mobile they registered with. */}
+            <Route path="/my-options" element={<MyOptions />} />
             {/* Anything that does not match a real page lands here instead of a blank screen. */}
             <Route path="/desk" element={<Desk />} />
             <Route path="*" element={<NotFound />} />
