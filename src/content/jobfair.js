@@ -83,17 +83,23 @@ const EXP_MR = ['फ्रेशर', '० ते १ वर्ष', '१ ते
 /* logoH is a Tailwind height class, tuned per mark so the logos read at the same
    optical weight even though their artwork proportions differ. */
 const RECRUITERS = [
-  { name: 'Bosch', logo: '/img/recruiters/bosch.svg', logoH: 'h-8 sm:h-9', tag_en: 'Manufacturing & engineering roles', tag_mr: 'उत्पादन व अभियांत्रिकी पदे' },
-  { name: 'CII', logo: '/img/recruiters/cii.png', logoH: 'h-12 sm:h-14', tag_en: 'Member companies hiring across functions', tag_mr: 'सर्व विभागांत सदस्य कंपन्यांची भरती' },
-  { name: 'Endurance Technologies', logo: '/img/recruiters/endurance.png', logoH: 'h-9 sm:h-10', tag_en: 'Manufacturing & plant roles', tag_mr: 'उत्पादन व प्लांट पदे' },
-  { name: 'Akbar Travels', logo: '/img/recruiters/akbar-travels.svg', logoH: 'h-14 sm:h-16', tag_en: 'Travel, process & customer roles', tag_mr: 'ट्रॅव्हल, प्रोसेस व ग्राहक सेवा पदे' },
-  { name: 'ZentrumHub', logo: '/img/recruiters/zentrumhub.png', logoH: 'h-9 sm:h-10', tag_en: 'IT & software roles', tag_mr: 'आयटी व सॉफ्टवेअर पदे' },
-  { name: 'Techspian', logo: '/img/recruiters/techspian.svg', logoH: 'h-7 sm:h-8', tag_en: 'Engineering & software roles', tag_mr: 'अभियांत्रिकी व सॉफ्टवेअर पदे' },
-  { name: 'Hi-tech Services', logo: '/img/recruiters/hi-tech-services.png', logoH: 'h-9 sm:h-10', tag_en: 'Manufacturing & production roles', tag_mr: 'उत्पादन व प्रॉडक्शन पदे' },
-  { name: 'GAPS Energy', logo: '/img/recruiters/gaps-energy.png', logoH: 'h-14 sm:h-16', tag_en: 'Production & administration roles', tag_mr: 'उत्पादन व प्रशासन पदे' },
-  { name: 'Dhiti Services', logo: '/img/recruiters/dhiti-services.webp', logoH: 'h-9 sm:h-10', tag_en: 'Services & operations roles', tag_mr: 'सेवा व ऑपरेशन्स पदे' },
-  { name: 'Resonance', logo: '/img/recruiters/resonance.png', logoH: 'h-12 sm:h-14', tag_en: 'Roles across IT, accounts & logistics', tag_mr: 'आयटी, अकाउंट्स व लॉजिस्टिक्स पदे' },
-  { name: 'Zeal Connect', logo: '/img/recruiters/zeal-connect.png', logoH: 'h-8 sm:h-9', tag_en: 'Sales & support roles', tag_mr: 'विक्री व सपोर्ट पदे' },
+  { name: 'Kunal Facility India', logo: null, open_en: 'More than 100 openings', open_mr: '100 हून अधिक जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
+  { name: 'Endurance Technologies', logo: '/img/recruiters/endurance.png', logoH: 'h-9 sm:h-10', open_en: '51 to 100 openings', open_mr: '51 ते 100 जागा', tag_en: 'Manufacturing and plant roles', tag_mr: 'उत्पादन व प्लांट पदे' },
+  { name: 'Johnson Lifts', logo: '/img/recruiters/johnson-lifts.png', logoH: 'h-12 sm:h-14', open_en: '51 to 100 openings', open_mr: '51 ते 100 जागा', tag_en: 'Production, operations and general staff roles', tag_mr: 'उत्पादन, ऑपरेशन्स व जनरल स्टाफ पदे' },
+  { name: 'Hi-tech Services', logo: '/img/recruiters/hi-tech-services.png', logoH: 'h-9 sm:h-10', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Manufacturing and production roles', tag_mr: 'उत्पादन व प्रॉडक्शन पदे' },
+  { name: 'Devaki Commercial Vehicle', logo: '/img/recruiters/devaki.png', logoH: 'h-6 sm:h-7', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Authorised Tata Motors commercial vehicle dealer', tag_mr: 'टाटा मोटर्स कमर्शियल व्हेइकल अधिकृत डीलर' },
+  { name: 'BVG India', logo: '/img/recruiters/bvg-india.png', logoH: 'h-14 sm:h-16', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Facility and non technical operations roles', tag_mr: 'फॅसिलिटी व नॉन टेक्निकल ऑपरेशन्स पदे' },
+  { name: 'SkkAto India', logo: '/img/recruiters/skkato.png', logoH: 'h-10 sm:h-12', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Supervisor, team lead and general staff roles', tag_mr: 'सुपरवायझर, टीम लीड व जनरल स्टाफ पदे' },
+  { name: 'GAPS Energy', logo: '/img/recruiters/gaps-energy.png', logoH: 'h-14 sm:h-16', open_en: '11 to 25 openings', open_mr: '11 ते 25 जागा', tag_en: 'Production and administration roles', tag_mr: 'उत्पादन व प्रशासन पदे' },
+  { name: 'Ecotech Chutes', logo: '/img/recruiters/ecotech-chutes.png', logoH: 'h-9 sm:h-10', open_en: '11 to 25 openings', open_mr: '11 ते 25 जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
+  { name: 'NSB Systems', logo: null, open_en: '11 to 25 openings', open_mr: '11 ते 25 जागा', tag_en: 'Production and non technical operations roles', tag_mr: 'उत्पादन व नॉन टेक्निकल ऑपरेशन्स पदे' },
+  { name: 'Akbar Travels', logo: '/img/recruiters/akbar-travels.svg', logoH: 'h-14 sm:h-16', open_en: '6 to 10 openings', open_mr: '6 ते 10 जागा', tag_en: 'Customer support and sales roles', tag_mr: 'ग्राहक सेवा व विक्री पदे' },
+  { name: 'SBI Life Insurance', logo: '/img/recruiters/sbi-life.png', logoH: 'h-7 sm:h-8', open_en: '6 to 10 openings', open_mr: '6 ते 10 जागा', tag_en: 'Sales and marketing roles', tag_mr: 'विक्री व मार्केटिंग पदे' },
+  { name: 'Techspian', logo: '/img/recruiters/techspian.svg', logoH: 'h-7 sm:h-8', open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'IT and software roles', tag_mr: 'आयटी व सॉफ्टवेअर पदे' },
+  { name: 'Zeal Connect Solutions', logo: '/img/recruiters/zeal-connect.png', logoH: 'h-8 sm:h-9', open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'IT and software roles', tag_mr: 'आयटी व सॉफ्टवेअर पदे' },
+  { name: 'Dhiti Services', logo: '/img/recruiters/dhiti-services.webp', logoH: 'h-9 sm:h-10', open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Customer support and BPO roles', tag_mr: 'ग्राहक सेवा व बीपीओ पदे' },
+  { name: 'Diamond Pipe Supports', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production and supervisor roles', tag_mr: 'उत्पादन व सुपरवायझर पदे' },
+  { name: 'Techsham Stamping', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
 ]
 
 export const jobfair = {
@@ -129,8 +135,10 @@ export const jobfair = {
 
     recEyebrow: 'RECRUITING ORGANISATIONS',
     recTitle: 'Who is hiring on the day',
-    recSub: 'More organisations are being confirmed. Register once and we will tell you as new companies join.',
-    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, tag: r.tag_en })),
+    recSub: 'These 17 organisations have confirmed a hiring desk so far, with more than 350 openings between them. More are being confirmed every week. Register once and your resume goes to all of them, including the companies that join after you apply.',
+    recMoreTitle: 'Also confirmed',
+    recMoreSub: 'These companies have confirmed a desk and will be at the venue on the day.',
+    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, openings: r.open_en, tag: r.tag_en })),
 
     deptEyebrow: 'ROLES ON OFFER',
     deptTitle: 'Departments hiring',
@@ -265,8 +273,10 @@ export const jobfair = {
 
     recEyebrow: 'भरती करणाऱ्या संस्था',
     recTitle: 'या दिवशी भरती करणाऱ्या कंपन्या',
-    recSub: 'अधिक संस्थांची नावे निश्चित होत आहेत. एकदा नोंदणी करा, नवीन कंपन्या जोडल्या की आम्ही कळवू.',
-    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, tag: r.tag_mr })),
+    recSub: 'आतापर्यंत 17 संस्थांनी भरती डेस्क निश्चित केला आहे आणि त्यांच्याकडे मिळून 350 हून अधिक जागा आहेत. दर आठवड्याला आणखी कंपन्या जोडल्या जात आहेत. एकदा नोंदणी करा, तुमचा रेझ्युमे या सर्व कंपन्यांपर्यंत पोहोचतो, तुम्ही अर्ज केल्यानंतर जोडल्या जाणाऱ्या कंपन्यांपर्यंतही.',
+    recMoreTitle: 'हेही निश्चित झाले आहेत',
+    recMoreSub: 'या कंपन्यांनी डेस्क निश्चित केला आहे आणि त्या दिवशी त्या ठिकाणी उपस्थित राहतील.',
+    recruiters: RECRUITERS.map((r) => ({ name: r.name, logo: r.logo, logoH: r.logoH, openings: r.open_mr, tag: r.tag_mr })),
 
     deptEyebrow: 'उपलब्ध पदे',
     deptTitle: 'भरती होणारे विभाग',
