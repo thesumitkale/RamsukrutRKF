@@ -150,6 +150,30 @@ Deno.serve(async (req) => {
     const on = body.on !== false;
     if (!candidate_id || !corporate_id) return json({ ok: false, error: "bad_request" }, 400);
 
+    // Same five company ceiling the candidate page has, so a volunteer cannot
+    // book past it either.
+    if (on) {
+      const { data: live, error: liveErr } = await db
+        .from("rkf_jobfair_interviews")
+        .select("corporate_id")
+        .eq("candidate_id", candidate_id)
+        .is("removed_at", null);
+      if (liveErr) {
+        console.error("desk sit count failed", liveErr.message);
+        return json({ ok: false, error: "write_failed" }, 500);
+      }
+      // A pick for a company that has since pulled out does not use up a slot.
+      const { data: liveCorps } = await db
+        .from("rkf_jobfair_corporates")
+        .select("id")
+        .is("removed_at", null);
+      const coming = new Set((liveCorps || []).map((r) => r.id));
+      const ids = (live || []).map((r) => r.corporate_id).filter((id) => coming.has(id));
+      if (!ids.includes(corporate_id) && ids.length >= 5) {
+        return json({ ok: false, error: "limit", max: 5 }, 409);
+      }
+    }
+
     const fit = Number.isFinite(Number(body.fit)) ? Math.round(Number(body.fit)) : null;
     const band = body.band ? String(body.band).slice(0, 24) : null;
     const now = new Date().toISOString();

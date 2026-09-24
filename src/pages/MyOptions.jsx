@@ -37,6 +37,11 @@ import {
    rather than dangled. Same floor the desk uses. */
 const OFFER_FLOOR = 58
 const STRONG_FLOOR = 78
+/* A person can realistically sit five processes in one day, so five is the
+   ceiling, enforced on the server too. Six are shown so there is always one
+   spare to swap in. */
+export const MAX_PICKS = 5
+const SHOW = 6
 
 const digits = (s) => String(s || '').replace(/\D/g, '')
 
@@ -103,7 +108,6 @@ export default function MyOptions() {
   const [err, setErr] = useState('')
   const [data, setData] = useState(null)
   const [notFound, setNotFound] = useState(false)
-  const [showWeak, setShowWeak] = useState(false)
   const [savingId, setSavingId] = useState('')
 
   useEffect(() => {
@@ -179,11 +183,26 @@ export default function MyOptions() {
 
   const chosen = useMemo(() => new Set(data?.chosen || []), [data])
 
-  const strong = options.filter((o) => o.total >= STRONG_FLOOR)
-  /* A company already picked stays visible even if it later slips under the
-     floor, so nobody loses a slot without being told. */
-  const mid = options.filter((o) => o.total < STRONG_FLOOR && (o.total >= OFFER_FLOOR || chosen.has(o.co.id)))
-  const weak = options.filter((o) => o.total < OFFER_FLOOR && !chosen.has(o.co.id))
+  /* The best six, plus anything already picked, so nobody loses a slot
+     without being told. A long list of seventeen reads as "apply everywhere",
+     which is exactly what the cap is there to stop. */
+  const visible = useMemo(() => {
+    const keep = options.filter((o) => chosen.has(o.co.id))
+    /* A pick the scorer no longer ranks (the company changed what it hires
+       for) still shows, so the tally and the cards always agree. */
+    const seen = new Set(keep.map((o) => o.co.id))
+    ;(data?.corporates || []).forEach((co) => {
+      if (chosen.has(co.id) && !seen.has(co.id)) keep.push({ co, total: 0, reasons: [] })
+    })
+    for (const o of options) {
+      if (keep.length >= SHOW) break
+      if (!chosen.has(o.co.id)) keep.push(o)
+    }
+    return keep.sort((a, b) => b.total - a.total)
+  }, [options, chosen, data])
+  const strong = visible.filter((o) => o.total >= STRONG_FLOOR)
+  const mid = visible.filter((o) => o.total < STRONG_FLOOR)
+  const full = chosen.size >= MAX_PICKS
 
   const sit = async (o, on) => {
     setSavingId(o.co.id)
@@ -200,7 +219,7 @@ export default function MyOptions() {
       if (!out.ok) throw new Error(out.error || 'failed')
       setData(out)
     } catch (e) {
-      setErr(m.errNet)
+      setErr(String(e.message) === 'limit' ? m.fullErr : m.errNet)
     }
     setSavingId('')
   }
@@ -315,6 +334,9 @@ export default function MyOptions() {
                 <p className="font-display text-[1.02rem] font-semibold text-ink">
                   {count === 0 ? m.chosenNone : count === 1 ? m.chosenOne : m.chosenMany.replace('{n}', String(count))}
                 </p>
+                <p className="mt-1.5 text-[0.9rem] font-semibold text-forest-2">
+                  {m.limit.split('{n}').join(String(count)).split('{max}').join(String(MAX_PICKS))}
+                </p>
                 {count > 0 && <p className="mt-2 text-[0.93rem] leading-[1.65] text-ink2">{m.chosenHint}</p>}
                 {!data.candidate.has_resume && (
                   <p className="mt-3 border-t border-sand pt-3 text-[0.9rem] leading-[1.6] text-clay-deep">{m.noResume}</p>
@@ -334,29 +356,14 @@ export default function MyOptions() {
                 title={m.strongTitle}
                 sub={m.strongSub}
                 items={strong}
-                {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang }}
+                {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang, full }}
               />
               <Group
                 title={m.okTitle}
                 sub={m.okSub}
                 items={mid}
-                {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang }}
+                {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang, full }}
               />
-
-              {weak.length > 0 && (
-                <div className="mt-8">
-                  <button
-                    type="button"
-                    onClick={() => setShowWeak(!showWeak)}
-                    className="rounded-[4px] border border-sand px-5 py-3 font-display text-[0.9rem] font-semibold text-ink2 transition hover:border-clay hover:text-clay-deep"
-                  >
-                    {showWeak ? m.showLess : m.showMore + ' (' + weak.length + ')'}
-                  </button>
-                  {showWeak && (
-                    <Group title="" sub="" items={weak} {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang }} />
-                  )}
-                </div>
-              )}
 
               {/* --------------------------------------------------- help */}
               <div className="mt-12 rounded-[6px] border border-sand bg-white p-6 sm:p-8">
@@ -393,7 +400,7 @@ export default function MyOptions() {
    One band of companies
    ========================================================================== */
 
-function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook, say, lang }) {
+function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook, say, lang, full }) {
   if (!items.length) return null
   return (
     <div className="mt-10">
@@ -407,6 +414,7 @@ function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook
         {items.map((o) => {
           const on = chosen.has(o.co.id)
           const saving = savingId === o.co.id
+          const locked = full && !on
           return (
             <article
               key={o.co.id}
@@ -448,15 +456,17 @@ function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook
               <button
                 type="button"
                 onClick={() => sit(o, !on)}
-                disabled={saving}
+                disabled={saving || locked}
                 className={
                   'mt-5 inline-flex w-full items-center justify-center gap-2 rounded-[4px] px-6 py-3.5 font-display text-[0.95rem] font-semibold transition disabled:opacity-60 sm:w-auto ' +
                   (on
                     ? 'bg-forest text-white hover:bg-forest-2'
-                    : 'border border-clay bg-clay text-white hover:bg-clay-deep')
+                    : locked
+                      ? 'border border-sand bg-paper2 text-muted'
+                      : 'border border-clay bg-clay text-white hover:bg-clay-deep')
                 }
               >
-                {saving ? m.saving : on ? m.picked : m.pick}
+                {saving ? m.saving : on ? m.picked : locked ? m.fullBtn : m.pick}
               </button>
             </article>
           )

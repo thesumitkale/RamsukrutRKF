@@ -22,6 +22,8 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
+const MAX_PICKS = 5;
+
 const cors = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, apikey, content-type, x-client-info",
@@ -99,6 +101,31 @@ Deno.serve(async (req) => {
     if (!corp) return json({ ok: false, error: "unknown_company" }, 404);
 
     const on = body.on !== false;
+
+    // Five companies at most. One person cannot queue at more desks than that
+    // in a single day, and every extra slot is a seat another candidate needed.
+    if (on) {
+      const { data: live, error: liveErr } = await db
+        .from("rkf_jobfair_interviews")
+        .select("corporate_id")
+        .eq("candidate_id", cand.id)
+        .is("removed_at", null);
+      if (liveErr) {
+        console.error("me sit count failed", liveErr.message);
+        return json({ ok: false, error: "write_failed" }, 500);
+      }
+      // A pick for a company that has since pulled out does not use up a slot.
+      const { data: liveCorps } = await db
+        .from("rkf_jobfair_corporates")
+        .select("id")
+        .is("removed_at", null);
+      const coming = new Set((liveCorps || []).map((r) => r.id));
+      const ids = (live || []).map((r) => r.corporate_id).filter((id) => coming.has(id));
+      if (!ids.includes(corporate_id) && ids.length >= MAX_PICKS) {
+        return json({ ok: false, error: "limit", max: MAX_PICKS }, 409);
+      }
+    }
+
     const fit = Number.isFinite(Number(body.fit)) ? Math.round(Number(body.fit)) : null;
     const bandName = body.band ? String(body.band).slice(0, 24) : null;
     const now = new Date().toISOString();
@@ -150,6 +177,9 @@ Deno.serve(async (req) => {
     found: true,
     candidate: { ...safe, has_resume: Boolean(resume_url) },
     corporates: corpRes.data ?? [],
-    chosen: (sitRes.data ?? []).map((r: { corporate_id: string }) => r.corporate_id),
+    // Only picks for companies still coming, so the tally matches the cards.
+    chosen: (sitRes.data ?? [])
+      .map((r: { corporate_id: string }) => r.corporate_id)
+      .filter((id: string) => (corpRes.data ?? []).some((c: { id: string }) => c.id === id)),
   });
 });
