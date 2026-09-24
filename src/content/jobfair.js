@@ -146,7 +146,7 @@ export const jobfair = {
     facts: [
       { k: 'Date', v: '29 September 2026' },
       { k: 'Reporting time', v: '9:00 AM sharp, process runs till 5:00 PM' },
-      { k: 'Venue', v: 'Shreemant Maharaj Fattesingrao Gaikwad Mahavidyalay (and Jr. College), At post Dawadi, Tal. Khed, Dist. Pune' },
+      { k: 'Venue', v: 'Mahalaxmi Mangal Karyalay, Dawadi, Tal. Khed, Dist. Pune 410505' },
       { k: 'Entry', v: 'Free for all candidates' },
     ],
 
@@ -333,7 +333,7 @@ export const jobfair = {
     facts: [
       { k: 'दिनांक', v: '२९ सप्टेंबर २०२६' },
       { k: 'हजर राहण्याची वेळ', v: 'सकाळी ९:०० वाजता, प्रक्रिया सायंकाळी ५:०० पर्यंत' },
-      { k: 'ठिकाण', v: 'श्रीमंत महाराज फत्तेसिंगराव गायकवाड महाविद्यालय (व कनिष्ठ महाविद्यालय), मु. पो. दावडी, ता. खेड, जि. पुणे' },
+      { k: 'ठिकाण', v: 'महालक्ष्मी मंगल कार्यालय, दावडी, ता. खेड, जि. पुणे 410505' },
       { k: 'प्रवेश', v: 'सर्व उमेदवारांसाठी नि:शुल्क' },
     ],
 
