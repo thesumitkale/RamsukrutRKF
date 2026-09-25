@@ -14,6 +14,7 @@ import { JOBFAIR_DESK, JOBFAIR_KEY } from '../content/jobfair.js'
 import DeskMatch from '../components/DeskMatch.jsx'
 import DeskCandidate from '../components/DeskCandidate.jsx'
 import DeskRoster from '../components/DeskRoster.jsx'
+import DeskWalkIn from '../components/DeskWalkIn.jsx'
 
 const REFRESH_MS = 15000
 
@@ -61,6 +62,7 @@ export default function Desk() {
   const [acting, setActing] = useState('')      // row id currently being written
   const [actErr, setActErr] = useState('')
   const [data2, setData2] = useState({ candidates: [], corporates: [] }) // removed rows
+  const [openMobile, setOpenMobile] = useState('')  // walk-in just saved, open them on Sign ups
   const [interviews, setInterviews] = useState([])  // which processes each candidate signed up for
 
   const load = async (theCode) => {
@@ -276,9 +278,10 @@ export default function Desk() {
   const sitting = tab === 'sit'
   /* The register of who is sitting for whom. Read only, its own screen. */
   const rostering = tab === 'roster'
+  const walking = tab === 'walkin'
   /* Matching and Sign ups render their own screens, so the shared filter bar,
      table and downloads below are all held back for them. */
-  const plain = !matching && !sitting && !rostering
+  const plain = !matching && !sitting && !rostering && !walking
 
   /* One candidate choosing one company process. Its own table on the server,
      so nothing a candidate or a company typed can be changed from here.
@@ -369,12 +372,12 @@ export default function Desk() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <div className="flex rounded-[4px] border border-sand bg-paper p-1">
-          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['match', 'Matching'], ['sit', 'Sign ups'], ['roster', 'Interview list']].map(([k, label]) => (
+          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['walkin', 'Walk-in'], ['match', 'Matching'], ['sit', 'Sign ups'], ['roster', 'Interview list']].map(([k, label]) => (
             <button
               key={k}
-              onClick={() => { setTab(k); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr(''); setView('live') }}
+              onClick={() => { setTab(k); setOpenMobile(''); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr(''); setView('live') }}
               className={
-                'rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
+                'whitespace-nowrap rounded-[3px] px-4 py-2 text-[0.9rem] font-semibold transition ' +
                 (tab === k ? 'bg-forest text-white' : 'text-ink2')
               }
             >
@@ -455,6 +458,17 @@ export default function Desk() {
           corporates={data.corporates}
           interviews={interviews}
           onSit={sit}
+          openMobile={openMobile}
+        />
+      )}
+      {walking && (
+        <DeskWalkIn
+          candidates={data.candidates}
+          onDone={async (mobile) => {
+            await load(code.trim())
+            setOpenMobile(mobile)
+            setTab('sit')
+          }}
         />
       )}
       {rostering && (

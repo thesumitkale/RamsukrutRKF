@@ -511,3 +511,8 @@ export const jobfair = {
 }
 
 export default jobfair
+
+/* The English option lists, for the volunteer desk walk-in form, so a person
+   registered at the venue lands in exactly the same buckets as one who
+   registered online. */
+export { DEPTS_EN, QUALIF_EN, EXP_EN }

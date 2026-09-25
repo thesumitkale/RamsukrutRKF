@@ -38,7 +38,7 @@ const digits = (s) => String(s || '').replace(/\D/g, '')
    the desk would be sending somebody to queue for an hour on a maybe. */
 const OFFER_FLOOR = 58
 
-export default function DeskCandidate({ candidates, corporates, interviews, onSit }) {
+export default function DeskCandidate({ candidates, corporates, interviews, onSit, openMobile }) {
   const [q, setQ] = useState('')
   const [pickedId, setPickedId] = useState('')
   const [showAll, setShowAll] = useState(false)
@@ -69,6 +69,13 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
   }, [unique, q])
 
   const person = useMemo(() => unique.find((r) => r.id === pickedId) || null, [unique, pickedId])
+
+  /* Arriving from the walk-in form: open the person who was just saved. */
+  useEffect(() => {
+    if (!openMobile) return
+    const hit = unique.find((r) => digits(r.mobile).slice(-10) === openMobile)
+    if (hit) setPickedId(hit.id)
+  }, [openMobile, unique])
 
   /* Every company scored for this one person. The recruiter side lets a
      recruiter tighten experience and qualification for themselves. Here the
