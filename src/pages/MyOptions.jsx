@@ -331,7 +331,7 @@ export default function MyOptions() {
                 </button>
               </div>
 
-              {dayPlan && <DayPlan plan={dayPlan} corporates={data.corporates || []} m={m} lang={lang} />}
+              {dayPlan && <DayPlan plan={dayPlan} corporates={data.corporates || []} m={m} lang={lang} who={{ ...data.candidate, mobile: data.candidate.mobile || mobile }} />}
 
               {/* Running tally, so the page always answers "am I done". */}
               {!dayPlan && <div className="mt-6 rounded-[6px] border border-sand bg-paper2 p-5 sm:p-6">
@@ -491,7 +491,7 @@ const clock = (slot, lang) => {
   return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
 }
 
-function DayPlan({ plan, corporates, m, lang }) {
+function DayPlan({ plan, corporates, m, lang, who }) {
   const byId = new Map(corporates.map((c) => [c.id, c]))
   if (plan.status === 'reserve') {
     return (
@@ -503,12 +503,22 @@ function DayPlan({ plan, corporates, m, lang }) {
       </div>
     )
   }
+  const mob = String(who?.mobile || '').replace(/\D/g, '').slice(-10)
   return (
-    <div className="mt-6 overflow-hidden rounded-[6px] border border-forest bg-white">
-      <div className="bg-forest px-6 py-5 text-white sm:px-8">
+    <>
+    <div className="mt-6 flex items-start gap-3 rounded-[6px] bg-gold/25 px-4 py-3 text-[0.92rem] leading-[1.55] text-ink">
+      <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 18.5h4" /></svg>
+      <span><strong className="font-semibold">{m.dayShotTitle}</strong> {m.dayShotBody}</span>
+    </div>
+    <div className="mt-3 overflow-hidden rounded-[6px] border border-forest bg-white">
+      <div className="bg-forest px-5 py-4 text-white sm:px-8 sm:py-5">
         <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-gold">{m.dayTitle}</p>
-        <p className="mt-1 text-[0.95rem] text-white/80">{m.dayDate}</p>
-        <div className="mt-4 flex flex-wrap items-end gap-x-10 gap-y-3">
+        <p className="mt-0.5 text-[0.88rem] text-white/75">{m.dayDate}</p>
+        <p className="mt-2 font-display text-[1.15rem] font-semibold leading-tight">
+          {who?.name}
+          {mob && <span className="ml-2 font-sans text-[0.85rem] font-normal text-white/70">{mob.slice(0, 5)} {mob.slice(5)}</span>}
+        </p>
+        <div className="mt-3 flex flex-wrap items-end gap-x-10 gap-y-3">
           <div>
             <p className="text-[0.8rem] text-white/70">{m.dayReport}</p>
             <p className="font-display text-[2rem] font-bold leading-none">{clock(plan.report_at, lang)}</p>
@@ -519,20 +529,20 @@ function DayPlan({ plan, corporates, m, lang }) {
           </div>
         </div>
       </div>
-      <div className="px-6 py-5 sm:px-8">
+      <div className="px-5 py-4 sm:px-8 sm:py-5">
         <p className="font-display text-[0.95rem] font-semibold text-ink">{m.dayStops}</p>
-        <ol className="mt-3 space-y-3">
+        <ol className="mt-3 space-y-2.5">
           {(plan.route || []).map((r, i) => {
             const test = r.key === 'TEST'
             const co = byId.get(r.key)
             return (
-              <li key={r.key} className="flex gap-4 border-b border-sand pb-3 last:border-0 last:pb-0">
+              <li key={r.key} className="flex gap-4 border-b border-sand pb-2.5 last:border-0 last:pb-0">
                 <span className="w-[5.5rem] shrink-0 font-display text-[1.05rem] font-bold text-clay-deep">{clock(r.slot, lang)}</span>
                 <span className="min-w-0">
                   <span className="block font-display text-[1rem] font-semibold leading-snug text-ink">
                     {i + 1}. {test ? m.dayTest : co?.organization || m.dayDesk}
                   </span>
-                  <span className="mt-0.5 block text-[0.88rem] leading-[1.55] text-muted">{test ? m.dayTestNote : m.dayDesk}</span>
+                  {test && <span className="mt-0.5 block text-[0.86rem] leading-[1.5] text-muted">{m.dayTestNote}</span>}
                 </span>
               </li>
             )
@@ -542,5 +552,6 @@ function DayPlan({ plan, corporates, m, lang }) {
         <p className="mt-2 text-[0.88rem] leading-[1.6] text-muted">{m.dayFixed}</p>
       </div>
     </div>
+    </>
   )
 }

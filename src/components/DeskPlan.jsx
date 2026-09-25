@@ -106,7 +106,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
     return (
       'Namaskar ' + first + '. Ramsukrut Job Fair, Tuesday 29 September, Mahalaxmi Mangal Karyalay, Dawadi. Group ' + plan.grp +
       '. Reach the venue by ' + clock(plan.report_at) + ' and go to any help desk at the entrance. They will tell you where to go and when. Your stops: ' + en +
-      '. Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. ' + mr + '.'
+      '. See your full plan and save a screenshot: ramsukrut.com/#/my-options . Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. ' + mr + '. तुमचा प्लॅन पाहून स्क्रीनशॉट घ्या: ramsukrut.com/#/my-options'
     )
   }
 
