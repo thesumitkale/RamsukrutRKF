@@ -110,9 +110,9 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
   useEffect(() => { setShowAll(false); setErr(''); setCopied('') }, [pickedId])
 
   const sit = async (corpId, on, fit) => {
-    /* Five per person, the same ceiling the candidate page and the server hold. */
-    if (on && !chosen.has(corpId) && chosen.size >= 5) {
-      setErr('Already booked for 5 companies. Untick one first.')
+    /* Three per person, the same ceiling the candidate page and the server hold. */
+    if (on && !chosen.has(corpId) && chosen.size >= 3) {
+      setErr('Already booked for 3 companies. Untick one first.')
       return
     }
     setBusyCorp(corpId)

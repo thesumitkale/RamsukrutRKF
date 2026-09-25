@@ -150,7 +150,7 @@ Deno.serve(async (req) => {
     const on = body.on !== false;
     if (!candidate_id || !corporate_id) return json({ ok: false, error: "bad_request" }, 400);
 
-    // Same five company ceiling the candidate page has, so a volunteer cannot
+    // Same three company ceiling the candidate page has, so a volunteer cannot
     // book past it either.
     if (on) {
       const { data: live, error: liveErr } = await db
@@ -169,8 +169,8 @@ Deno.serve(async (req) => {
         .is("removed_at", null);
       const coming = new Set((liveCorps || []).map((r) => r.id));
       const ids = (live || []).map((r) => r.corporate_id).filter((id) => coming.has(id));
-      if (!ids.includes(corporate_id) && ids.length >= 5) {
-        return json({ ok: false, error: "limit", max: 5 }, 409);
+      if (!ids.includes(corporate_id) && ids.length >= 3) {
+        return json({ ok: false, error: "limit", max: 3 }, 409);
       }
     }
 
@@ -198,6 +198,40 @@ Deno.serve(async (req) => {
     }
     console.log("desk sit", on ? "on" : "off", candidate_id, corporate_id, fit);
     return json({ ok: true, action, candidate_id, corporate_id, on });
+  }
+
+  // The day plan. Written by the desk's planner, which only ever adds people
+  // or re-places one person at a time, so nobody already told a time moves.
+  if (action === "plan_put") {
+    const rows = Array.isArray(body.rows) ? body.rows.slice(0, 2500) : [];
+    const now = new Date().toISOString();
+    const clean = rows
+      .map((r: Record<string, unknown>) => ({
+        candidate_id: String(r.candidate_id || ""),
+        grp: r.grp ? String(r.grp).slice(0, 20) : null,
+        status: ["planned", "reserve", "no_match"].includes(String(r.status)) ? String(r.status) : "planned",
+        report_at: r.report_at ? String(r.report_at).slice(0, 5) : null,
+        route: Array.isArray(r.route)
+          ? (r.route as Record<string, unknown>[]).slice(0, 3).map((x) => ({
+              key: String(x.key || "").slice(0, 60),
+              slot: String(x.slot || "").slice(0, 5),
+              fit: Number(x.fit) || 0,
+            }))
+          : [],
+        updated_at: now,
+        removed_at: null,
+      }))
+      .filter((r) => r.candidate_id);
+    for (let i = 0; i < clean.length; i += 500) {
+      const { error } = await db
+        .from("rkf_jobfair_plan")
+        .upsert(clean.slice(i, i + 500), { onConflict: "candidate_id" });
+      if (error) {
+        console.error("plan put failed", error.message);
+        return json({ ok: false, error: "write_failed", saved: i }, 500);
+      }
+    }
+    return json({ ok: true, saved: clean.length });
   }
 
   if (action !== "list") return json({ ok: false, error: "unknown_action" }, 400);
@@ -230,7 +264,7 @@ Deno.serve(async (req) => {
   const read = (which: Which) =>
     readAll(TABLES[which].table, TABLES[which].cols, TABLES[which].limit, "created_at");
 
-  const [cand, corp, sits] = await Promise.all([
+  const [cand, corp, sits, plan] = await Promise.all([
     read("candidates"),
     read("corporates"),
     readAll(
@@ -240,7 +274,15 @@ Deno.serve(async (req) => {
       "created_at",
       (q) => q.is("removed_at", null),
     ),
+    readAll(
+      "rkf_jobfair_plan",
+      "candidate_id,grp,status,report_at,route,updated_at",
+      5000,
+      "updated_at",
+      (q) => q.is("removed_at", null),
+    ),
   ]);
+  if (plan.error) console.error("desk plan read failed", plan.error.message);
 
   if (cand.error || corp.error) {
     console.error("desk read failed", cand.error?.message, corp.error?.message);
@@ -263,5 +305,6 @@ Deno.serve(async (req) => {
     removed_candidates: gone(candRows),
     removed_corporates: gone(corpRows),
     interviews: sits.rows,
+    plans: plan.rows,
   });
 });

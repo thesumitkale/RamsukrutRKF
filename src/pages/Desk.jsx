@@ -14,6 +14,7 @@ import { JOBFAIR_DESK, JOBFAIR_KEY } from '../content/jobfair.js'
 import DeskMatch from '../components/DeskMatch.jsx'
 import DeskCandidate from '../components/DeskCandidate.jsx'
 import DeskRoster from '../components/DeskRoster.jsx'
+import DeskPlan from '../components/DeskPlan.jsx'
 import DeskWalkIn from '../components/DeskWalkIn.jsx'
 
 const REFRESH_MS = 15000
@@ -64,6 +65,16 @@ export default function Desk() {
   const [data2, setData2] = useState({ candidates: [], corporates: [] }) // removed rows
   const [openMobile, setOpenMobile] = useState('')  // walk-in just saved, open them on Sign ups
   const [interviews, setInterviews] = useState([])  // which processes each candidate signed up for
+  const [plans, setPlans] = useState([])            // day plan: group, reporting time, stops
+
+  const post = async (body) => {
+    const res = await fetch(JOBFAIR_DESK, {
+      method: 'POST',
+      headers: { Authorization: 'Bearer ' + JOBFAIR_KEY, apikey: JOBFAIR_KEY, 'x-desk-code': code.trim(), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    return res.json()
+  }
 
   const load = async (theCode) => {
     setBusy(true)
@@ -87,6 +98,7 @@ export default function Desk() {
       setData({ candidates: out.candidates || [], corporates: out.corporates || [] })
       setData2({ candidates: out.removed_candidates || [], corporates: out.removed_corporates || [] })
       setInterviews(out.interviews || [])
+      setPlans(out.plans || [])
       setAt(new Date())
       setErr('')
       setBusy(false)
@@ -279,9 +291,10 @@ export default function Desk() {
   /* The register of who is sitting for whom. Read only, its own screen. */
   const rostering = tab === 'roster'
   const walking = tab === 'walkin'
+  const planning = tab === 'plan'
   /* Matching and Sign ups render their own screens, so the shared filter bar,
      table and downloads below are all held back for them. */
-  const plain = !matching && !sitting && !rostering && !walking
+  const plain = !matching && !sitting && !rostering && !walking && !planning
 
   /* One candidate choosing one company process. Its own table on the server,
      so nothing a candidate or a company typed can be changed from here.
@@ -372,7 +385,7 @@ export default function Desk() {
 
       <div className="mt-6 flex flex-wrap items-center gap-3">
         <div className="flex rounded-[4px] border border-sand bg-paper p-1">
-          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['walkin', 'Walk-in'], ['match', 'Matching'], ['sit', 'Sign ups'], ['roster', 'Interview list']].map(([k, label]) => (
+          {[['candidates', 'Candidates'], ['corporates', 'Companies'], ['walkin', 'Walk-in'], ['match', 'Matching'], ['sit', 'Sign ups'], ['roster', 'Interview list'], ['plan', 'Day plan']].map(([k, label]) => (
             <button
               key={k}
               onClick={() => { setTab(k); setOpenMobile(''); setQ(''); setDept(''); setTaluka(''); setArmed(''); setActErr(''); setView('live') }}
@@ -467,8 +480,19 @@ export default function Desk() {
           onDone={async (mobile) => {
             await load(code.trim())
             setOpenMobile(mobile)
-            setTab('sit')
+            setTab('plan')
           }}
+        />
+      )}
+      {planning && (
+        <DeskPlan
+          candidates={data.candidates}
+          corporates={data.corporates}
+          interviews={interviews}
+          plans={plans}
+          post={post}
+          onSaved={() => load(code.trim())}
+          openMobile={openMobile}
         />
       )}
       {rostering && (

@@ -37,11 +37,10 @@ import {
    rather than dangled. Same floor the desk uses. */
 const OFFER_FLOOR = 58
 const STRONG_FLOOR = 78
-/* A person can realistically sit five processes in one day, so five is the
-   ceiling, enforced on the server too. Six are shown so there is always one
-   spare to swap in. */
-export const MAX_PICKS = 5
-const SHOW = 6
+/* Three companies per person, the rule across the whole fair, enforced on
+   the server too. Four are shown so there is always one spare to swap in. */
+export const MAX_PICKS = 3
+const SHOW = 4
 
 const digits = (s) => String(s || '').replace(/\D/g, '')
 
@@ -203,6 +202,9 @@ export default function MyOptions() {
   const strong = visible.filter((o) => o.total >= STRONG_FLOOR)
   const mid = visible.filter((o) => o.total < STRONG_FLOOR)
   const full = chosen.size >= MAX_PICKS
+  /* Once the day is planned the page stops being a menu and becomes a
+     ticket: group, time, and where to walk. */
+  const dayPlan = data?.plan && ['planned', 'reserve'].includes(data.plan.status) ? data.plan : null
 
   const sit = async (o, on) => {
     setSavingId(o.co.id)
@@ -329,8 +331,10 @@ export default function MyOptions() {
                 </button>
               </div>
 
+              {dayPlan && <DayPlan plan={dayPlan} corporates={data.corporates || []} m={m} lang={lang} />}
+
               {/* Running tally, so the page always answers "am I done". */}
-              <div className="mt-6 rounded-[6px] border border-sand bg-paper2 p-5 sm:p-6">
+              {!dayPlan && <div className="mt-6 rounded-[6px] border border-sand bg-paper2 p-5 sm:p-6">
                 <p className="font-display text-[1.02rem] font-semibold text-ink">
                   {count === 0 ? m.chosenNone : count === 1 ? m.chosenOne : m.chosenMany.replace('{n}', String(count))}
                 </p>
@@ -341,29 +345,29 @@ export default function MyOptions() {
                 {!data.candidate.has_resume && (
                   <p className="mt-3 border-t border-sand pt-3 text-[0.9rem] leading-[1.6] text-clay-deep">{m.noResume}</p>
                 )}
-              </div>
+              </div>}
 
               {err && <p className="mt-4 text-[0.92rem] text-clay-deep">{err}</p>}
 
-              {options.length === 0 && (
+              {!dayPlan && options.length === 0 && (
                 <div className="mt-8 rounded-[6px] border border-sand bg-white p-6 sm:p-8">
                   <h2 className="font-display text-[1.2rem] font-semibold text-ink">{m.noneTitle}</h2>
                   <p className="mt-3 text-[0.98rem] leading-[1.7] text-ink2">{m.noneBody}</p>
                 </div>
               )}
 
-              <Group
+              {!dayPlan && <Group
                 title={m.strongTitle}
                 sub={m.strongSub}
                 items={strong}
                 {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang, full }}
-              />
-              <Group
+              />}
+              {!dayPlan && <Group
                 title={m.okTitle}
                 sub={m.okSub}
                 items={mid}
                 {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang, full }}
-              />
+              />}
 
               {/* --------------------------------------------------- help */}
               <div className="mt-12 rounded-[6px] border border-sand bg-white p-6 sm:p-8">
@@ -471,6 +475,71 @@ function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook
             </article>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+/* ==========================================================================
+   The day ticket
+   ========================================================================== */
+
+const clock = (slot, lang) => {
+  const [h, mm] = String(slot).split(':').map(Number)
+  const h12 = ((h + 11) % 12) + 1
+  if (lang === 'mr') return (h < 12 ? 'सकाळी ' : 'दुपारी ') + h12 + ':' + String(mm).padStart(2, '0')
+  return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
+}
+
+function DayPlan({ plan, corporates, m, lang }) {
+  const byId = new Map(corporates.map((c) => [c.id, c]))
+  if (plan.status === 'reserve') {
+    return (
+      <div className="mt-6 rounded-[6px] border-2 border-gold bg-white p-6 sm:p-8">
+        <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-clay-deep">{m.dayDate}</p>
+        <h2 className="mt-2 font-display text-[1.35rem] font-semibold leading-tight text-ink">{m.reserveTitle}</h2>
+        <p className="mt-3 text-[0.98rem] leading-[1.7] text-ink2">{m.reserveBody}</p>
+        <p className="mt-4 border-t border-sand pt-4 text-[0.92rem] leading-[1.65] text-ink2">{m.dayBring}</p>
+      </div>
+    )
+  }
+  return (
+    <div className="mt-6 overflow-hidden rounded-[6px] border border-forest bg-white">
+      <div className="bg-forest px-6 py-5 text-white sm:px-8">
+        <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-gold">{m.dayTitle}</p>
+        <p className="mt-1 text-[0.95rem] text-white/80">{m.dayDate}</p>
+        <div className="mt-4 flex flex-wrap items-end gap-x-10 gap-y-3">
+          <div>
+            <p className="text-[0.8rem] text-white/70">{m.dayReport}</p>
+            <p className="font-display text-[2rem] font-bold leading-none">{clock(plan.report_at, lang)}</p>
+          </div>
+          <div>
+            <p className="text-[0.8rem] text-white/70">{m.dayGroup}</p>
+            <p className="font-display text-[2rem] font-bold leading-none text-gold">{plan.grp}</p>
+          </div>
+        </div>
+      </div>
+      <div className="px-6 py-5 sm:px-8">
+        <p className="font-display text-[0.95rem] font-semibold text-ink">{m.dayStops}</p>
+        <ol className="mt-3 space-y-3">
+          {(plan.route || []).map((r, i) => {
+            const test = r.key === 'TEST'
+            const co = byId.get(r.key)
+            return (
+              <li key={r.key} className="flex gap-4 border-b border-sand pb-3 last:border-0 last:pb-0">
+                <span className="w-[5.5rem] shrink-0 font-display text-[1.05rem] font-bold text-clay-deep">{clock(r.slot, lang)}</span>
+                <span className="min-w-0">
+                  <span className="block font-display text-[1rem] font-semibold leading-snug text-ink">
+                    {i + 1}. {test ? m.dayTest : co?.organization || m.dayDesk}
+                  </span>
+                  <span className="mt-0.5 block text-[0.88rem] leading-[1.55] text-muted">{test ? m.dayTestNote : m.dayDesk}</span>
+                </span>
+              </li>
+            )
+          })}
+        </ol>
+        <p className="mt-5 border-t border-sand pt-4 text-[0.92rem] leading-[1.65] text-ink2">{m.dayBring}</p>
+        <p className="mt-2 text-[0.88rem] leading-[1.6] text-muted">{m.dayFixed}</p>
       </div>
     </div>
   )

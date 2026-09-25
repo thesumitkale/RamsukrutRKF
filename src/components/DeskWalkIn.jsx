@@ -3,7 +3,7 @@
 
    Someone arrives on the day without having registered, often without a
    smartphone. A volunteer fills this in for them in under a minute, and the
-   desk then opens that person on Sign ups so their companies are picked in the
+   desk then opens that person on Day plan so they get a group and time in the
    same sitting.
 
    It posts to the same intake the public form uses, so the duplicate guard on
@@ -83,7 +83,7 @@ export default function DeskWalkIn({ candidates, onDone }) {
               <div className="mt-2 flex flex-wrap items-center gap-3 rounded-[4px] border border-gold bg-gold/15 px-3 py-2.5 text-[0.9rem] text-ink">
                 <span>Already registered as <strong>{known.name}</strong>. Saving again only updates their details.</span>
                 <button type="button" onClick={() => onDone(ten)} className="rounded-[3px] bg-forest px-3 py-1.5 text-[0.85rem] font-semibold text-white">
-                  Open their sign ups
+                  Open their day plan
                 </button>
               </div>
             )}
@@ -158,7 +158,7 @@ export default function DeskWalkIn({ candidates, onDone }) {
 
       <aside className="h-fit rounded-[8px] border border-sand bg-paper2 p-5 text-[0.92rem] leading-[1.65] text-ink2">
         <p className="font-display text-[1rem] font-semibold text-ink">At the desk</p>
-        <p className="mt-2">Ask for the mobile first. If it is already registered, skip the form and open their sign ups.</p>
+        <p className="mt-2">Ask for the mobile first. If it is already registered, skip the form and open their day plan.</p>
         <p className="mt-2">Walk-ins are marked Walk-in at venue in the sheet, so they can be counted after the day.</p>
         {last && <p className="mt-3 border-t border-sand pt-3 font-medium text-forest-2">Saved {last}.</p>}
       </aside>

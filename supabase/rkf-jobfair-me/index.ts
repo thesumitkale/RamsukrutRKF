@@ -22,7 +22,7 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
-const MAX_PICKS = 5;
+const MAX_PICKS = 3;
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -102,8 +102,8 @@ Deno.serve(async (req) => {
 
     const on = body.on !== false;
 
-    // Five companies at most. One person cannot queue at more desks than that
-    // in a single day, and every extra slot is a seat another candidate needed.
+    // Three companies at most, the rule across the whole fair. Every extra slot
+    // is a seat another candidate needed.
     if (on) {
       const { data: live, error: liveErr } = await db
         .from("rkf_jobfair_interviews")
@@ -153,13 +153,19 @@ Deno.serve(async (req) => {
     return json({ ok: false, error: "unknown_action" }, 400);
   }
 
-  const [corpRes, sitRes] = await Promise.all([
+  const [corpRes, sitRes, planRes] = await Promise.all([
     db.from("rkf_jobfair_corporates").select(CORP_COLS).is("removed_at", null),
     db
       .from("rkf_jobfair_interviews")
       .select("corporate_id")
       .eq("candidate_id", cand.id)
       .is("removed_at", null),
+    db
+      .from("rkf_jobfair_plan")
+      .select("grp,status,report_at,route")
+      .eq("candidate_id", cand.id)
+      .is("removed_at", null)
+      .maybeSingle(),
   ]);
 
   if (corpRes.error) {
@@ -177,6 +183,8 @@ Deno.serve(async (req) => {
     found: true,
     candidate: { ...safe, has_resume: Boolean(resume_url) },
     corporates: corpRes.data ?? [],
+    // Their group, reporting time and stops on the day, once planned.
+    plan: planRes.data ?? null,
     // Only picks for companies still coming, so the tally matches the cards.
     chosen: (sitRes.data ?? [])
       .map((r: { corporate_id: string }) => r.corporate_id)
