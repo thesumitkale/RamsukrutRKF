@@ -59,6 +59,13 @@ export const TEST = 'TEST'
 /* Companies that run two interview panels. Matched on name so a re-entered
    company row still gets its second panel. */
 const TWO_PANELS = [/diamond pipe/i, /gaps energy/i, /skkato/i, /ecotech/i, /techsham/i]
+/* Desks that stay open till 8:00 because they are booked more than 10 a
+   slot before 5:00. Every other desk closes at 5:00. Zeal and Techspian also
+   run till 8:00, interviewing their test shortlist. */
+const LATE_DESKS = [/techsham/i, /ecotech/i, /skkato/i, /diamond pipe/i, /kunal facility/i, /nivara/i, /dhiti/i, /johnson lift/i, /hi-tech service/i, /nsb system/i, /pravin industr/i, /endurance/i, /hawk glass/i, /gaps energy/i, /^bvg/i]
+export const CLOSE_AT = '17:00'
+export const LAST_AT = '20:00'
+export const runsLate = (co) => isTestCo(co) || LATE_DESKS.some((re) => re.test(String(co?.organization || '').trim()))
 export const isTestCo = (co) => /zeal|techspian/i.test(String(co?.organization || ''))
 export const panelsOf = (co) => (TWO_PANELS.some((re) => re.test(String(co?.organization || ''))) ? 2 : 1)
 
@@ -142,7 +149,7 @@ export function capacity(corporates, plans) {
   const cap = {}
   cap[TEST] = WAVES.map((w) => (TEST_STARTS.includes(w) ? TEST_SEATS : 0))
   corporates.forEach((co) => {
-    if (!isTestCo(co)) cap[co.id] = WAVES.map(() => panelsOf(co) * PER_PANEL)
+    if (!isTestCo(co)) cap[co.id] = WAVES.map((w) => (w < CLOSE_AT || runsLate(co) ? panelsOf(co) * PER_PANEL : 0))
   })
   plans.forEach((p) => {
     if (p.removed_at) return
