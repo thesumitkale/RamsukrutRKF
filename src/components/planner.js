@@ -305,17 +305,3 @@ export function firstOpenWave(now = new Date()) {
   return i < 0 ? WAVES.length : i
 }
 
-/* Help desks at the gate, one minute per person. Ground floor 1 to 18, first
-   floor 19 to 22 beside the aptitude hall. Desks are shared out by how many
-   people each kind of group has, so no line runs much longer than another. */
-const HELP_DESKS = {
-  MFG: [1, 2, 3], OFF: [4, 5, 6], ACC: [7, 8], LOG: [9], SUP: [10], HR: [11], GEN: [12],
-  SAL: [13], BPO: [13], OPS: [14], OTH: [14], IT: [15, 16, 17, 18, 19, 20, 21, 22],
-}
-export function helpDeskOf(grp) {
-  const [code, n] = String(grp || '').split('-')
-  const list = HELP_DESKS[code]
-  if (!list) return null
-  return list[(Number(n) || 1) % list.length]
-}
-export const helpFloorOf = (desk) => (desk >= 19 ? 'first floor' : 'ground floor')
