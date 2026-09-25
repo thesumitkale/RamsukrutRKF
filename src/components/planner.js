@@ -21,7 +21,7 @@
 
 import { scoreOf, wantedDeptsOf, hiresEverythingOf, dedupe, dept, qualOf } from './matchScore.js'
 
-const DEPT_CODE = {
+export const DEPT_CODE = {
   'IT & Software': 'IT',
   'Sales & Marketing': 'SAL',
   'Customer Support & BPO': 'BPO',

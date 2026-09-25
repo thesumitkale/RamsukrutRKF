@@ -13,7 +13,7 @@
 
 import { useMemo, useState } from 'react'
 import { dept, download } from './matchScore.js'
-import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS } from './planner.js'
+import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE } from './planner.js'
 
 const box = 'w-full rounded-[4px] border border-sand bg-paper px-3 py-2 text-[0.95rem] text-ink outline-none focus:border-clay'
 const btn = 'rounded-[4px] px-4 py-2 font-display text-[0.86rem] font-semibold transition disabled:opacity-50'
@@ -279,13 +279,17 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                         <td key={w} className={'px-2 py-2 text-center align-top ' + (n && n >= cap ? 'bg-gold/30' : n ? 'bg-forest/5' : '')}>
                           {n ? (
                             <>
-                              <span className="font-semibold text-ink">{n}</span>
-                              <span className="mt-0.5 block text-[0.7rem] leading-tight text-muted">
-                                {key === TEST
-                                  ? Object.keys(gs).length + ' groups'
-                                  : Object.keys(gs).sort().map((g) => (
-                                      <span key={g} className="block whitespace-nowrap">{g}</span>
-                                    ))}
+                              {key === TEST && (
+                                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">Batch T{TEST_STARTS.indexOf(w) + 1}</span>
+                              )}
+                              <span className="block font-display text-[1.15rem] font-extrabold leading-tight text-ink">{n}</span>
+                              <span className="mt-1 block space-y-0.5 text-[0.72rem] leading-tight">
+                                {Object.keys(gs).sort((a, b) => gs[b].length - gs[a].length || a.localeCompare(b)).map((g) => (
+                                  <span key={g} className="flex items-center justify-between gap-2 whitespace-nowrap">
+                                    <span className="font-semibold text-ink2">{g}</span>
+                                    <span className="text-muted">{gs[g].length}</span>
+                                  </span>
+                                ))}
                               </span>
                             </>
                           ) : key === TEST && !cap ? '' : <span className="text-sand">.</span>}
@@ -296,7 +300,25 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                 ))}
               </tbody>
             </table>
-            <p className="mt-3 text-[0.82rem] text-muted">Numbers are people, codes under them are the micro groups called to that desk in that wave. Gold means the desk is full for that wave.</p>
+            <div className="mt-4 rounded-[10px] border border-sand bg-paper p-4 text-[0.85rem] leading-[1.55] text-ink2">
+              <p className="font-display font-semibold text-ink">How to read this</p>
+              <ul className="mt-2 space-y-1.5">
+                <li><b className="text-ink">Row</b> is one company desk. <b className="text-ink">Column</b> is the half hour a group reaches it.</li>
+                <li><b className="text-ink">Big number</b> is the total people booked there for that half hour. About 2 in 3 turn up, so 12 booked means about 8 seen.</li>
+                <li><b className="text-ink">Group code</b> with its head count sits under it. IT-47 means IT, batch 47.</li>
+                <li><b className="text-ink">Why codes:</b> a group is people with exactly the same day, the same stops at the same times. Calling "IT-47 to Lenze" moves all of them at once, instead of reading out 12 names. Small groups exist because their other stops differ.</li>
+                <li><b className="text-ink">Test batches</b> T1 to T5 run at 10:00, 11:00, 12:00, 1:30 and 2:30. Only IT groups sit it, under their own IT code. Zeal and Techspian interview their shortlist by name from 3:30 to 5:00.</li>
+                <li><b className="text-ink">Gold</b> means the desk is full for that half hour. Light means it still has room.</li>
+              </ul>
+              <p className="mt-4 font-display font-semibold text-ink">Code full forms</p>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {Object.entries(DEPT_CODE).map(([name, code]) => (
+                  <span key={code} className="rounded-full border border-sand bg-white px-3 py-1 text-[0.8rem]">
+                    <b className="text-ink">{code}</b> <span className="text-muted">{name}</span>
+                  </span>
+                ))}
+              </div>
+            </div>
           </div>
         )}
 
