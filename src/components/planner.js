@@ -149,7 +149,9 @@ export function capacity(corporates, plans) {
   const cap = {}
   cap[TEST] = WAVES.map((w) => (TEST_STARTS.includes(w) ? TEST_SEATS : 0))
   corporates.forEach((co) => {
-    if (!isTestCo(co)) cap[co.id] = WAVES.map((w) => (w < CLOSE_AT || runsLate(co) ? panelsOf(co) * PER_PANEL : 0))
+    /* Every desk takes at most PER_PANEL a slot, even with two panels, so the
+       two panels share the load and the longer day absorbs the rest. */
+    if (!isTestCo(co)) cap[co.id] = WAVES.map((w) => (w < CLOSE_AT || runsLate(co) ? PER_PANEL : 0))
   })
   plans.forEach((p) => {
     if (p.removed_at) return
@@ -294,7 +296,62 @@ export function planPeople({ people, corporates, interviews, plans, from = 0 }) 
       }
     }
   })
+  if (from === 0) openAtTen(out, cap, nextGroup)
   return out
+}
+
+/* Every desk opens at 10:00. A desk with room at 10:00 takes a group that
+   meets it later in the day: the group swaps that stop with whatever it had
+   at 10:00, as long as the other desk has room at the later time. Everyone is
+   inside by 9:30, so seeing a desk at 10:00 instead of later never adds
+   waiting. A group bigger than the room left is split, and the part that
+   moves gets its own code. Test takers are left alone, the test is their
+   10:00. */
+function openAtTen(out, cap, nextGroup) {
+  const first = WAVES[0]
+  const groups = new Map()
+  out.forEach((r) => {
+    if (r.status !== 'planned' || !r.grp) return
+    if (!groups.has(r.grp)) groups.set(r.grp, [])
+    groups.get(r.grp).push(r)
+  })
+  const keys = Object.keys(cap).filter((k) => k !== TEST)
+  for (let pass = 0; pass < 3; pass++) {
+    for (const key of keys) {
+      const target = Math.ceil(PER_PANEL / 2)
+      for (const [, rows] of groups) {
+        if (PER_PANEL - cap[key][0] >= target) break
+        const route = rows[0].route
+        if (route.some((x) => x.key === TEST)) continue
+        const late = route.find((x) => x.key === key && x.slot !== first)
+        if (!late) continue
+        let n = rows.length
+        let movers = rows
+        if (cap[key][0] < n) {
+          if (cap[key][0] < 4) continue
+          n = cap[key][0]
+          movers = rows.slice(0, n)
+        }
+        const early = route.find((x) => x.slot === first)
+        const li = WAVES.indexOf(late.slot)
+        if (early && (cap[early.key]?.[li] ?? 0) < n) continue
+        cap[key][0] -= n
+        cap[key][li] += n
+        if (early) { cap[early.key][0] += n; cap[early.key][li] -= n }
+        const next = route
+          .map((x) => (x === late ? { ...x, slot: first } : x === early ? { ...x, slot: late.slot } : x))
+          .sort((a, b) => mins(a.slot) - mins(b.slot))
+        if (movers.length < rows.length) {
+          const g = nextGroup(rows[0].grp.split('-')[0])
+          movers.forEach((r) => { r.grp = g })
+          groups.set(g, movers)
+          groups.set(rows[0].grp === g ? '' : rows[movers.length].grp, rows.slice(movers.length))
+          rows.splice(0, movers.length)
+        }
+        movers.forEach((r) => { r.route = next.map((x) => ({ ...x })) })
+      }
+    }
+  }
 }
 
 const row = (candidate_id, grp, route, status) => ({
