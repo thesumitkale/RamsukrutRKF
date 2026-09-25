@@ -36,11 +36,19 @@ const DEPT_CODE = {
 }
 export const deptCode = (p) => DEPT_CODE[dept(p)] || 'OTH'
 
-export const WAVES = ['09:30', '10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00']
-export const TEST_STARTS = ['09:30', '10:30', '11:30', '13:30', '14:30', '15:30']
-export const TEST_SEATS = 100
-export const PER_PANEL = 8
-export const GROUP_MAX = 8
+/* The floor opens at 10:00. Lunch is 13:00 to 13:30. */
+export const WAVES = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30']
+export const TEST_STARTS = ['10:00', '11:00', '12:00', '13:30', '14:30', '15:30']
+/* Not everyone who registers comes. We plan for about 800 of 1,368, so each
+   slot is booked one and a half times over: a panel that sees 8 people a
+   wave is given 12 names, a hall of 100 seats is given 150. */
+export const EXPECTED_TURNOUT = 800
+export const BOOK = 1.5
+export const SEATS = 100
+export const SEEN_PER_PANEL = 8
+export const TEST_SEATS = Math.round(SEATS * BOOK)
+export const PER_PANEL = Math.round(SEEN_PER_PANEL * BOOK)
+export const GROUP_MAX = PER_PANEL
 export const MAX_STOPS = 3
 export const TEST = 'TEST'
 
@@ -53,7 +61,10 @@ export const panelsOf = (co) => (TWO_PANELS.some((re) => re.test(String(co?.orga
 const len = (key) => (key === TEST ? 2 : 1)
 const hhmm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')
 const mins = (s) => Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5))
-export const reportAt = (slot) => hhmm(mins(slot) - 30)
+/* Everyone enters together: the gate opens at 9:00 and all are in by 9:30.
+   The slot times are when a group is called from the seating hall. */
+export const REPORT_AT = '09:30'
+export const reportAt = () => REPORT_AT
 
 /* Every stop a person could use, best first. Their own picks lead when they
    made any, then strong matches, then the next best. Placement walks down
@@ -73,8 +84,31 @@ const BY_QUAL = {
 export const forPlanning = (p) =>
   dept(p) === 'Other' ? { ...p, department: BY_QUAL[qualOf(p)] || 'General Staff', dept_from_qual: true } : p
 
+/* IT openings are few: Zeal and Techspian hire a handful between them. So an
+   IT candidate sits the shared test first, then gets two desks where a
+   graduate is a real fit, office, support, sales or accounts, so nobody
+   travels to Dawadi for one paper alone. */
+const IT_RELATED = ['Office Staff', 'Customer Support & BPO', 'Sales & Marketing', 'Accounts & Finance']
+const IT_RELATED_TECH = ['Manufacturing & Production', 'Supervisors & Team Leads', 'Office Staff']
+
 export function stopsFor(person0, corporates, picks = []) {
   const person = forPlanning(person0)
+  if (dept(person) === 'IT & Software') {
+    const base = baseStops(person, corporates, picks)
+    const test = base.filter((s) => s.key === TEST)
+    const own = base.filter((s) => s.key !== TEST && picks.some((p) => p.corporate_id === s.key))
+    const related = (['Graduate', 'Post Graduate'].includes(qualOf(person)) ? IT_RELATED : IT_RELATED_TECH)
+      .flatMap((d) => baseStops({ ...person, department: d }, corporates, []))
+      .filter((s) => s.key !== TEST)
+      .sort((a, b) => b.fit - a.fit)
+    const out = []
+    ;[...test, ...own, ...related, ...base].forEach((s) => { if (!out.some((x) => x.key === s.key)) out.push(s) })
+    return out
+  }
+  return baseStops(person, corporates, picks)
+}
+
+function baseStops(person, corporates, picks = []) {
   const byId = new Map(corporates.map((c) => [c.id, c]))
   const scored = []
   corporates.forEach((co) => {
@@ -270,3 +304,18 @@ export function firstOpenWave(now = new Date()) {
   const i = WAVES.findIndex((w) => mins(w) >= m)
   return i < 0 ? WAVES.length : i
 }
+
+/* Help desks at the gate, one minute per person. Ground floor 1 to 18, first
+   floor 19 to 22 beside the aptitude hall. Desks are shared out by how many
+   people each kind of group has, so no line runs much longer than another. */
+const HELP_DESKS = {
+  MFG: [1, 2, 3], OFF: [4, 5, 6], ACC: [7, 8], LOG: [9], SUP: [10], HR: [11], GEN: [12],
+  SAL: [13], BPO: [13], OPS: [14], OTH: [14], IT: [15, 16, 17, 18, 19, 20, 21, 22],
+}
+export function helpDeskOf(grp) {
+  const [code, n] = String(grp || '').split('-')
+  const list = HELP_DESKS[code]
+  if (!list) return null
+  return list[(Number(n) || 1) % list.length]
+}
+export const helpFloorOf = (desk) => (desk >= 19 ? 'first floor' : 'ground floor')

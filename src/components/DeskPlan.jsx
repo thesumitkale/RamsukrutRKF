@@ -13,7 +13,7 @@
 
 import { useMemo, useState } from 'react'
 import { dept, download } from './matchScore.js'
-import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL } from './planner.js'
+import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, helpDeskOf, helpFloorOf } from './planner.js'
 
 const box = 'w-full rounded-[4px] border border-sand bg-paper px-3 py-2 text-[0.95rem] text-ink outline-none focus:border-clay'
 const btn = 'rounded-[4px] px-4 py-2 font-display text-[0.86rem] font-semibold transition disabled:opacity-50'
@@ -105,8 +105,8 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
     const mr = (plan.route || []).map((r) => clockMr(r.slot) + ' ' + (r.key === TEST ? 'अभियोग्यता चाचणी' : stopName(r.key))).join(', ')
     return (
       'Namaskar ' + first + '. Ramsukrut Job Fair, Tuesday 29 September, Mahalaxmi Mangal Karyalay, Dawadi. Group ' + plan.grp +
-      '. Report at the gate by ' + clock(plan.report_at) + '. Your stops: ' + en +
-      '. Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा. ' + mr + '.'
+      '. Reach the venue by ' + clock(plan.report_at) + ' and go to help desk ' + helpDeskOf(plan.grp) + ', ' + helpFloorOf(helpDeskOf(plan.grp)) + '. Your stops: ' + en +
+      '. Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि मदत कक्ष क्रमांक ' + helpDeskOf(plan.grp) + ' येथे जा. ' + mr + '.'
     )
   }
 
@@ -117,13 +117,13 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
       if (!plan) return
       const r = plan.route || []
       rows.push([
-        p.name, digits(p.mobile), dept(p), plan.grp || '', plan.status, clock(plan.report_at),
+        p.name, digits(p.mobile), dept(p), plan.grp || '', helpDeskOf(plan.grp) || '', plan.status, clock(plan.report_at),
         ...[0, 1, 2].flatMap((i) => (r[i] ? [clock(r[i].slot), stopName(r[i].key)] : ['', ''])),
         message(p, plan),
       ])
     })
     rows.sort((a, b) => String(a[3]).localeCompare(String(b[3])))
-    download('rkf-day-plan.csv', ['Name', 'Mobile', 'Department', 'Group', 'Status', 'Report by', 'Stop 1 time', 'Stop 1', 'Stop 2 time', 'Stop 2', 'Stop 3 time', 'Stop 3', 'WhatsApp message'], rows)
+    download('rkf-day-plan.csv', ['Name', 'Mobile', 'Department', 'Group', 'Help desk', 'Status', 'Report by', 'Stop 1 time', 'Stop 1', 'Stop 2 time', 'Stop 2', 'Stop 3 time', 'Stop 3', 'WhatsApp message'], rows)
   }
 
   const exportCompany = (key) => {
@@ -176,7 +176,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         </div>
         {msg && <p className="mt-3 text-[0.9rem] text-forest-2">{msg}</p>}
         <p className="mt-4 text-[0.85rem] leading-[1.6] text-muted">
-          Each desk takes {PER_PANEL} people per panel every 30 minutes. The aptitude hall takes 100 per batch, one test for both Zeal and Techspian. Everyone reports 30 minutes before their first stop. New people only fill spare room from the next wave onwards.
+          The floor opens at 10:00. Each panel sees 8 people every 30 minutes and is booked {PER_PANEL}, since we expect about 800 of 1,368 to come. The aptitude hall has 100 seats and is booked {TEST_SEATS} per batch, one test for both Zeal and Techspian. IT candidates sit the test first, then two related desks. Everyone enters by 9:30 and is briefed at a help desk, 1 to 18 on the ground floor and 19 to 22 on the first floor for IT. New people only fill spare room from the next wave onwards.
         </p>
       </div>
 
@@ -199,7 +199,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                     {plan?.status === 'reserve' && <p className="mt-1 text-[0.9rem] text-clay-deep">Reserve list, send to the first desk that opens</p>}
                     {plan?.status === 'planned' && (
                       <p className="mt-1 text-[0.9rem] leading-[1.6] text-ink2">
-                        <strong className="text-ink">{plan.grp}</strong>, report {clock(plan.report_at)}.{' '}
+                        <strong className="text-ink">{plan.grp}</strong>, help desk {helpDeskOf(plan.grp)}, report {clock(plan.report_at)}.{' '}
                         {(plan.route || []).map((r) => clock(r.slot) + ' ' + stopName(r.key)).join(', ')}
                       </p>
                     )}

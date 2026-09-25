@@ -23,6 +23,7 @@ import { translatePlace } from '../content/maharashtra.js'
 import Reveal from '../components/Reveal.jsx'
 import GhostEyebrow from '../components/GhostEyebrow.jsx'
 import { Arrow, Wa, Phone } from '../components/Icons.jsx'
+import { helpDeskOf } from '../components/planner.js'
 import {
   dept,
   expOf,
@@ -517,6 +518,12 @@ function DayPlan({ plan, corporates, m, lang }) {
             <p className="text-[0.8rem] text-white/70">{m.dayGroup}</p>
             <p className="font-display text-[2rem] font-bold leading-none text-gold">{plan.grp}</p>
           </div>
+          {helpDeskOf(plan.grp) && (
+            <div>
+              <p className="text-[0.8rem] text-white/70">{m.dayHelp}</p>
+              <p className="font-display text-[2rem] font-bold leading-none">{helpDeskOf(plan.grp)}</p>
+            </div>
+          )}
         </div>
       </div>
       <div className="px-6 py-5 sm:px-8">
