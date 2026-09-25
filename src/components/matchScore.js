@@ -17,12 +17,19 @@
 export const DEPT_FIX = {
   'IT / Software': 'IT & Software',
   'लॉजिस्टिक्स व वेअरहाऊस': 'Logistics & Warehouse',
+  'आयटी व सॉफ्टवेअर': 'IT & Software',
+  'अकाउंट्स व फायनान्स': 'Accounts & Finance',
+  'इतर': 'Other',
 }
 
-const EXP_FIX = { 'फ्रेशर': 'Fresher' }
+const EXP_FIX = { 'फ्रेशर': 'Fresher', '० ते १ वर्ष': '0 to 1 year' }
 
 const QUAL_FIX = {
   'पदव्युत्तर': 'Post Graduate',
+  'पदवीधर': 'Graduate',
+  '१२वी (HSC)': '12th (HSC)',
+  '१०वी (SSC)': '10th (SSC)',
+  'इतर': 'Other',
   MBA: 'Post Graduate',
   'BE Mechanical': 'Graduate',
   'BSc IT': 'Graduate',

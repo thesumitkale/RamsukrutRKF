@@ -19,7 +19,7 @@
    their time.
    ========================================================================== */
 
-import { scoreOf, wantedDeptsOf, hiresEverythingOf, dedupe, dept } from './matchScore.js'
+import { scoreOf, wantedDeptsOf, hiresEverythingOf, dedupe, dept, qualOf } from './matchScore.js'
 
 const DEPT_CODE = {
   'IT & Software': 'IT',
@@ -58,7 +58,23 @@ export const reportAt = (slot) => hhmm(mins(slot) - 30)
 /* Every stop a person could use, best first. Their own picks lead when they
    made any, then strong matches, then the next best. Placement walks down
    this list and keeps the first three that have room. */
-export function stopsFor(person, corporates, picks = []) {
+/* Somebody who answered "Other" for department has not told us the work they
+   want, so their qualification speaks for them: ITI and Diploma to the shop
+   floor, graduates to office work, school leavers to general staff. Used for
+   planning only, the registration itself is not rewritten. */
+const BY_QUAL = {
+  ITI: 'Manufacturing & Production',
+  Diploma: 'Manufacturing & Production',
+  Graduate: 'Office Staff',
+  'Post Graduate': 'Office Staff',
+  '12th (HSC)': 'General Staff',
+  '10th (SSC)': 'General Staff',
+}
+export const forPlanning = (p) =>
+  dept(p) === 'Other' ? { ...p, department: BY_QUAL[qualOf(p)] || 'General Staff', dept_from_qual: true } : p
+
+export function stopsFor(person0, corporates, picks = []) {
+  const person = forPlanning(person0)
   const byId = new Map(corporates.map((c) => [c.id, c]))
   const scored = []
   corporates.forEach((co) => {
@@ -155,7 +171,7 @@ export function planPeople({ people, corporates, interviews, plans, from = 0 }) 
      gets eight people who all came for the same kind of work. */
   const bundles = new Map()
   todo.forEach((t) => {
-    const k = deptCode(t.p) + '#' + t.stops.slice(0, MAX_STOPS).map((s) => s.key).sort().join('|')
+    const k = deptCode(forPlanning(t.p)) + '#' + t.stops.slice(0, MAX_STOPS).map((s) => s.key).sort().join('|')
     if (!bundles.has(k)) bundles.set(k, [])
     bundles.get(k).push(t)
   })
@@ -213,6 +229,23 @@ export function planPeople({ people, corporates, interviews, plans, from = 0 }) 
       })
     }
   }
+  /* Last try before the reserve list. Field sales and customer support hire
+     from every background, so anyone still without a desk is offered those
+     with room, best fit first. */
+  const stuck = out.filter((r) => r.status === 'reserve')
+  stuck.forEach((r) => {
+    const t = todo.find((x) => x.p.id === r.candidate_id)
+    if (!t) return
+    for (const d of ['Sales & Marketing', 'Customer Support & BPO']) {
+      const ranked = stopsFor({ ...t.p, department: d }, corporates).filter((s) => s.key !== TEST)
+      const route = place(ranked, 1)
+      if (route) {
+        take(cap, route, 1)
+        Object.assign(r, row(r.candidate_id, nextGroup(d === 'Sales & Marketing' ? 'SAL' : 'BPO'), route, 'planned'))
+        return
+      }
+    }
+  })
   return out
 }
 
