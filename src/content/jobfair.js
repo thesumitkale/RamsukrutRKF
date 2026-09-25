@@ -134,7 +134,7 @@ export const jobfair = {
     navLabel: 'Job Fair',
     meta: {
       title: 'Ramsukrut Job Fair 2026. 29 September, Dawadi, Khed, Pune | Ramsukrut Kalyan Foundation',
-      description: 'A free one day job fair on 29 September 2026. Reporting at 9:00 AM, process runs till 5:00 PM. Register as a candidate or book a hiring desk for your company.',
+      description: 'A free one day job fair on 29 September 2026. Reporting at 9:00 AM, process runs till 8:00 PM. Register as a candidate or book a hiring desk for your company.',
     },
     badge: 'Ramsukrut Job Fair 2026',
     h1: 'You have the talent.<br/>We are bringing the opportunity to your door.',
@@ -145,7 +145,7 @@ export const jobfair = {
 
     facts: [
       { k: 'Date', v: '29 September 2026' },
-      { k: 'Reporting time', v: '9:00 AM sharp, process runs till 5:00 PM' },
+      { k: 'Reporting time', v: '9:00 AM sharp, process runs till 8:00 PM' },
       { k: 'Venue', v: 'Mahalaxmi Mangal Karyalay, Dawadi, Tal. Khed, Dist. Pune 410505' },
       { k: 'Entry', v: 'Free for all candidates' },
     ],
@@ -312,7 +312,7 @@ export const jobfair = {
       dayGroup: 'Your group',
       dayStops: 'Where you go, in this order',
       dayTest: 'Aptitude test for Zeal Connect and Techspian',
-      dayTestNote: 'Test hall, 45 minutes. One test counts for both companies. Shortlisted names are called for interview the same day.',
+      dayTestNote: 'One sitting for all IT candidates at 10:00, 45 minutes, in the test hall. One test counts for both companies. Shortlisted names are called by name to the Zeal and Techspian desks for interview through the day.',
       dayDesk: 'Interview desk',
       dayBring: 'Bring 3 copies of your resume, a photo ID and your certificates. Show this screenshot at the help desk.',
       dayFixed: 'Go to any help desk at the entrance first. They tell you where to go and when. Your companies and times are fixed so that no desk gets crowded. To change anything, ask the help desk on the day.',
@@ -338,7 +338,7 @@ export const jobfair = {
     navLabel: 'रोजगार मेळावा',
     meta: {
       title: 'रामसुकृत रोजगार मेळावा २०२६. २९ सप्टेंबर, दावडी, खेड, पुणे | रामसुकृत कल्याण फाउंडेशन',
-      description: '२९ सप्टेंबर २०२६ रोजी मोफत रोजगार मेळावा. सकाळी ९:०० वाजता हजर राहा, प्रक्रिया सायंकाळी ५:०० पर्यंत चालेल. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
+      description: '२९ सप्टेंबर २०२६ रोजी मोफत रोजगार मेळावा. सकाळी ९:०० वाजता हजर राहा, प्रक्रिया रात्री ८:०० पर्यंत चालेल. उमेदवार म्हणून नोंदणी करा किंवा तुमच्या कंपनीसाठी भरती डेस्क बुक करा.',
     },
     badge: 'रामसुकृत रोजगार मेळावा 2026',
     h1: 'क्षमता तुमच्याकडे आहे.<br/>संधी आम्ही तुमच्या दारात आणत आहोत.',
@@ -349,7 +349,7 @@ export const jobfair = {
 
     facts: [
       { k: 'दिनांक', v: '२९ सप्टेंबर २०२६' },
-      { k: 'हजर राहण्याची वेळ', v: 'सकाळी ९:०० वाजता, प्रक्रिया सायंकाळी ५:०० पर्यंत' },
+      { k: 'हजर राहण्याची वेळ', v: 'सकाळी ९:०० वाजता, प्रक्रिया रात्री ८:०० पर्यंत' },
       { k: 'ठिकाण', v: 'महालक्ष्मी मंगल कार्यालय, दावडी, ता. खेड, जि. पुणे 410505' },
       { k: 'प्रवेश', v: 'सर्व उमेदवारांसाठी नि:शुल्क' },
     ],
@@ -515,7 +515,7 @@ export const jobfair = {
       dayGroup: 'तुमचा गट',
       dayStops: 'या क्रमाने जा',
       dayTest: 'झील कनेक्ट आणि टेक्स्पियनसाठी अभियोग्यता चाचणी',
-      dayTestNote: 'चाचणी हॉल, 45 मिनिटे. एकच चाचणी दोन्ही कंपन्यांसाठी ग्राह्य. निवड झालेल्यांना त्याच दिवशी मुलाखतीसाठी बोलावले जाईल.',
+      dayTestNote: 'सर्व आयटी उमेदवारांची एकच चाचणी सकाळी 10:00 वाजता, 45 मिनिटे, चाचणी हॉलमध्ये. एकच चाचणी दोन्ही कंपन्यांसाठी ग्राह्य. निवड झालेल्यांना दिवसभरात नावाने झील आणि टेक्स्पियन डेस्कवर मुलाखतीसाठी बोलावले जाईल.',
       dayDesk: 'मुलाखत टेबल',
       dayBring: 'बायोडेटाच्या 3 प्रती, ओळखपत्र आणि प्रमाणपत्रे सोबत आणा. मदत कक्षात हा स्क्रीनशॉट दाखवा.',
       dayFixed: 'आधी प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. कोणत्याही टेबलवर गर्दी होऊ नये म्हणून तुमच्या कंपन्या आणि वेळा ठरलेल्या आहेत. काही बदल हवा असल्यास त्या दिवशी मदत कक्षात विचारा.',

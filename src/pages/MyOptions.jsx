@@ -487,7 +487,7 @@ function Group({ title, sub, items, m, chosen, sit, savingId, bandName, bandLook
 const clock = (slot, lang) => {
   const [h, mm] = String(slot).split(':').map(Number)
   const h12 = ((h + 11) % 12) + 1
-  if (lang === 'mr') return (h < 12 ? 'सकाळी ' : 'दुपारी ') + h12 + ':' + String(mm).padStart(2, '0')
+  if (lang === 'mr') return (h < 12 ? 'सकाळी ' : h < 17 ? 'दुपारी ' : h < 19 ? 'सायंकाळी ' : 'रात्री ') + h12 + ':' + String(mm).padStart(2, '0')
   return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
 }
 

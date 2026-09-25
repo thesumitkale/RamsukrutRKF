@@ -36,9 +36,12 @@ export const DEPT_CODE = {
 }
 export const deptCode = (p) => DEPT_CODE[dept(p)] || 'OTH'
 
-/* The floor opens at 10:00. Lunch is 13:00 to 13:30. */
-export const WAVES = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30']
-export const TEST_STARTS = ['10:00', '11:00', '12:00', '13:30', '14:30', '15:30']
+/* The floor opens at 10:00 and the last slot starts at 7:30, so the day ends
+   at 8:00. Lunch is 13:00 to 13:30. The Zeal and Techspian aptitude test is
+   one sitting for everyone at 10:00. Their desks then use the rest of the day
+   to interview whoever they shortlist. */
+export const WAVES = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30']
+export const TEST_STARTS = ['10:00']
 /* Not everyone who registers comes. We plan for about 800 of 1,368, so each
    slot is booked one and a half times over: a panel that sees 8 people a
    wave is given 12 names, a hall of 100 seats is given 150. */
@@ -46,7 +49,8 @@ export const EXPECTED_TURNOUT = 800
 export const BOOK = 1.5
 export const SEATS = 100
 export const SEEN_PER_PANEL = 8
-export const TEST_SEATS = Math.round(SEATS * BOOK)
+/* One sitting takes every IT candidate, so the hall has no booking cap. */
+export const TEST_SEATS = 5000
 export const PER_PANEL = Math.round(SEEN_PER_PANEL * BOOK)
 export const GROUP_MAX = PER_PANEL
 export const MAX_STOPS = 3
@@ -153,8 +157,11 @@ export function capacity(corporates, plans) {
 const perms = (a) => (a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slice(0, i), ...a.slice(i + 1)]).map((p) => [x, ...p])))
 
 /* Earliest route for `size` people through these stops, one stop after
-   another, never more than one wave of waiting between two stops. */
+   another, never more than one wave of waiting between two stops. Test
+   takers are the exception: all of them leave the hall at 11:00 together, so
+   their desks may be spread over the rest of the day. */
 function fit(stops, size, cap, from) {
+  const gap = stops.some((s) => s.key === TEST) ? 99 : 1
   let best = null
   for (const order of perms(stops)) {
     for (let start = from; start < WAVES.length; start++) {
@@ -163,7 +170,7 @@ function fit(stops, size, cap, from) {
       let ok = true
       for (const s of order) {
         let w = -1
-        for (let j = t; j < WAVES.length && j <= t + 1 + (route.length ? 0 : 99); j++) {
+        for (let j = t; j < WAVES.length && j <= t + (route.length ? gap : 99); j++) {
           if (j + len(s.key) > WAVES.length) break
           const room = cap[s.key]?.[j] ?? 0
           if (room >= size) { w = j; break }

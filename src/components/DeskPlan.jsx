@@ -13,22 +13,12 @@
 
 import { useMemo, useState } from 'react'
 import { dept, download } from './matchScore.js'
+import { clock, dayMessage } from './dayMessage.js'
 import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE } from './planner.js'
 
 const box = 'w-full rounded-[4px] border border-sand bg-paper px-3 py-2 text-[0.95rem] text-ink outline-none focus:border-clay'
 const btn = 'rounded-[4px] px-4 py-2 font-display text-[0.86rem] font-semibold transition disabled:opacity-50'
 const digits = (s) => String(s || '').replace(/\D/g, '').slice(-10)
-
-const clock = (slot) => {
-  if (!slot) return ''
-  const [h, mm] = String(slot).split(':').map(Number)
-  return ((h + 11) % 12) + 1 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
-}
-const clockMr = (slot) => {
-  if (!slot) return ''
-  const [h, mm] = String(slot).split(':').map(Number)
-  return (h < 12 ? 'सकाळी ' : 'दुपारी ') + (((h + 11) % 12) + 1) + ':' + String(mm).padStart(2, '0')
-}
 
 export default function DeskPlan({ candidates, corporates, interviews, plans, post, onSaved, openMobile }) {
   const [view, setView] = useState('time')
@@ -96,19 +86,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
     save(rows, person.id)
   }
 
-  const message = (p, plan) => {
-    const first = String(p.name || '').split(' ')[0]
-    if (plan.status === 'reserve') {
-      return 'Namaskar ' + first + '. Ramsukrut Job Fair, Tuesday 29 September, Mahalaxmi Mangal Karyalay, Dawadi. You are on the reserve list. Please come by 12:30 PM and go to the help desk. / आपले नाव राखीव यादीत आहे. दुपारी 12:30 पर्यंत येऊन मदत कक्षात भेटा.'
-    }
-    const en = (plan.route || []).map((r) => clock(r.slot) + ' ' + stopName(r.key)).join(', ')
-    const mr = (plan.route || []).map((r) => clockMr(r.slot) + ' ' + (r.key === TEST ? 'अभियोग्यता चाचणी' : stopName(r.key))).join(', ')
-    return (
-      'Namaskar ' + first + '. Ramsukrut Job Fair, Tuesday 29 September, Mahalaxmi Mangal Karyalay, Dawadi. Group ' + plan.grp +
-      '. Reach the venue by ' + clock(plan.report_at) + ' and go to any help desk at the entrance. They will tell you where to go and when. Your stops: ' + en +
-      '. See your full plan and save a screenshot: ramsukrut.com/#/my-options . Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. ' + mr + '. तुमचा प्लॅन पाहून स्क्रीनशॉट घ्या: ramsukrut.com/#/my-options'
-    )
-  }
+  const message = (p, plan) => dayMessage(p, plan, stopName)
 
   const exportAll = () => {
     const rows = []
@@ -176,7 +154,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         </div>
         {msg && <p className="mt-3 text-[0.9rem] text-forest-2">{msg}</p>}
         <p className="mt-4 text-[0.85rem] leading-[1.6] text-muted">
-          The floor opens at 10:00. Each panel sees 8 people every 30 minutes and is booked {PER_PANEL}, since we expect about 800 of 1,368 to come. The aptitude hall has 100 seats and is booked {TEST_SEATS} per batch, one test for both Zeal and Techspian. IT candidates sit the test first, then two related desks. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
+          The floor opens at 10:00 and the last slot starts at 7:30, so the day ends at 8:00. Each panel sees 8 people every 30 minutes and is booked {PER_PANEL}, since we expect about 800 of 1,368 to come. The Zeal and Techspian aptitude test is one sitting for every IT candidate at 10:00. They then go to two related desks, spread over the rest of the day, while Zeal and Techspian use their desks to interview the shortlist. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
         </p>
       </div>
 
@@ -280,7 +258,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                           {n ? (
                             <>
                               {key === TEST && (
-                                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">Batch T{TEST_STARTS.indexOf(w) + 1}</span>
+                                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">One sitting</span>
                               )}
                               <span className="block font-display text-[1.15rem] font-extrabold leading-tight text-ink">{n}</span>
                               <span className="mt-1 block space-y-0.5 text-[0.72rem] leading-tight">
@@ -307,7 +285,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                 <li><b className="text-ink">Big number</b> is the total people booked there for that half hour. About 2 in 3 turn up, so 12 booked means about 8 seen.</li>
                 <li><b className="text-ink">Group code</b> with its head count sits under it. IT-47 means IT, batch 47.</li>
                 <li><b className="text-ink">Why codes:</b> a group is people with exactly the same day, the same stops at the same times. Calling "IT-47 to Lenze" moves all of them at once, instead of reading out 12 names. Small groups exist because their other stops differ.</li>
-                <li><b className="text-ink">Test batches</b> T1 to T5 run at 10:00, 11:00, 12:00, 1:30 and 2:30. Only IT groups sit it, under their own IT code. Zeal and Techspian interview their shortlist by name from 3:30 to 5:00.</li>
+                <li><b className="text-ink">Aptitude test</b> is one sitting for every IT candidate at 10:00, under their own IT codes. After the test, Zeal and Techspian call their shortlist by name for interviews through the rest of the day, till 8:00.</li>
                 <li><b className="text-ink">Gold</b> means the desk is full for that half hour. Light means it still has room.</li>
               </ul>
               <p className="mt-4 font-display font-semibold text-ink">Code full forms</p>
