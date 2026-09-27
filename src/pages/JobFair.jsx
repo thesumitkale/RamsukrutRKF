@@ -11,6 +11,55 @@ import CtaBanner from '../components/CtaBanner.jsx'
 import JobFairForm from '../components/JobFairForm.jsx'
 import { Arrow, Wa, Phone, Clock, Calendar, MapPin, Rupee, Briefcase, Users, Handshake, Shield } from '../components/Icons.jsx'
 
+/* Online candidate registration closes at 5:00 PM IST on 27 September.
+   Companies can still book a desk. Walk ins are placed at the help desk. */
+const REG_CLOSES = Date.parse('2026-09-27T17:00:00+05:30')
+const useRegOpen = () => {
+  const [open, setOpen] = useState(() => Date.now() < REG_CLOSES)
+  useEffect(() => {
+    if (!open) return undefined
+    const t = setInterval(() => { if (Date.now() >= REG_CLOSES) setOpen(false) }, 20000)
+    return () => clearInterval(t)
+  }, [open])
+  return open
+}
+const CLOSED = {
+  en: {
+    soon: 'Online registration closes today, Sunday 27 September, at 5:00 PM.',
+    title: 'Online registration is closed',
+    body: 'Registration closed at 5:00 PM on Sunday 27 September. Thank you to everyone who signed up.',
+    have: 'Already registered? Your companies, times and group code are ready.',
+    cta: 'See my plan for the day',
+    walk: 'Missed it? Walk in on Tuesday 29 September from 9:00 AM with three copies of your resume and a photo ID. The help desk at the entrance will place you wherever there is room.',
+  },
+  mr: {
+    soon: 'ऑनलाइन नोंदणी आज, रविवार 27 सप्टेंबर, सायंकाळी 5:00 वाजता बंद होईल.',
+    title: 'ऑनलाइन नोंदणी बंद झाली आहे',
+    body: 'रविवार 27 सप्टेंबर रोजी सायंकाळी 5:00 वाजता नोंदणी बंद झाली. नोंदणी केलेल्या सर्वांचे आभार.',
+    have: 'नोंदणी केली आहे? तुमच्या कंपन्या, वेळा आणि गट कोड तयार आहेत.',
+    cta: 'माझा दिवसाचा प्लॅन पाहा',
+    walk: 'नोंदणी राहिली? मंगळवार 29 सप्टेंबर रोजी सकाळी 9:00 पासून रिझ्युमच्या तीन प्रती आणि ओळखपत्र घेऊन थेट या. प्रवेशद्वारावरील मदत कक्ष जिथे जागा असेल तिथे तुमची व्यवस्था करेल.',
+  },
+}
+
+function RegClosed({ lang }) {
+  const c = CLOSED[lang] || CLOSED.en
+  return (
+    <div className="rounded-[8px] border border-sand bg-paper p-6 shadow-soft md:p-8">
+      <p className="font-sans text-[.76rem] font-semibold uppercase tracking-wide text-clay">27.09.2026, 5:00 PM</p>
+      <h3 className="mt-2 font-display text-[1.45rem] font-bold leading-tight text-ink">{c.title}</h3>
+      <p className="mt-3 text-[1rem] leading-[1.6] text-ink-2">{c.body}</p>
+      <div className="mt-6 rounded-[6px] bg-paper2 p-5">
+        <p className="text-[.98rem] leading-[1.55] text-ink">{c.have}</p>
+        <Link to="/my-options" className="mt-4 inline-flex items-center gap-2 rounded-full bg-clay px-5 py-3 font-sans text-[.9rem] font-bold text-white shadow-glow transition hover:brightness-105">
+          {c.cta} <Arrow className="h-4 w-4" />
+        </Link>
+      </div>
+      <p className="mt-6 text-[.95rem] leading-[1.6] text-ink-2">{c.walk}</p>
+    </div>
+  )
+}
+
 const FACT_ICONS = [Calendar, Clock, MapPin, Rupee]
 const POINT_ICONS = [Briefcase, Users, Handshake, Shield]
 
@@ -57,6 +106,7 @@ export default function JobFair() {
   const { lang } = useLang()
   const v = jobfair[lang] || jobfair.en
   const [tab, setTab] = useState('candidate')
+  const regOpen = useRegOpen()
   const [openFaq, setOpenFaq] = useState(0)
 
   /* /#/job-fair#register from the hero buttons should scroll, not reload. */
@@ -280,9 +330,14 @@ export default function JobFair() {
           </div>
 
           <div className="mx-auto max-w-3xl">
-            {tab === 'candidate' ? (
+            {tab === 'candidate' && !regOpen ? (
+              <RegClosed lang={lang} />
+            ) : tab === 'candidate' ? (
+              <>
+              <p className="mb-4 rounded-[6px] border border-clay/30 bg-clay/10 px-4 py-3 text-center font-sans text-[.92rem] font-semibold text-ink">{(CLOSED[lang] || CLOSED.en).soon}</p>
               <JobFairForm key="candidate" kind="candidate" copy={v.candidate} nextCta={v.mine.checkCta}
                 fields={candidateFields(v.candidate, lang)} lang={lang} waIntro={v.waIntro} />
+              </>
             ) : (
               <JobFairForm key="corporate" kind="corporate" copy={v.corporate}
                 fields={corporateFields(v.corporate)} lang={lang} waIntro={v.waIntro} />
