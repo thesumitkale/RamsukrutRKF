@@ -1,4 +1,4 @@
-/* Desk volunteers from the final sheet, 28 September. Candidates see the
+/* Desk volunteers from the final sheet, 29 September. Candidates see the
    main point of contact (ground floor) and the help desk number. The desk
    board also shows the floor 1 volunteer and the help desk captain.
    Matched on company name so a re-entered company row keeps its people. */
@@ -10,13 +10,14 @@ const DESKS = [
   [/nivara/i, 'Mayur Satpute', 'Ganesh Kadam', 'HD5', 'Samiksha D'],
   [/lic of india/i, 'Shreya Bhalerao', 'Kirti Deshmukh', 'HD5', 'Samiksha D'],
   [/ecotech/i, 'Komal Kale', 'Kirti Deshmukh', 'HD5', 'Samiksha D'],
+  [/^bvg/i, 'Mark Masih', 'Nikhil Gulati', 'HD5', 'Samiksha D'],
   [/skkato/i, 'Swapnil Thorat', 'Nikita Ovhal', 'HD4', 'Bhushan T'],
   [/hi-tech/i, 'Chaitali Gade', 'Nikhil Gulati', 'HD4', 'Bhushan T'],
   [/hawk glass|shivsai/i, 'Sakshi Lonkar', 'Pranoti Jadhav', 'HD4', 'Bhushan T'],
   [/endurance/i, 'Prajwal Jambe', 'Kalyani Somnath Puri', 'HD3', 'Victoria'],
   [/gtpl/i, 'Vishal Amrale', 'Nikhil Gulati', 'HD3', 'Victoria'],
   [/sbi life/i, 'Vidya Kolekar', 'Pratiksha Shendkar', 'HD3', 'Victoria'],
-  [/nsb/i, 'Prachi Arude', 'Suraj Jadhav', 'HD3', 'Vaibhav Shetty'],
+  [/nsb/i, 'Prachi Arude', 'Suraj Jadhav', 'HD3', 'Victoria'],
   [/johnson/i, 'Pratiksha Bhalerao', 'Chaitali Sagar Gade', 'HD2', 'Vaibhav Shetty'],
   [/devaki/i, 'Archana Wagh', 'Chetan Shinde', 'HD2', 'Vaibhav Shetty'],
   [/diamond pipe/i, 'Samruddhi Kanhurkar', 'Chetan Shinde', 'HD2', 'Vaibhav Shetty'],
