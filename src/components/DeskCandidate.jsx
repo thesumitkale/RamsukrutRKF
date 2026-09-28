@@ -29,6 +29,8 @@ import {
   scoreOf,
   wantedDeptsOf,
 } from './matchScore.js'
+import { DayPlan } from '../pages/MyOptions.jsx'
+import { jobfair } from '../content/jobfair.js'
 
 const box = 'w-full rounded-[4px] border border-sand bg-paper px-3 py-2 text-[0.95rem] text-ink outline-none focus:border-clay'
 
@@ -38,7 +40,7 @@ const digits = (s) => String(s || '').replace(/\D/g, '')
    the desk would be sending somebody to queue for an hour on a maybe. */
 const OFFER_FLOOR = 58
 
-export default function DeskCandidate({ candidates, corporates, interviews, onSit, openMobile }) {
+export default function DeskCandidate({ candidates, corporates, interviews, onSit, openMobile, plans = [] }) {
   const [q, setQ] = useState('')
   const [pickedId, setPickedId] = useState('')
   const [showAll, setShowAll] = useState(false)
@@ -69,6 +71,7 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
   }, [unique, q])
 
   const person = useMemo(() => unique.find((r) => r.id === pickedId) || null, [unique, pickedId])
+  const dayPlan = person ? plans.find((p) => p.candidate_id === person.id && !p.removed_at) || null : null
 
   /* Arriving from the walk-in form: open the person who was just saved. */
   useEffect(() => {
@@ -278,6 +281,7 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
               </div>
             </div>
 
+            {!dayPlan && (
             <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-sand pt-4">
               <p className="text-[0.9rem] text-ink2">
                 <span className="font-display text-[1.25rem] font-bold text-ink">{chosen.size}</span>
@@ -301,9 +305,14 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
               )}
             </div>
 
+            )}
             {err && <p className="mt-3 text-[0.88rem] font-semibold text-clay-deep">{err}</p>}
           </div>
 
+          {/* The same day plan card the candidate sees on My options. */}
+          {dayPlan ? (
+            <DayPlan plan={dayPlan} corporates={corporates} m={jobfair.en.mine} lang="en" who={person} />
+          ) : (<>
           {/* ----------------------------------------------------- options */}
           {shown.length === 0 ? (
             <div className="mt-4 rounded-[8px] border border-sand bg-paper px-5 py-10 text-center shadow-soft">
@@ -408,6 +417,7 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
               Show strong matches only
             </button>
           )}
+          </>)}
         </>
       )}
 

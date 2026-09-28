@@ -492,7 +492,7 @@ const clock = (slot, lang) => {
   return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
 }
 
-function DayPlan({ plan, corporates, m, lang, who }) {
+export function DayPlan({ plan, corporates, m, lang, who }) {
   const byId = new Map(corporates.map((c) => [c.id, c]))
   if (plan.status === 'reserve') {
     return (

@@ -472,6 +472,7 @@ export default function Desk() {
           interviews={interviews}
           onSit={sit}
           openMobile={openMobile}
+          plans={plans}
         />
       )}
       {walking && (
