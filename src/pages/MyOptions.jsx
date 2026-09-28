@@ -13,7 +13,7 @@
    Written for a cheap phone on a weak signal in a village. One input, big
    taps, no login, no jargon, and every state says what to do next.
    ========================================================================== */
-import { volunteersForStop } from '../content/volunteers.js'
+import { deskPeople } from '../content/volunteers.js'
 
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
@@ -553,10 +553,10 @@ function DayPlan({ plan, corporates, m, lang, who }) {
                     </a>
                   )}
                   {test && <span className="mt-1 block break-all font-mono text-[0.76rem] text-muted">{link.replace('https://', '')}</span>}
-                  {volunteersForStop(r.key, co?.organization).length > 0 && (
-                    <span className="mt-2 block rounded-[6px] bg-paper2 px-3 py-2 text-[0.84rem] leading-[1.5] text-ink2">
-                      <span className="font-semibold text-ink">{m.dayVolunteers}</span>{' '}
-                      {volunteersForStop(r.key, co?.organization).join(', ')}
+                  {deskPeople(r.key, co?.organization).main.length > 0 && (
+                    <span className="mt-2 block rounded-[6px] bg-paper2 px-3 py-2 text-[0.84rem] leading-[1.55] text-ink2">
+                      <span className="block"><span className="font-semibold text-ink">{m.dayVolunteers}</span> {deskPeople(r.key, co?.organization).main.join(', ')}</span>
+                      <span className="block"><span className="font-semibold text-ink">{m.dayHelpDesk}</span> {deskPeople(r.key, co?.organization).hd}</span>
                     </span>
                   )}
                 </span>
