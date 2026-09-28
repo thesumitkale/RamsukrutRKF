@@ -258,10 +258,14 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
               <tbody>
                 {stops.map((key) => (
                   <tr key={key} className="border-t border-sand">
-                    <td className="sticky left-0 max-w-[12rem] truncate bg-paper px-2 py-2 font-semibold text-ink">
+                    <td className="sticky left-0 z-10 w-[13rem] min-w-[13rem] whitespace-normal break-words bg-paper px-2 py-2 align-top font-semibold leading-snug text-ink">
                       {stopName(key)}
                       {(() => { const k = String(key).replace(/^INT:/, ''); const v = deskPeople(k, coById.get(k)?.organization); return v.main.length > 0 && (
-                        <span className="block text-[0.7rem] font-normal text-muted">{v.main.join(', ')} (main), {v.floor.join(', ')} (floor 1), {v.hd} {v.captain}</span>
+                        <span className="mt-1 block text-[0.72rem] font-normal leading-[1.4] text-muted">
+                          <span className="block">Main: <b className="font-semibold text-ink2">{v.main.join(', ')}</b></span>
+                          <span className="block">Floor 1: {v.floor.join(', ')}</span>
+                          <span className="block">{v.hd}, captain {v.captain}</span>
+                        </span>
                       ) })()}
                       {!isTestKey(key) && !String(key).startsWith('INT:') && panelsOf(coById.get(key)) > 1 && <span className="ml-1 font-normal text-muted">(2 panels)</span>}
                     </td>
