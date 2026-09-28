@@ -492,7 +492,7 @@ const clock = (slot, lang) => {
   return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
 }
 
-export function DayPlan({ plan, corporates, m, lang, who }) {
+export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
   const byId = new Map(corporates.map((c) => [c.id, c]))
   if (plan.status === 'reserve') {
     return (
@@ -507,10 +507,10 @@ export function DayPlan({ plan, corporates, m, lang, who }) {
   const mob = String(who?.mobile || '').replace(/\D/g, '').slice(-10)
   return (
     <>
-    <div className="mt-6 flex items-start gap-3 rounded-[6px] bg-gold/25 px-4 py-3 text-[0.92rem] leading-[1.55] text-ink">
+    {!forDesk && <div className="mt-6 flex items-start gap-3 rounded-[6px] bg-gold/25 px-4 py-3 text-[0.92rem] leading-[1.55] text-ink">
       <svg viewBox="0 0 24 24" className="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 18.5h4" /></svg>
       <span><strong className="font-semibold">{m.dayShotTitle}</strong> {m.dayShotBody}</span>
-    </div>
+    </div>}
     <div className="mt-3 overflow-hidden rounded-[6px] border border-forest bg-white">
       <div className="bg-forest px-5 py-4 text-white sm:px-8 sm:py-5">
         <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-gold">{m.dayTitle}</p>
@@ -564,8 +564,19 @@ export function DayPlan({ plan, corporates, m, lang, who }) {
             )
           })}
         </ol>
-        <p className="mt-5 border-t border-sand pt-4 text-[0.92rem] leading-[1.65] text-ink2">{m.dayBring}</p>
-        <p className="mt-2 text-[0.88rem] leading-[1.6] text-muted">{m.dayFixed}</p>
+        {forDesk ? (
+          <ul className="mt-5 space-y-1.5 border-t border-sand pt-4 text-[0.92rem] leading-[1.6] text-ink2">
+            <li><b className="text-ink">Tell them:</b> their candidate number, and the first time and place above.</li>
+            <li><b className="text-ink">Send them</b> to the help desk and volunteer shown for their first stop. Between stops they wait in the seating area.</li>
+            <li><b className="text-ink">Test stop:</b> they need their phone charged with internet. The start code is announced in the test hall.</li>
+            <li><b className="text-ink">Change of plan:</b> only move them to a desk that has room, from the Day plan tab.</li>
+          </ul>
+        ) : (
+          <>
+            <p className="mt-5 border-t border-sand pt-4 text-[0.92rem] leading-[1.65] text-ink2">{m.dayBring}</p>
+            <p className="mt-2 text-[0.88rem] leading-[1.6] text-muted">{m.dayFixed}</p>
+          </>
+        )}
       </div>
     </div>
     </>

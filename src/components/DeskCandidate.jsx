@@ -311,7 +311,7 @@ export default function DeskCandidate({ candidates, corporates, interviews, onSi
 
           {/* The same day plan card the candidate sees on My options. */}
           {dayPlan ? (
-            <DayPlan plan={dayPlan} corporates={corporates} m={jobfair.en.mine} lang="en" who={person} />
+            <DayPlan plan={dayPlan} corporates={corporates} m={{ ...jobfair.en.mine, dayTitle: "Their day at the fair", dayGroup: "Candidate number", dayVolunteers: "Volunteer:", dayStops: "Where they go, in this order" }} lang="en" who={person} forDesk />
           ) : (<>
           {/* ----------------------------------------------------- options */}
           {shown.length === 0 ? (
