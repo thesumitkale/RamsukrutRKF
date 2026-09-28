@@ -1,6 +1,6 @@
 /* One place that words a person's day plan, so the WhatsApp list, the help
    desk and anything else send exactly the same text. */
-import { TEST } from './planner.js'
+import { TEST, TEST_BPO, TEST_LINK } from './planner.js'
 
 export const clock = (slot) => {
   if (!slot) return ''
@@ -22,8 +22,8 @@ export function dayMessage(p, plan, stopName, atDesk = false) {
     return head + ' You are on the reserve list. ' + (atDesk ? 'Please wait near the help desk, we will call you when a desk opens.' : 'Please come by 12:30 PM and go to the help desk.') +
       ' / आपले नाव राखीव यादीत आहे. ' + (atDesk ? 'मदत कक्षाजवळ थांबा, टेबल मोकळे झाल्यावर आम्ही बोलावू.' : 'दुपारी 12:30 पर्यंत येऊन मदत कक्षात भेटा.')
   }
-  const en = (plan.route || []).map((r, i) => (i + 1) + ') ' + clock(r.slot) + ' ' + stopName(r.key)).join(', ')
-  const mr = (plan.route || []).map((r, i) => (i + 1) + ') ' + clockMr(r.slot) + ' ' + (r.key === TEST ? 'अभियोग्यता चाचणी' : stopName(r.key))).join(', ')
+  const en = (plan.route || []).map((r, i) => (i + 1) + ') ' + clock(r.slot) + ' ' + stopName(r.key) + (TEST_LINK[r.key] ? ' (' + TEST_LINK[r.key].replace('https://', '') + ')' : '')).join(', ')
+  const mr = (plan.route || []).map((r, i) => (i + 1) + ') ' + clockMr(r.slot) + ' ' + (r.key === TEST ? 'आयटी अभियोग्यता चाचणी' : r.key === TEST_BPO ? 'बीपीओ अभियोग्यता चाचणी' : stopName(r.key))).join(', ')
   if (atDesk) {
     return (
       head + ' You are checked in. Group ' + plan.grp + '. Your stops: ' + en +

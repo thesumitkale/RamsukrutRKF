@@ -533,16 +533,25 @@ function DayPlan({ plan, corporates, m, lang, who }) {
         <p className="font-display text-[0.95rem] font-semibold text-ink">{m.dayStops}</p>
         <ol className="mt-3 space-y-2.5">
           {(plan.route || []).map((r, i) => {
-            const test = r.key === 'TEST'
+            const test = r.key === 'TEST' || r.key === 'TBPO'
+            const bpo = r.key === 'TBPO'
+            const link = bpo ? 'https://ramsukrut-test.netlify.app/bpo' : 'https://ramsukrut-test.netlify.app/tech'
             const co = byId.get(r.key)
             return (
               <li key={r.key} className="flex gap-4 border-b border-sand pb-2.5 last:border-0 last:pb-0">
                 <span className="w-[5.5rem] shrink-0 font-display text-[1.05rem] font-bold text-clay-deep">{clock(r.slot, lang)}</span>
                 <span className="min-w-0">
                   <span className="block font-display text-[1rem] font-semibold leading-snug text-ink">
-                    {i + 1}. {test ? m.dayTest : co?.organization || m.dayDesk}
+                    {i + 1}. {test ? (bpo ? m.dayTestBpo : m.dayTest) : co?.organization || m.dayDesk}
                   </span>
-                  {test && <span className="mt-0.5 block text-[0.86rem] leading-[1.5] text-muted">{m.dayTestNote}</span>}
+                  {test && <span className="mt-0.5 block text-[0.86rem] leading-[1.5] text-muted">{bpo ? m.dayTestBpoNote : m.dayTestNote} {m.dayTestPhone}</span>}
+                  {test && (
+                    <a href={link} target="_blank" rel="noopener noreferrer"
+                      className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-clay px-4 py-2 font-sans text-[0.84rem] font-bold text-white transition hover:brightness-105">
+                      {m.dayTestLink} <span aria-hidden="true">&rarr;</span>
+                    </a>
+                  )}
+                  {test && <span className="mt-1 block break-all font-mono text-[0.76rem] text-muted">{link.replace('https://', '')}</span>}
                 </span>
               </li>
             )

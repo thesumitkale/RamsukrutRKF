@@ -14,7 +14,7 @@
 import { useMemo, useState } from 'react'
 import { dept, download } from './matchScore.js'
 import { clock, dayMessage } from './dayMessage.js'
-import { WAVES, TEST, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE, CLOSE_AT } from './planner.js'
+import { WAVES, TEST, TEST_BPO, isTestKey, runsLate, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE, CLOSE_AT } from './planner.js'
 
 const box = 'w-full rounded-[4px] border border-sand bg-paper px-3 py-2 text-[0.95rem] text-ink outline-none focus:border-clay'
 const btn = 'rounded-[4px] px-4 py-2 font-display text-[0.86rem] font-semibold transition disabled:opacity-50'
@@ -32,7 +32,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
   const coById = useMemo(() => new Map(corporates.map((c) => [c.id, c])), [corporates])
   const planBy = useMemo(() => new Map(plans.map((p) => [p.candidate_id, p])), [plans])
   const stopName = (key) =>
-    key === TEST ? 'Aptitude test (Zeal + Techspian)' : String(key).startsWith('INT:') ? (coById.get(key.slice(4))?.organization || 'Company') + ' interviews' : coById.get(key)?.organization || 'Company'
+    key === TEST ? 'IT aptitude test (Zeal + Techspian)' : key === TEST_BPO ? 'BPO aptitude test (Akbar + Dhiti)' : String(key).startsWith('INT:') ? (coById.get(key.slice(4))?.organization || 'Company') + ' interviews' : coById.get(key)?.organization || 'Company'
 
   const planned = plans.filter((p) => p.status === 'planned' && byId.has(p.candidate_id))
   const reserve = plans.filter((p) => p.status === 'reserve' && byId.has(p.candidate_id))
@@ -60,7 +60,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
   }, [planned])
 
   const cap0 = useMemo(() => capacity(corporates, []), [corporates])
-  const stops = [TEST, ...corporates.filter((c) => isTestCo(c)).map((c) => 'INT:' + c.id), ...corporates.filter((c) => !isTestCo(c)).map((c) => c.id)]
+  const stops = [TEST, TEST_BPO, ...corporates.filter((c) => isTestCo(c)).map((c) => 'INT:' + c.id), ...corporates.filter((c) => !isTestCo(c)).map((c) => c.id)]
 
   const save = async (rows, label) => {
     setBusy(label)
@@ -155,7 +155,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         </div>
         {msg && <p className="mt-3 text-[0.9rem] text-forest-2">{msg}</p>}
         <p className="mt-4 text-[0.85rem] leading-[1.6] text-muted">
-          The floor opens at 10:00 and the last slot starts at 7:30, so the day ends at 8:00 for the busiest desks. Desks booked more than 10 a slot before 5:00 run till 8:00, the rest close at 5:00. Every desk opens at 10:00 and is booked at most {PER_PANEL} a slot, about 8 seen, since we expect about 800 of 1,368 to come. Desks with two panels share those {PER_PANEL}, so each panel sees about 4 every 30 minutes. The Zeal and Techspian aptitude test is one sitting for every IT candidate at 10:00. They then go to two related desks, spread over the rest of the day, while Zeal and Techspian interview their shortlist by name from 11:30 to 8:00. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
+          The floor opens at 10:00 and the last slot starts at 7:30, so the day ends at 8:00 for the busiest desks. Desks booked more than 10 a slot before 5:00 run till 8:00, the rest close at 5:00. Every desk opens at 10:00 and is booked at most {PER_PANEL} a slot, about 8 seen, since we expect about 800 of 1,368 to come. Desks with two panels share those {PER_PANEL}, so each panel sees about 4 every 30 minutes. Zeal, Techspian, Akbar Travels and Dhiti run an online aptitude test in two sittings, 10:00 and 10:30, then interview their shortlist by name from 11:00. Test takers go to their other desks through the rest of the day. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
         </p>
       </div>
 
@@ -248,17 +248,20 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                   <tr key={key} className="border-t border-sand">
                     <td className="sticky left-0 max-w-[12rem] truncate bg-paper px-2 py-2 font-semibold text-ink">
                       {stopName(key)}
-                      {key !== TEST && !String(key).startsWith('INT:') && panelsOf(coById.get(key)) > 1 && <span className="ml-1 font-normal text-muted">(2 panels)</span>}
+                      {!isTestKey(key) && !String(key).startsWith('INT:') && panelsOf(coById.get(key)) > 1 && <span className="ml-1 font-normal text-muted">(2 panels)</span>}
                     </td>
                     {WAVES.map((w, i) => {
                       if (String(key).startsWith('INT:')) {
+                        if (w >= CLOSE_AT && !runsLate(coById.get(key.slice(4)))) {
+                          return <td key={w} className="bg-sand/40 px-2 py-2 text-center align-top text-[0.72rem] text-muted">Closed</td>
+                        }
                         return (
-                          <td key={w} className={'px-2 py-2 text-center align-top ' + (w >= '11:30' ? 'bg-clay/10' : '')}>
-                            {w >= '11:30' ? <span className="text-[0.72rem] font-semibold leading-tight text-ink2">Shortlist<span className="block font-normal text-muted">by name</span></span> : w === '10:00' ? <span className="text-[0.72rem] text-muted">Test</span> : <span className="text-[0.72rem] text-muted">Marking</span>}
+                          <td key={w} className={'px-2 py-2 text-center align-top ' + (w >= '11:00' ? 'bg-clay/10' : '')}>
+                            {w >= '11:00' ? <span className="text-[0.72rem] font-semibold leading-tight text-ink2">Interviews<span className="block font-normal text-muted">shortlist by name</span></span> : <span className="text-[0.72rem] text-muted">Test</span>}
                           </td>
                         )
                       }
-                      if (!(cap0[key]?.[i] > 0) && key !== TEST && w >= CLOSE_AT) {
+                      if (!(cap0[key]?.[i] > 0) && !isTestKey(key) && w >= CLOSE_AT) {
                         return <td key={w} className="bg-sand/40 px-2 py-2 text-center align-top text-[0.72rem] text-muted">Closed</td>
                       }
                       const gs = floor[key]?.[w] || {}
@@ -268,8 +271,8 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                         <td key={w} className={'px-2 py-2 text-center align-top ' + (n && n >= cap ? 'bg-gold/30' : n ? 'bg-forest/5' : '')}>
                           {n ? (
                             <>
-                              {key === TEST && (
-                                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">One sitting</span>
+                              {isTestKey(key) && (
+                                <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">Sitting {w === '10:00' ? 1 : 2}</span>
                               )}
                               <span className="block font-display text-[1.15rem] font-extrabold leading-tight text-ink">{n}</span>
                               <span className="mt-1 block space-y-0.5 text-[0.72rem] leading-tight">
@@ -281,7 +284,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                                 ))}
                               </span>
                             </>
-                          ) : key === TEST && !cap ? '' : <span className="text-sand">.</span>}
+                          ) : isTestKey(key) && !cap ? '' : <span className="text-sand">.</span>}
                         </td>
                       )
                     })}
@@ -296,8 +299,8 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                 <li><b className="text-ink">Big number</b> is the total people booked there for that half hour. About 2 in 3 turn up, so 12 booked means about 8 seen.</li>
                 <li><b className="text-ink">Group code</b> with its head count sits under it. IT-47 means IT, batch 47.</li>
                 <li><b className="text-ink">Why codes:</b> a group is people with exactly the same day, the same stops at the same times. Calling "IT-47 to Lenze" moves all of them at once, instead of reading out 12 names. Small groups exist because their other stops differ.</li>
-                <li><b className="text-ink">Aptitude test</b> is one sitting for every IT candidate at 10:00, under their own IT codes. Papers are marked by 11:30.</li>
-                <li><b className="text-ink">Zeal and Techspian interviews</b> run from 11:30 to 8:00 at their own desks. They call their shortlist by name and mobile, so these rows show no group codes.</li>
+                <li><b className="text-ink">Aptitude tests</b> are two online papers taken on the phone in the test hall, 25 minutes each: IT for Zeal and Techspian (ramsukrut-test.netlify.app/tech) and BPO for Akbar Travels and Dhiti (ramsukrut-test.netlify.app/bpo). Each runs in two sittings, 10:00 and 10:30, split about half and half. Someone booked for both papers sits one at 10:00 and the other at 10:30. The start code is announced in the hall.</li>
+                <li><b className="text-ink">Zeal, Techspian, Akbar and Dhiti interviews</b> use the rest of their row from 11:00. They call their shortlist by name and mobile, so these rows show no group codes. Akbar closes at 5:00, the other three run till 8:00.</li>
                 <li><b className="text-ink">Closing time:</b> desks booked more than 10 a slot before 5:00 stay open till 8:00. The rest close at 5:00 and show Closed after that.</li>
                 <li><b className="text-ink">Gold</b> means the desk is full for that half hour. Light means it still has room.</li>
               </ul>

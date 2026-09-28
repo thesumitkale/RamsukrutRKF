@@ -37,11 +37,13 @@ export const DEPT_CODE = {
 export const deptCode = (p) => DEPT_CODE[dept(p)] || 'OTH'
 
 /* The floor opens at 10:00 and the last slot starts at 7:30, so the day ends
-   at 8:00. Lunch is 13:00 to 13:30. The Zeal and Techspian aptitude test is
-   one sitting for everyone at 10:00. Their desks then use the rest of the day
-   to interview whoever they shortlist. */
+   at 8:00. Lunch is 13:00 to 13:30. There are two online aptitude papers,
+   one for Zeal and Techspian (IT) and one for Akbar Travels and Dhiti (BPO).
+   Each runs in two sittings, 10:00 and 10:30, 25 minutes on the phone in the
+   test hall. Those four desks then use the rest of the day to interview the
+   people they shortlist, by name. */
 export const WAVES = ['10:00', '10:30', '11:00', '11:30', '12:00', '12:30', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00', '18:30', '19:00', '19:30']
-export const TEST_STARTS = ['10:00']
+export const TEST_STARTS = ['10:00', '10:30']
 /* Not everyone who registers comes. We plan for about 800 of 1,368, so each
    slot is booked one and a half times over: a panel that sees 8 people a
    wave is given 12 names, a hall of 100 seats is given 150. */
@@ -49,12 +51,15 @@ export const EXPECTED_TURNOUT = 800
 export const BOOK = 1.5
 export const SEATS = 100
 export const SEEN_PER_PANEL = 8
-/* One sitting takes every IT candidate, so the hall has no booking cap. */
+/* The hall takes whoever is booked; the two sittings are balanced by the plan. */
 export const TEST_SEATS = 5000
 export const PER_PANEL = Math.round(SEEN_PER_PANEL * BOOK)
 export const GROUP_MAX = PER_PANEL
 export const MAX_STOPS = 3
 export const TEST = 'TEST'
+export const TEST_BPO = 'TBPO'
+export const isTestKey = (k) => k === TEST || k === TEST_BPO
+export const TEST_LINK = { [TEST]: 'https://ramsukrut-test.netlify.app/tech', [TEST_BPO]: 'https://ramsukrut-test.netlify.app/bpo' }
 
 /* Companies that run two interview panels. Matched on name so a re-entered
    company row still gets its second panel. */
@@ -65,11 +70,12 @@ const TWO_PANELS = [/diamond pipe/i, /gaps energy/i, /skkato/i, /ecotech/i, /tec
 const LATE_DESKS = [/techsham/i, /ecotech/i, /skkato/i, /diamond pipe/i, /kunal facility/i, /nivara/i, /dhiti/i, /johnson lift/i, /hi-tech service/i, /nsb system/i, /pravin industr/i, /endurance/i, /hawk glass/i, /gaps energy/i, /^bvg/i]
 export const CLOSE_AT = '17:00'
 export const LAST_AT = '20:00'
-export const runsLate = (co) => isTestCo(co) || LATE_DESKS.some((re) => re.test(String(co?.organization || '').trim()))
-export const isTestCo = (co) => /zeal|techspian/i.test(String(co?.organization || ''))
+export const runsLate = (co) => /zeal|techspian/i.test(String(co?.organization || '')) || LATE_DESKS.some((re) => re.test(String(co?.organization || '').trim()))
+export const isTestCo = (co) => /zeal|techspian|akbar|dhiti/i.test(String(co?.organization || ''))
+export const testKeyOf = (co) => (/zeal|techspian/i.test(String(co?.organization || '')) ? TEST : TEST_BPO)
 export const panelsOf = (co) => (TWO_PANELS.some((re) => re.test(String(co?.organization || ''))) ? 2 : 1)
 
-const len = (key) => (key === TEST ? 2 : 1)
+const len = () => 1
 const hhmm = (m) => String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0')
 const mins = (s) => Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5))
 /* Everyone enters together: the gate opens at 9:00 and all are in by 9:30.
@@ -131,7 +137,7 @@ function baseStops(person, corporates, picks = []) {
 
   const out = []
   const push = (co, fit) => {
-    const key = isTestCo(co) ? TEST : co.id
+    const key = isTestCo(co) ? testKeyOf(co) : co.id
     if (out.some((x) => x.key === key)) return
     out.push({ key, fit })
   }
@@ -148,6 +154,7 @@ function baseStops(person, corporates, picks = []) {
 export function capacity(corporates, plans) {
   const cap = {}
   cap[TEST] = WAVES.map((w) => (TEST_STARTS.includes(w) ? TEST_SEATS : 0))
+  cap[TEST_BPO] = WAVES.map((w) => (TEST_STARTS.includes(w) ? TEST_SEATS : 0))
   corporates.forEach((co) => {
     /* Every desk takes at most PER_PANEL a slot, even with two panels, so the
        two panels share the load and the longer day absorbs the rest. */
@@ -170,7 +177,7 @@ const perms = (a) => (a.length <= 1 ? [a] : a.flatMap((x, i) => perms([...a.slic
    takers are the exception: all of them leave the hall at 11:00 together, so
    their desks may be spread over the rest of the day. */
 function fit(stops, size, cap, from) {
-  const gap = stops.some((s) => s.key === TEST) ? 99 : 1
+  const gap = stops.some((s) => isTestKey(s.key)) ? 99 : 1
   let best = null
   for (const order of perms(stops)) {
     for (let start = from; start < WAVES.length; start++) {
@@ -287,7 +294,7 @@ export function planPeople({ people, corporates, interviews, plans, from = 0 }) 
     const t = todo.find((x) => x.p.id === r.candidate_id)
     if (!t) return
     for (const d of ['Sales & Marketing', 'Customer Support & BPO']) {
-      const ranked = stopsFor({ ...t.p, department: d }, corporates).filter((s) => s.key !== TEST)
+      const ranked = stopsFor({ ...t.p, department: d }, corporates).filter((s) => !isTestKey(s.key))
       const route = place(ranked, 1)
       if (route) {
         take(cap, route, 1)
@@ -315,14 +322,14 @@ function openAtTen(out, cap, nextGroup) {
     if (!groups.has(r.grp)) groups.set(r.grp, [])
     groups.get(r.grp).push(r)
   })
-  const keys = Object.keys(cap).filter((k) => k !== TEST)
+  const keys = Object.keys(cap).filter((k) => !isTestKey(k))
   for (let pass = 0; pass < 3; pass++) {
     for (const key of keys) {
       const target = Math.ceil(PER_PANEL / 2)
       for (const [, rows] of groups) {
         if (PER_PANEL - cap[key][0] >= target) break
         const route = rows[0].route
-        if (route.some((x) => x.key === TEST)) continue
+        if (route.some((x) => isTestKey(x.key))) continue
         const late = route.find((x) => x.key === key && x.slot !== first)
         if (!late) continue
         let n = rows.length
