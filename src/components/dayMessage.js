@@ -26,14 +26,14 @@ export function dayMessage(p, plan, stopName, atDesk = false) {
   const mr = (plan.route || []).map((r, i) => (i + 1) + ') ' + clockMr(r.slot) + ' ' + (r.key === TEST ? 'आयटी अभियोग्यता चाचणी' : r.key === TEST_BPO ? 'बीपीओ अभियोग्यता चाचणी' : stopName(r.key))).join(', ')
   if (atDesk) {
     return (
-      head + ' You are checked in. Group ' + plan.grp + '. Your stops: ' + en +
-      '. Go to each desk at its time and wait in the seating area in between. Keep this message and show it at every desk. / तुमची नोंद झाली. गट ' + plan.grp + '. ' + mr +
+      head + ' You are checked in. Candidate number ' + plan.grp + '. Your stops: ' + en +
+      '. Go to each desk at its time and wait in the seating area in between. Keep this message and show it at every desk. / तुमची नोंद झाली. उमेदवार क्रमांक ' + plan.grp + '. ' + mr +
       '. प्रत्येक टेबलवर दिलेल्या वेळी जा, मधल्या वेळेत बैठक व्यवस्थेत थांबा. हा मेसेज प्रत्येक टेबलवर दाखवा.'
     )
   }
   return (
-    head + ' Group ' + plan.grp +
+    head + ' Candidate number ' + plan.grp +
     '. Reach the venue by ' + clock(plan.report_at) + ' and go to any help desk at the entrance. They will tell you where to go and when. Your stops: ' + en +
-    '. See your full plan and save a screenshot: ramsukrut.com/#/my-options . Bring 3 copies of your resume and a photo ID. / गट ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. ' + mr + '. तुमचा प्लॅन पाहून स्क्रीनशॉट घ्या: ramsukrut.com/#/my-options'
+    '. See your full plan and save a screenshot: ramsukrut.com/#/my-options . Bring 3 copies of your resume and a photo ID. / उमेदवार क्रमांक ' + plan.grp + '. प्रवेशद्वारावर ' + clockMr(plan.report_at) + ' पर्यंत पोहोचा आणि प्रवेशद्वाराजवळील कोणत्याही मदत कक्षात जा. कुठे आणि केव्हा जायचे ते तिथे सांगितले जाईल. ' + mr + '. तुमचा प्लॅन पाहून स्क्रीनशॉट घ्या: ramsukrut.com/#/my-options'
   )
 }

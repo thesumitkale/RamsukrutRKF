@@ -304,7 +304,20 @@ export function planPeople({ people, corporates, interviews, plans, from = 0 }) 
     }
   })
   if (from === 0) openAtTen(out, cap, nextGroup)
+  /* The desk calls people by one plain number, 1 upwards, not by group.
+     New people continue after the highest number already given, and people
+     who share a route get numbers next to each other. */
+  let num = plans.reduce((a, p) => Math.max(a, Number(p.grp) || 0), 0)
+  out
+    .filter((r) => r.status === 'planned')
+    .sort((a, b) => routeSort(a, b) || String(a.grp).localeCompare(String(b.grp)))
+    .forEach((r) => { r.grp = String(++num) })
   return out
+}
+
+export const routeSort = (a, b) => {
+  const k = (r) => (r.route || []).map((x) => x.slot + x.key).join('|')
+  return k(a).localeCompare(k(b))
 }
 
 /* Every desk opens at 10:00. A desk with room at 10:00 takes a group that

@@ -38,7 +38,18 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
   const planned = plans.filter((p) => p.status === 'planned' && byId.has(p.candidate_id))
   const reserve = plans.filter((p) => p.status === 'reserve' && byId.has(p.candidate_id))
   const unplanned = people.filter((p) => !planBy.has(p.id))
-  const groups = new Set(planned.map((p) => p.grp))
+  /* Candidate numbers at one desk and time, folded into runs: 1 to 12, 40. */
+  const ranges = (list) => {
+    const n = [...new Set(list.map(Number).filter((x) => x > 0))].sort((a, b) => a - b)
+    const out = []
+    for (let i = 0; i < n.length; i++) {
+      let j = i
+      while (j + 1 < n.length && n[j + 1] === n[j] + 1) j++
+      out.push(j > i ? n[i] + ' to ' + n[j] : String(n[i]))
+      i = j
+    }
+    return out
+  }
 
   const arrivals = useMemo(() => {
     const m = {}
@@ -103,7 +114,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
       ])
     })
     rows.sort((a, b) => String(a[3]).localeCompare(String(b[3])))
-    download('rkf-day-plan.csv', ['Name', 'Mobile', 'Department', 'Group', 'Status', 'Report by', 'Stop 1 time', 'Stop 1', 'Stop 2 time', 'Stop 2', 'Stop 3 time', 'Stop 3', 'WhatsApp message'], rows)
+    download('rkf-day-plan.csv', ['Name', 'Mobile', 'Department', 'Candidate no.', 'Status', 'Report by', 'Stop 1 time', 'Stop 1', 'Stop 2 time', 'Stop 2', 'Stop 3 time', 'Stop 3', 'WhatsApp message'], rows)
   }
 
   const exportCompany = (key) => {
@@ -116,7 +127,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         })
       })
     })
-    download('rkf-' + String(stopName(key)).toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-queue.csv', ['Time', 'Group', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'Resume'], rows)
+    download('rkf-' + String(stopName(key)).toLowerCase().replace(/[^a-z0-9]+/g, '-') + '-queue.csv', ['Time', 'Candidate no.', 'Name', 'Mobile', 'Department', 'Qualification', 'Experience', 'Resume'], rows)
   }
 
   /* One person, by name or mobile. */
@@ -136,7 +147,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {[
             ['With a time', planned.length],
-            ['Micro groups', groups.size],
+            ['Candidate numbers', planned.length ? '1 to ' + planned.length : '0'],
             ['Reserve list', reserve.length],
             ['No time yet', unplanned.length],
           ].map(([k, v]) => (
@@ -162,8 +173,8 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
 
       {/* ------------------------------------------------------ one person */}
       <div className="rounded-[8px] border border-sand bg-paper p-5 shadow-soft">
-        <p className="font-display text-[1rem] font-semibold text-ink">Find a person or group</p>
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, mobile, or group like MFG-03" className={box + ' mt-3'} />
+        <p className="font-display text-[1rem] font-semibold text-ink">Find a person</p>
+        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Name, mobile, or candidate number" className={box + ' mt-3'} />
         {found.length > 0 && (
           <ul className="mt-3 divide-y divide-sand">
             {found.map((p) => {
@@ -179,7 +190,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                     {plan?.status === 'reserve' && <p className="mt-1 text-[0.9rem] text-clay-deep">Reserve list, send to the first desk that opens</p>}
                     {plan?.status === 'planned' && (
                       <p className="mt-1 text-[0.9rem] leading-[1.6] text-ink2">
-                        <strong className="text-ink">{plan.grp}</strong>, report {clock(plan.report_at)}.{' '}
+                        <strong className="text-ink">No. {plan.grp}</strong>, report {clock(plan.report_at)}.{' '}
                         {(plan.route || []).map((r) => clock(r.slot) + ' ' + stopName(r.key)).join(', ')}
                       </p>
                     )}
@@ -279,12 +290,9 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                                 <span className="block text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-forest-2">Sitting {w === '10:00' ? 1 : 2}</span>
                               )}
                               <span className="block font-display text-[1.15rem] font-extrabold leading-tight text-ink">{n}</span>
-                              <span className="mt-1 block space-y-0.5 text-[0.72rem] leading-tight">
-                                {Object.keys(gs).sort((a, b) => gs[b].length - gs[a].length || a.localeCompare(b)).map((g) => (
-                                  <span key={g} className="flex items-center justify-between gap-2 whitespace-nowrap">
-                                    <span className="font-semibold text-ink2">{g}</span>
-                                    <span className="text-muted">{gs[g].length}</span>
-                                  </span>
+                              <span className="mt-1 block space-y-0.5 text-[0.74rem] leading-tight">
+                                {ranges(Object.keys(gs)).map((g) => (
+                                  <span key={g} className="block whitespace-nowrap font-semibold text-ink2">{g}</span>
                                 ))}
                               </span>
                             </>
@@ -301,21 +309,13 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
               <ul className="mt-2 space-y-1.5">
                 <li><b className="text-ink">Row</b> is one company desk. <b className="text-ink">Column</b> is the half hour a group reaches it.</li>
                 <li><b className="text-ink">Big number</b> is the total people booked there for that half hour. About 2 in 3 turn up, so 12 booked means about 8 seen.</li>
-                <li><b className="text-ink">Group code</b> with its head count sits under it. IT-47 means IT, batch 47.</li>
-                <li><b className="text-ink">Why codes:</b> a group is people with exactly the same day, the same stops at the same times. Calling "IT-47 to Lenze" moves all of them at once, instead of reading out 12 names. Small groups exist because their other stops differ.</li>
+                <li><b className="text-ink">Candidate numbers</b> sit under it. Every person has one number, 1 to {planned.length}, shown on their My options page. "1 to 12" means candidates 1, 2, 3 and so on up to 12. Call them out by number.</li>
                 <li><b className="text-ink">Aptitude tests</b> are two online papers taken on the phone in the test hall, 25 minutes each: IT for Zeal and Techspian (ramsukrut-test.netlify.app/tech) and BPO for Akbar Travels and Dhiti (ramsukrut-test.netlify.app/bpo). Each runs in two sittings, 10:00 and 10:30, split about half and half. Someone booked for both papers sits one at 10:00 and the other at 10:30. The start code is announced in the hall.</li>
-                <li><b className="text-ink">Zeal, Techspian, Akbar and Dhiti interviews</b> use the rest of their row from 11:00. They call their shortlist by name and mobile, so these rows show no group codes. Akbar closes at 5:00, the other three run till 8:00.</li>
+                <li><b className="text-ink">Zeal, Techspian, Akbar and Dhiti interviews</b> use the rest of their row from 11:00. They call their shortlist by name and mobile, so these rows show no numbers. Akbar closes at 5:00, the other three run till 8:00.</li>
                 <li><b className="text-ink">Closing time:</b> desks booked more than 10 a slot before 5:00 stay open till 8:00. The rest close at 5:00 and show Closed after that.</li>
                 <li><b className="text-ink">Gold</b> means the desk is full for that half hour. Light means it still has room.</li>
               </ul>
-              <p className="mt-4 font-display font-semibold text-ink">Code full forms</p>
-              <div className="mt-2 flex flex-wrap gap-2">
-                {Object.entries(DEPT_CODE).map(([name, code]) => (
-                  <span key={code} className="rounded-full border border-sand bg-white px-3 py-1 text-[0.8rem]">
-                    <b className="text-ink">{code}</b> <span className="text-muted">{name}</span>
-                  </span>
-                ))}
-              </div>
+              
             </div>
           </div>
         )}
