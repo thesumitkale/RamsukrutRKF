@@ -63,11 +63,11 @@ export const TEST_LINK = { [TEST]: 'https://ramsukrut-test.netlify.app/tech', [T
 
 /* Companies that run two interview panels. Matched on name so a re-entered
    company row still gets its second panel. */
-const TWO_PANELS = [/diamond pipe/i, /gaps energy/i, /skkato/i, /ecotech/i, /techsham/i]
+const TWO_PANELS = [/diamond pipe/i, /gaps energy/i, /skkato/i, /ecotech/i]
 /* Desks that stay open till 8:00 because they are booked more than 10 a
    slot before 5:00. Every other desk closes at 5:00. Zeal and Techspian also
    run till 8:00, interviewing their test shortlist. */
-const LATE_DESKS = [/techsham/i, /ecotech/i, /skkato/i, /diamond pipe/i, /kunal facility/i, /nivara/i, /dhiti/i, /johnson lift/i, /hi-tech service/i, /nsb system/i, /pravin industr/i, /endurance/i, /hawk glass/i, /gaps energy/i, /^bvg/i]
+const LATE_DESKS = [/lenze/i, /autobahn/i, /gtpl/i, /sbi life/i, /lic of india/i, /ecotech/i, /skkato/i, /diamond pipe/i, /nivara/i, /dhiti/i, /johnson lift/i, /hi-tech service/i, /nsb system/i, /endurance/i, /hawk glass/i, /gaps energy/i]
 export const CLOSE_AT = '17:00'
 export const LAST_AT = '20:00'
 export const runsLate = (co) => /zeal|techspian/i.test(String(co?.organization || '')) || LATE_DESKS.some((re) => re.test(String(co?.organization || '').trim()))

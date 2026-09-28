@@ -10,6 +10,7 @@
    can be re-placed from now onwards. Nobody already told a time is moved by
    anything else here.
    ========================================================================== */
+import { volunteersForStop } from '../content/volunteers.js'
 
 import { useMemo, useState } from 'react'
 import { dept, download } from './matchScore.js'
@@ -155,7 +156,7 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
         </div>
         {msg && <p className="mt-3 text-[0.9rem] text-forest-2">{msg}</p>}
         <p className="mt-4 text-[0.85rem] leading-[1.6] text-muted">
-          The floor opens at 10:00 and the last slot starts at 7:30, so the day ends at 8:00 for the busiest desks. Desks booked more than 10 a slot before 5:00 run till 8:00, the rest close at 5:00. Every desk opens at 10:00 and is booked at most {PER_PANEL} a slot, about 8 seen, since we expect about 800 of 1,368 to come. Desks with two panels share those {PER_PANEL}, so each panel sees about 4 every 30 minutes. Zeal, Techspian, Akbar Travels and Dhiti run an online aptitude test in two sittings, 10:00 and 10:30, then interview their shortlist by name from 11:00. Test takers go to their other desks through the rest of the day. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
+          The floor opens at 10:00 and the last slot starts at 7:30, so the day ends at 8:00 for the busiest desks. Desks booked more than 10 a slot before 5:00 run till 8:00, the rest close at 5:00. Devaki and Akbar close at 5:00. Every desk opens at 10:00 and is booked at most {PER_PANEL} a slot, about 8 seen, since we expect about 800 of 1,368 to come. Desks with two panels share those {PER_PANEL}, so each panel sees about 4 every 30 minutes. Zeal, Techspian, Akbar Travels and Dhiti run an online aptitude test in two sittings, 10:00 and 10:30, then interview their shortlist by name from 11:00. Test takers go to their other desks through the rest of the day. Everyone enters by 9:30 and is briefed at any of the 22 help desks, which look people up here by name or mobile. New people only fill spare room from the next wave onwards.
         </p>
       </div>
 
@@ -248,6 +249,9 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                   <tr key={key} className="border-t border-sand">
                     <td className="sticky left-0 max-w-[12rem] truncate bg-paper px-2 py-2 font-semibold text-ink">
                       {stopName(key)}
+                      {volunteersForStop(String(key).replace(/^INT:/, ''), coById.get(String(key).replace(/^INT:/, ''))?.organization).length > 0 && (
+                        <span className="block text-[0.7rem] font-normal text-muted">{volunteersForStop(String(key).replace(/^INT:/, ''), coById.get(String(key).replace(/^INT:/, ''))?.organization).join(', ')}</span>
+                      )}
                       {!isTestKey(key) && !String(key).startsWith('INT:') && panelsOf(coById.get(key)) > 1 && <span className="ml-1 font-normal text-muted">(2 panels)</span>}
                     </td>
                     {WAVES.map((w, i) => {

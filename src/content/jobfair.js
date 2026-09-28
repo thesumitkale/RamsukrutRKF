@@ -87,12 +87,10 @@ const EXP_MR = ['फ्रेशर', '० ते १ वर्ष', '१ ते
 /* logoH is a Tailwind height class, tuned per mark so the logos read at the same
    optical weight even though their artwork proportions differ. */
 const RECRUITERS = [
-  { name: 'Kunal Facility India', logo: null, open_en: 'More than 100 openings', open_mr: '100 हून अधिक जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
   { name: 'Endurance Technologies', logo: '/img/recruiters/endurance.png', logoH: 'h-9 sm:h-10', open_en: '51 to 100 openings', open_mr: '51 ते 100 जागा', tag_en: 'Manufacturing and plant roles', tag_mr: 'उत्पादन व प्लांट पदे' },
   { name: 'Johnson Lifts', logo: '/img/recruiters/johnson-lifts.png', logoH: 'h-12 sm:h-14', open_en: '51 to 100 openings', open_mr: '51 ते 100 जागा', tag_en: 'Production, operations and general staff roles', tag_mr: 'उत्पादन, ऑपरेशन्स व जनरल स्टाफ पदे' },
   { name: 'Hi-tech Services', logo: '/img/recruiters/hi-tech-services.png', logoH: 'h-9 sm:h-10', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Manufacturing and production roles', tag_mr: 'उत्पादन व प्रॉडक्शन पदे' },
   { name: 'Devaki Commercial Vehicle', logo: '/img/recruiters/devaki.png', logoH: 'h-6 sm:h-7', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Authorised Tata Motors commercial vehicle dealer', tag_mr: 'टाटा मोटर्स कमर्शियल व्हेइकल अधिकृत डीलर' },
-  { name: 'BVG India', logo: '/img/recruiters/bvg-india.png', logoH: 'h-14 sm:h-16', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Facility and non technical operations roles', tag_mr: 'फॅसिलिटी व नॉन टेक्निकल ऑपरेशन्स पदे' },
   { name: 'SkkAto India', logo: '/img/recruiters/skkato.png', logoH: 'h-10 sm:h-12', open_en: '26 to 50 openings', open_mr: '26 ते 50 जागा', tag_en: 'Supervisor, team lead and general staff roles', tag_mr: 'सुपरवायझर, टीम लीड व जनरल स्टाफ पदे' },
   { name: 'GAPS Energy', logo: '/img/recruiters/gaps-energy.png', logoH: 'h-14 sm:h-16', open_en: '11 to 25 openings', open_mr: '11 ते 25 जागा', tag_en: 'Production and administration roles', tag_mr: 'उत्पादन व प्रशासन पदे' },
   { name: 'Ecotech Chutes', logo: '/img/recruiters/ecotech-chutes.png', logoH: 'h-9 sm:h-10', open_en: '11 to 25 openings', open_mr: '11 ते 25 जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
@@ -103,7 +101,6 @@ const RECRUITERS = [
   { name: 'Zeal Connect Solutions', logo: '/img/recruiters/zeal-connect.png', logoH: 'h-8 sm:h-9', open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'IT and software roles', tag_mr: 'आयटी व सॉफ्टवेअर पदे' },
   { name: 'Dhiti Services', logo: '/img/recruiters/dhiti-services.webp', logoH: 'h-9 sm:h-10', open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Customer support and BPO roles', tag_mr: 'ग्राहक सेवा व बीपीओ पदे' },
   { name: 'Diamond Pipe Supports', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production and supervisor roles', tag_mr: 'उत्पादन व सुपरवायझर पदे' },
-  { name: 'Techsham Stamping', logo: null, open_en: '1 to 5 openings', open_mr: '1 ते 5 जागा', tag_en: 'Production, office staff and operations roles', tag_mr: 'उत्पादन, ऑफिस स्टाफ व ऑपरेशन्स पदे' },
 ]
 
 /* The answer a candidate chose is stored exactly as they picked it, in the
@@ -316,6 +313,7 @@ export const jobfair = {
       dayTestBpo: 'BPO aptitude test for Akbar Travels and Dhiti Services',
       dayTestBpoNote: 'Online, 25 minutes, on your phone in the test hall. Open the link at your time, log in with the mobile number you registered with and enter the start code announced in the hall. One test counts for both companies. Shortlisted names are called to the Akbar Travels and Dhiti desks for interview from 11:00 AM, so stay at the venue.',
       dayTestLink: 'Open the test',
+      dayVolunteers: 'Your volunteers at this desk:',
       dayTestPhone: 'Bring your phone fully charged, with internet on.',
       dayDesk: 'Interview desk',
       dayBring: 'Bring 3 copies of your resume, a photo ID and your certificates. Show this screenshot at the help desk.',
@@ -523,6 +521,7 @@ export const jobfair = {
       dayTestBpo: 'अकबर ट्रॅव्हल्स आणि धिती सर्व्हिसेससाठी बीपीओ अभियोग्यता चाचणी',
       dayTestBpoNote: 'ऑनलाइन, 25 मिनिटे, चाचणी हॉलमध्ये तुमच्या मोबाईलवर. दिलेल्या वेळी लिंक उघडा, नोंदणी केलेल्या मोबाईल नंबरने लॉग इन करा आणि हॉलमध्ये सांगितलेला सुरुवातीचा कोड टाका. एकच चाचणी दोन्ही कंपन्यांसाठी ग्राह्य. निवड झालेल्यांना सकाळी 11:00 पासून नावाने अकबर ट्रॅव्हल्स आणि धिती डेस्कवर मुलाखतीसाठी बोलावले जाईल, त्यामुळे ठिकाणीच थांबा.',
       dayTestLink: 'चाचणी उघडा',
+      dayVolunteers: 'या टेबलवरील तुमचे स्वयंसेवक:',
       dayTestPhone: 'मोबाईल पूर्ण चार्ज करून आणि इंटरनेट चालू ठेवून आणा.',
       dayDesk: 'मुलाखत टेबल',
       dayBring: 'बायोडेटाच्या 3 प्रती, ओळखपत्र आणि प्रमाणपत्रे सोबत आणा. मदत कक्षात हा स्क्रीनशॉट दाखवा.',
