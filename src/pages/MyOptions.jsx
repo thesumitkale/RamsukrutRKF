@@ -208,6 +208,15 @@ export default function MyOptions() {
   /* Once the day is planned the page stops being a menu and becomes a
      ticket: group, time, and where to walk. */
   const dayPlan = data?.plan && ['planned', 'reserve'].includes(data.plan.status) ? data.plan : null
+  /* No plan yet (just registered on site): look again every 20 seconds. */
+  useEffect(() => {
+    if (!data || dayPlan) return undefined
+    const num = digits(mobile).slice(-10)
+    const t = setInterval(async () => {
+      try { const out = await post({ action: 'lookup', mobile: num }); if (out.ok && out.found) setData(out) } catch (e) { /* try again */ }
+    }, 20000)
+    return () => clearInterval(t)
+  }, [data, dayPlan, mobile, post])
 
   const sit = async (o, on) => {
     setSavingId(o.co.id)
@@ -336,8 +345,14 @@ export default function MyOptions() {
 
               {dayPlan && <DayPlan plan={dayPlan} corporates={data.corporates || []} m={m} lang={lang} who={{ ...data.candidate, mobile: data.candidate.mobile || mobile }} />}
 
+              {!dayPlan && (
+                <div className="mt-6 rounded-[6px] border-2 border-gold bg-white p-6 sm:p-8">
+                  <h2 className="font-display text-[1.25rem] font-semibold leading-tight text-ink">{lang === 'mr' ? 'तुमचा दिवसाचा प्लॅन तयार होत आहे' : 'Your plan for the day is being made'}</h2>
+                  <p className="mt-3 text-[0.98rem] leading-[1.7] text-ink2">{lang === 'mr' ? 'तुमची नोंदणी झाली आहे. एका मिनिटात तुमचा उमेदवार क्रमांक, कंपन्या आणि वेळा इथे दिसतील. हे पान आपोआप अपडेट होईल. तोपर्यंत कोणत्याही मदत कक्षावर जा.' : 'You are registered. Your candidate number, companies and times will show here in about a minute. This page updates by itself. Meanwhile, go to any help desk.'}</p>
+                </div>
+              )}
               {/* Running tally, so the page always answers "am I done". */}
-              {!dayPlan && <div className="mt-6 rounded-[6px] border border-sand bg-paper2 p-5 sm:p-6">
+              {false && <div className="mt-6 rounded-[6px] border border-sand bg-paper2 p-5 sm:p-6">
                 <p className="font-display text-[1.02rem] font-semibold text-ink">
                   {count === 0 ? m.chosenNone : count === 1 ? m.chosenOne : m.chosenMany.replace('{n}', String(count))}
                 </p>
@@ -352,20 +367,20 @@ export default function MyOptions() {
 
               {err && <p className="mt-4 text-[0.92rem] text-clay-deep">{err}</p>}
 
-              {!dayPlan && options.length === 0 && (
+              {false && options.length === 0 && (
                 <div className="mt-8 rounded-[6px] border border-sand bg-white p-6 sm:p-8">
                   <h2 className="font-display text-[1.2rem] font-semibold text-ink">{m.noneTitle}</h2>
                   <p className="mt-3 text-[0.98rem] leading-[1.7] text-ink2">{m.noneBody}</p>
                 </div>
               )}
 
-              {!dayPlan && <Group
+              {false && <Group
                 title={m.strongTitle}
                 sub={m.strongSub}
                 items={strong}
                 {...{ m, chosen, sit, savingId, bandName, bandLook, say, lang, full }}
               />}
-              {!dayPlan && <Group
+              {false && <Group
                 title={m.okTitle}
                 sub={m.okSub}
                 items={mid}
