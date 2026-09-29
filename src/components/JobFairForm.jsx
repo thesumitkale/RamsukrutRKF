@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useEffect, useRef, useState } from 'react'
 import { JOBFAIR_ENDPOINT, JOBFAIR_KEY, JOBFAIR_WA } from '../content/jobfair.js'
 import { Arrow, Wa } from './Icons.jsx'
+import { track, isFairDay } from '../content/visits.js'
 
 /* ---------------------------------------------------------------------------
    readSource
@@ -208,7 +209,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro, nextCta
       const payload = new FormData()
       payload.append('kind', kind)
       payload.append('lang', lang)
-      payload.append('source', readSource())
+      payload.append('source', kind === 'candidate' && isFairDay() ? ('onsite-' + readSource()).slice(0, 60) : readSource())
       Object.entries(values).forEach(([k, v]) => payload.append(k, v))
       if (kind === 'corporate') payload.append('contact_name', values.name || '')
 
@@ -227,6 +228,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro, nextCta
         const res = await send(payload)
         out = await res.json().catch(() => ({ ok: res.ok }))
         if (!out.ok) throw new Error(out.error || 'rejected')
+        track('register', { mobile10: values.mobile })
       } catch (first) {
         /* Almost every failure here is the attachment: an odd file type, a slow
            upload dropping on mobile data, a photo the phone reports strangely.
@@ -239,6 +241,7 @@ export default function JobFairForm({ kind, copy, fields, lang, waIntro, nextCta
         const out2 = await res2.json().catch(() => ({ ok: res2.ok }))
         if (!out2.ok) throw new Error(out2.error || 'rejected')
         out = { ...out2, resume_saved: false }
+        track('register', { mobile10: values.mobile })
       }
 
       /* The function reports whether the attachment itself reached storage, so

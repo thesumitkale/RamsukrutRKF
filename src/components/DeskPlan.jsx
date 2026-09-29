@@ -12,7 +12,8 @@
    ========================================================================== */
 import { deskPeople } from '../content/volunteers.js'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { visitCounts } from '../content/visits.js'
 import { dept, download } from './matchScore.js'
 import { clock, dayMessage } from './dayMessage.js'
 import { WAVES, TEST, TEST_BPO, isTestKey, runsLate, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE, CLOSE_AT } from './planner.js'
@@ -140,8 +141,36 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
       .slice(0, 12)
   }, [q, people, planBy])
 
+  const [today, setToday] = useState(null)
+  useEffect(() => {
+    let live = true
+    const pull = () => visitCounts().then((c) => { if (live && c && typeof c.devices === 'number') setToday(c) }).catch(() => {})
+    pull()
+    const t = setInterval(pull, 30000)
+    return () => { live = false; clearInterval(t) }
+  }, [])
+
   return (
     <div className="mt-5 space-y-5">
+      {today && (
+        <div className="rounded-[8px] border border-forest bg-white p-5 shadow-soft">
+          <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-clay-deep">At the fair today</p>
+          <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-4">
+            {[
+              ['Plans looked up', today.lookups],
+              ['Registered on site', today.onsite_regs],
+              ['Phones on the site', today.devices],
+              ['Came in by QR scan', today.qr_devices],
+            ].map(([k, v]) => (
+              <div key={k}>
+                <p className="font-display text-[1.7rem] font-bold leading-none text-ink">{v}</p>
+                <p className="mt-1 text-[0.82rem] text-muted">{k}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-[0.8rem] text-muted">Counted from 29 Sept on phones that opened the site. Updates every 30 seconds.</p>
+        </div>
+      )}
       {/* ------------------------------------------------------ summary */}
       <div className="rounded-[8px] border border-sand bg-paper p-5 shadow-soft">
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">

@@ -19,6 +19,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
+import { track } from '../content/visits.js'
 import { jobfair, localizeAnswer, JOBFAIR_ME, JOBFAIR_PHONE, JOBFAIR_WA } from '../content/jobfair.js'
 import { translatePlace } from '../content/maharashtra.js'
 import Reveal from '../components/Reveal.jsx'
@@ -142,6 +143,7 @@ export default function MyOptions() {
     try {
       const out = await post({ action: 'lookup', mobile: num })
       if (!out.ok) throw new Error(out.error || 'failed')
+      track(out.found ? 'lookup' : 'notfound', { mobile10: num })
       if (!out.found) { setNotFound(true); setData(null) } else {
         setData(out)
         try { localStorage.setItem(SAVED, num) } catch (err2) { /* private mode */ }

@@ -10,22 +10,25 @@ import GhostEyebrow from '../components/GhostEyebrow.jsx'
 import CtaBanner from '../components/CtaBanner.jsx'
 import JobFairForm from '../components/JobFairForm.jsx'
 import { Arrow, Wa, Phone, Clock, Calendar, MapPin, Rupee, Briefcase, Users, Handshake, Shield } from '../components/Icons.jsx'
+import { isFairDay } from '../content/visits.js'
 
 /* Online candidate registration closes at 5:00 PM IST on 27 September.
    Companies can still book a desk. Walk ins are placed at the help desk. */
 const REG_CLOSES = Date.parse('2026-09-27T17:00:00+05:30')
+/* Reopened on the fair day for people registering at the venue. */
+const isOpenNow = () => Date.now() < REG_CLOSES || isFairDay()
 const useRegOpen = () => {
-  const [open, setOpen] = useState(() => Date.now() < REG_CLOSES)
+  const [open, setOpen] = useState(isOpenNow)
   useEffect(() => {
-    if (!open) return undefined
-    const t = setInterval(() => { if (Date.now() >= REG_CLOSES) setOpen(false) }, 20000)
+    const t = setInterval(() => setOpen(isOpenNow()), 20000)
     return () => clearInterval(t)
-  }, [open])
+  }, [])
   return open
 }
 const CLOSED = {
   en: {
     soon: 'Online registration closes today, Sunday 27 September, at 5:00 PM.',
+    onsite: 'At the venue today? Register here, then show your screen at any help desk. Your candidate number and plan appear on My options in a few minutes.',
     title: 'Online registration is closed',
     body: 'Registration closed at 5:00 PM on Sunday 27 September. Thank you to everyone who signed up.',
     have: 'Already registered? Your companies, times and group code are ready.',
@@ -34,6 +37,7 @@ const CLOSED = {
   },
   mr: {
     soon: 'ऑनलाइन नोंदणी आज, रविवार 27 सप्टेंबर, सायंकाळी 5:00 वाजता बंद होईल.',
+    onsite: 'आज मेळाव्याच्या ठिकाणी आहात? इथे नोंदणी करा आणि कोणत्याही मदत कक्षावर तुमची स्क्रीन दाखवा. काही मिनिटांत तुमचा उमेदवार क्रमांक आणि प्लॅन माझे पर्याय या पानावर दिसेल.',
     title: 'ऑनलाइन नोंदणी बंद झाली आहे',
     body: 'रविवार 27 सप्टेंबर रोजी सायंकाळी 5:00 वाजता नोंदणी बंद झाली. नोंदणी केलेल्या सर्वांचे आभार.',
     have: 'नोंदणी केली आहे? तुमच्या कंपन्या, वेळा आणि गट कोड तयार आहेत.',
@@ -334,7 +338,7 @@ export default function JobFair() {
               <RegClosed lang={lang} />
             ) : tab === 'candidate' ? (
               <>
-              <p className="mb-4 rounded-[6px] border border-clay/30 bg-clay/10 px-4 py-3 text-center font-sans text-[.92rem] font-semibold text-ink">{(CLOSED[lang] || CLOSED.en).soon}</p>
+              <p className="mb-4 rounded-[6px] border border-clay/30 bg-clay/10 px-4 py-3 text-center font-sans text-[.92rem] font-semibold text-ink">{(CLOSED[lang] || CLOSED.en)[isFairDay() ? 'onsite' : 'soon']}</p>
               <JobFairForm key="candidate" kind="candidate" copy={v.candidate} nextCta={v.mine.checkCta}
                 fields={candidateFields(v.candidate, lang)} lang={lang} waIntro={v.waIntro} />
               </>
