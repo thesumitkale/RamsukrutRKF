@@ -576,6 +576,7 @@ export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
     return (
       <div className="mt-6 rounded-[6px] border-2 border-gold bg-white p-6 sm:p-8">
         <p className="font-display text-[0.8rem] font-semibold uppercase tracking-[0.14em] text-clay-deep">{m.dayDate}</p>
+        <div className="mt-3"><Results list={results} lang={lang} /></div>
         <h2 className="mt-2 font-display text-[1.35rem] font-semibold leading-tight text-ink">{m.reserveTitle}</h2>
         <p className="mt-3 text-[0.98rem] leading-[1.7] text-ink2">{m.reserveBody}</p>
         <p className="mt-4 border-t border-sand pt-4 text-[0.92rem] leading-[1.65] text-ink2">{m.dayBring}</p>
