@@ -14,6 +14,7 @@ import { deskPeople } from '../content/volunteers.js'
 
 import { useEffect, useMemo, useState } from 'react'
 import { visitCounts } from '../content/visits.js'
+import { RESULTS } from '../content/results.js'
 import { dept, download } from './matchScore.js'
 import { clock, dayMessage } from './dayMessage.js'
 import { WAVES, TEST, TEST_BPO, isTestKey, runsLate, everyone, planPeople, firstOpenWave, capacity, isTestCo, panelsOf, PER_PANEL, TEST_SEATS, TEST_STARTS, DEPT_CODE, CLOSE_AT } from './planner.js'
@@ -33,6 +34,27 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
   const byId = useMemo(() => new Map(people.map((p) => [p.id, p])), [people])
   const coById = useMemo(() => new Map(corporates.map((c) => [c.id, c])), [corporates])
   const planBy = useMemo(() => new Map(plans.map((p) => [p.candidate_id, p])), [plans])
+
+  /* Test results are keyed by a hash of the mobile, so hash everyone once. */
+  const [byHash, setByHash] = useState(null)
+  useEffect(() => {
+    if (!window.crypto?.subtle) return
+    let live = true
+    Promise.all(people.map(async (p) => {
+      const n = digits(p.mobile).slice(-10)
+      if (n.length !== 10) return null
+      const buf = await window.crypto.subtle.digest('SHA-256', new TextEncoder().encode('rkf29|' + n))
+      return [Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16), p]
+    })).then((pairs) => { if (live) setByHash(new Map(pairs.filter(Boolean))) })
+    return () => { live = false }
+  }, [people])
+  const shortlist = (paper) => {
+    const out = []
+    Object.entries(RESULTS).forEach(([h, list]) => list.forEach(([pp, st, score]) => {
+      if (pp === paper && st === 'S') out.push({ p: byHash?.get(h), score })
+    }))
+    return out.sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+  }
   const stopName = (key) =>
     key === TEST ? 'IT aptitude test (Zeal + Techspian)' : key === TEST_BPO ? 'BPO aptitude test (Akbar + Dhiti)' : String(key).startsWith('INT:') ? (coById.get(key.slice(4))?.organization || 'Company') + ' interviews' : coById.get(key)?.organization || 'Company'
 
@@ -383,7 +405,29 @@ export default function DeskPlan({ candidates, corporates, interviews, plans, po
                     ))}
                   </div>
                 ))}
-                {!floor[co] && <p className="text-[0.9rem] text-muted">Nobody scheduled at this desk yet.</p>}
+                {co.startsWith('INT:') && (() => {
+                  const name = stopName(co)
+                  const paper = /akbar|dhiti/i.test(name) ? 'BPO' : 'IT'
+                  const list = shortlist(paper)
+                  return (
+                    <div>
+                      <p className="font-display text-[0.95rem] font-semibold text-ink">Shortlisted from the {paper} test <span className="font-normal text-muted">({list.length})</span></p>
+                      <p className="mt-1 text-[0.82rem] text-muted">Call them by name, highest score first. They have been told on My options to come to this desk now.</p>
+                      <ol className="mt-3 divide-y divide-sand rounded-[6px] border border-sand bg-white">
+                        {list.map(({ p, score }, i) => (
+                          <li key={i} className="flex flex-wrap items-baseline gap-x-4 gap-y-0.5 px-3 py-2 text-[0.88rem]">
+                            <span className="w-6 text-muted">{i + 1}.</span>
+                            <span className="min-w-[12rem] flex-1 font-semibold text-ink">{p?.name || 'Not matched to a registration'}</span>
+                            <span className="text-ink2">No. {p ? planBy.get(p.id)?.grp || '-' : '-'}</span>
+                            <span className="text-ink2">{p ? digits(p.mobile).slice(-10) : ''}</span>
+                            <span className="font-semibold text-forest">{score}/30</span>
+                          </li>
+                        ))}
+                      </ol>
+                    </div>
+                  )
+                })()}
+                {!floor[co] && !co.startsWith('INT:') && <p className="text-[0.9rem] text-muted">Nobody scheduled at this desk yet.</p>}
               </div>
             )}
           </div>
