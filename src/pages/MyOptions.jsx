@@ -633,6 +633,11 @@ export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
                       {m.dayTestLink} <span aria-hidden="true">&rarr;</span>
                     </a>
                   )}
+                  {test && !done && (
+                    <span className="mt-2 block rounded-[6px] border border-gold bg-gold/15 px-3 py-2 text-[0.84rem] leading-[1.55] text-ink">
+                      {lang === 'mr' ? 'या मोबाइल नंबरसाठी अजून निकाल आलेला नाही. चाचणी टीमकडून निकाल येताच इथे पास किंवा नापास दिसेल. तुम्ही चाचणी दिली असल्यास मदत कक्ष HD1 वर ही स्क्रीन दाखवा.' : 'No result for this mobile number yet. Pass or fail shows here as soon as the test team sends it. If you already took the test, show this screen at help desk HD1.'}
+                    </span>
+                  )}
                   {test && !done && <span className="mt-1 block break-all font-mono text-[0.76rem] text-muted">{link.replace('https://', '')}</span>}
                   {deskPeople(r.key, co?.organization).main.length > 0 && (
                     <span className="mt-2 block rounded-[6px] bg-paper2 px-3 py-2 text-[0.84rem] leading-[1.55] text-ink2">
