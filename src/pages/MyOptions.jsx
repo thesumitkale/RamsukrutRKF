@@ -20,6 +20,7 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useLang } from '../i18n.jsx'
 import { track } from '../content/visits.js'
+import { RESULTS } from '../content/results.js'
 import { jobfair, localizeAnswer, JOBFAIR_ME, JOBFAIR_PHONE, JOBFAIR_WA } from '../content/jobfair.js'
 import { translatePlace } from '../content/maharashtra.js'
 import Reveal from '../components/Reveal.jsx'
@@ -509,7 +510,67 @@ const clock = (slot, lang) => {
   return h12 + ':' + String(mm).padStart(2, '0') + (h < 12 ? ' AM' : ' PM')
 }
 
+function useResults(mobile) {
+  const [res, setRes] = useState([])
+  useEffect(() => {
+    const num = String(mobile || '').replace(/\D/g, '').slice(-10)
+    if (num.length !== 10 || !window.crypto?.subtle) { setRes([]); return }
+    window.crypto.subtle.digest('SHA-256', new TextEncoder().encode('rkf29|' + num)).then((buf) => {
+      const h = Array.from(new Uint8Array(buf)).map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 16)
+      setRes(RESULTS[h] || [])
+    }).catch(() => setRes([]))
+  }, [mobile])
+  return res
+}
+
+const RES_TEXT = {
+  en: {
+    title: 'Your test result',
+    IT: 'IT aptitude test, Zeal Connect and Techspian',
+    BPO: 'BPO aptitude test, Akbar Travels and Dhiti Services',
+    S: 'Shortlisted for interview',
+    N: 'Not shortlisted this time',
+    X: 'Test not completed',
+    nextS: { IT: 'Go to the Zeal Connect and Techspian desks now for your interview. Your name is on their list. Help desk HD1, Shraddha Wagh.', BPO: 'Go to the Akbar Travels and Dhiti Services desks now for your interview. Your name is on their list. Akbar closes at 5:00 PM. Help desk HD1, Shraddha Tamhankar and Swapnil Kanhurkar.' },
+    nextN: 'Thank you for taking the test. Your other companies below are still on, so go to them at their times.',
+    nextX: 'Your test did not finish. Please speak to help desk HD1.',
+    score: 'Score',
+  },
+  mr: {
+    title: 'तुमचा चाचणी निकाल',
+    IT: 'IT अ‍ॅप्टिट्यूड चाचणी, Zeal Connect आणि Techspian',
+    BPO: 'BPO अ‍ॅप्टिट्यूड चाचणी, Akbar Travels आणि Dhiti Services',
+    S: 'मुलाखतीसाठी निवड झाली',
+    N: 'या वेळी निवड झाली नाही',
+    X: 'चाचणी पूर्ण झाली नाही',
+    nextS: { IT: 'मुलाखतीसाठी आता Zeal Connect आणि Techspian च्या डेस्कवर जा. त्यांच्या यादीत तुमचे नाव आहे. मदत कक्ष HD1, श्रद्धा वाघ.', BPO: 'मुलाखतीसाठी आता Akbar Travels आणि Dhiti Services च्या डेस्कवर जा. त्यांच्या यादीत तुमचे नाव आहे. Akbar सायंकाळी 5:00 वाजता बंद होईल. मदत कक्ष HD1, श्रद्धा ताम्हणकर आणि स्वप्नील कान्हूरकर.' },
+    nextN: 'चाचणी दिल्याबद्दल धन्यवाद. खालील इतर कंपन्या कायम आहेत, त्यांच्या वेळेवर तिथे जा.',
+    nextX: 'तुमची चाचणी पूर्ण झाली नाही. कृपया मदत कक्ष HD1 शी बोला.',
+    score: 'गुण',
+  },
+}
+
+function Results({ list, lang }) {
+  if (!list.length) return null
+  const t = RES_TEXT[lang] || RES_TEXT.en
+  return (
+    <div className="mb-4 space-y-3">
+      {list.map(([paper, st, score]) => (
+        <div key={paper} className={'rounded-[6px] border-2 p-4 ' + (st === 'S' ? 'border-forest bg-forest/5' : 'border-sand bg-paper2')}>
+          <p className="font-display text-[0.78rem] font-semibold uppercase tracking-[0.12em] text-clay-deep">{t.title}</p>
+          <p className="mt-1 text-[0.86rem] text-muted">{t[paper]}</p>
+          <p className={'mt-1.5 font-display text-[1.2rem] font-bold leading-tight ' + (st === 'S' ? 'text-forest' : 'text-ink')}>
+            {t[st]}{score != null && st !== 'X' && <span className="ml-2 font-sans text-[0.9rem] font-normal text-muted">{t.score} {score}/30</span>}
+          </p>
+          <p className="mt-1.5 text-[0.92rem] leading-[1.6] text-ink2">{st === 'S' ? t.nextS[paper] : st === 'N' ? t.nextN : t.nextX}</p>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
+  const results = useResults(who?.mobile)
   const byId = new Map(corporates.map((c) => [c.id, c]))
   if (plan.status === 'reserve') {
     return (
@@ -548,6 +609,7 @@ export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
         </div>
       </div>
       <div className="px-5 py-4 sm:px-8 sm:py-5">
+        <Results list={results} lang={lang} />
         <p className="font-display text-[0.95rem] font-semibold text-ink">{m.dayStops}</p>
         <ol className="mt-3 space-y-2.5">
           {(plan.route || []).map((r, i) => {
@@ -555,6 +617,7 @@ export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
             const bpo = r.key === 'TBPO'
             const link = bpo ? 'https://ramsukrut-test.netlify.app/bpo' : 'https://ramsukrut-test.netlify.app/tech'
             const co = byId.get(r.key)
+            const done = test && results.some(([pp]) => pp === (bpo ? 'BPO' : 'IT'))
             return (
               <li key={r.key} className="flex gap-4 border-b border-sand pb-2.5 last:border-0 last:pb-0">
                 <span className="w-[5.5rem] shrink-0 font-display text-[1.05rem] font-bold text-clay-deep">{clock(r.slot, lang)}</span>
@@ -563,13 +626,13 @@ export function DayPlan({ plan, corporates, m, lang, who, forDesk = false }) {
                     {i + 1}. {test ? (bpo ? m.dayTestBpo : m.dayTest) : co?.organization || m.dayDesk}
                   </span>
                   {test && <span className="mt-0.5 block text-[0.86rem] leading-[1.5] text-muted">{bpo ? m.dayTestBpoNote : m.dayTestNote} {m.dayTestPhone}</span>}
-                  {test && (
+                  {test && !done && (
                     <a href={link} target="_blank" rel="noopener noreferrer"
                       className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-clay px-4 py-2 font-sans text-[0.84rem] font-bold text-white transition hover:brightness-105">
                       {m.dayTestLink} <span aria-hidden="true">&rarr;</span>
                     </a>
                   )}
-                  {test && <span className="mt-1 block break-all font-mono text-[0.76rem] text-muted">{link.replace('https://', '')}</span>}
+                  {test && !done && <span className="mt-1 block break-all font-mono text-[0.76rem] text-muted">{link.replace('https://', '')}</span>}
                   {deskPeople(r.key, co?.organization).main.length > 0 && (
                     <span className="mt-2 block rounded-[6px] bg-paper2 px-3 py-2 text-[0.84rem] leading-[1.55] text-ink2">
                       <span className="block"><span className="font-semibold text-ink">{m.dayVolunteers}</span> {deskPeople(r.key, co?.organization).main.join(', ')}</span>
