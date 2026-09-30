@@ -18,6 +18,7 @@ const Contact = lazy(() => import('./pages/Contact.jsx'))
 const JobFair = lazy(() => import('./pages/JobFair.jsx'))
 const MyOptions = lazy(() => import('./pages/MyOptions.jsx'))
 const Desk = lazy(() => import('./pages/Desk.jsx'))
+const Feedback = lazy(() => import('./pages/Feedback.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 const Loader = () => (
@@ -52,6 +53,7 @@ function AnimatedRoutes() {
             <Route path="/my-options" element={<MyOptions />} />
             {/* Anything that does not match a real page lands here instead of a blank screen. */}
             <Route path="/desk" element={<Desk />} />
+            <Route path="/feedback" element={<Feedback />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
