@@ -94,7 +94,7 @@ export default function Feedback() {
       liked: liked.trim().slice(0, 1000) || null,
       improve: improve.trim().slice(0, 1000) || null,
       lang,
-      src: (new URLSearchParams(window.location.search).get('s') || '').slice(0, 40),
+      src: (new URLSearchParams(window.location.search).get('s') || (window.location.pathname.includes('jobfairfeedback') ? 'fb' : '')).slice(0, 40),
       device: (() => { try { return localStorage.getItem('rkf-device') || '' } catch { return '' } })(),
     }
     try {

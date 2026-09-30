@@ -39,6 +39,8 @@ function AnimatedRoutes() {
         transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
       >
         <Suspense fallback={<Loader />}>
+          {/* ramsukrut.com/jobfairfeedback serves this same app; with no hash route it opens the feedback form. */}
+          {typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/jobfairfeedback' && location.pathname === '/' ? <Feedback /> :
           <Routes location={location}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -55,7 +57,7 @@ function AnimatedRoutes() {
             <Route path="/desk" element={<Desk />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="*" element={<NotFound />} />
-          </Routes>
+          </Routes>}
         </Suspense>
       </motion.div>
     </AnimatePresence>
