@@ -295,6 +295,11 @@ export default {
   vidTitle: 'Stories of <span class="title-grad">change</span>',
   vidSub: 'A glimpse of our work on the ground, through our YouTube videos.',
   galEyebrow: 'Photo Gallery',
+  vidNew: 'New',
+  videos: [
+   ['OULMLWNtxow', 'Ramsukrut Foundation, new video'],
+   ['gQkoDhlzonI', 'Ramsukrut Foundation, new short']
+  ],
   pressEyebrow: 'Press & Media',
   pressTitle: 'Ramsukrut in the <span class="title-grad">news</span>',
   pressSub: 'Our work and events as covered by local newspapers and the press.',

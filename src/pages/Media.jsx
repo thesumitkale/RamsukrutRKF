@@ -24,6 +24,10 @@ export default function Media() {
       <section className="section-tint py-16 md:py-24">
         <div className="container-x">
           <SectionHead eyebrow={m.vidEyebrow} title={m.vidTitle} sub={m.vidSub} />
+          <div className="mx-auto mb-8 grid max-w-4xl gap-5 md:mb-10 md:grid-cols-[3.16fr_1fr]">
+            <Reveal><Reel wide id={m.videos[0][0]} title={m.videos[0][1]} label={m.vidNew} /></Reveal>
+            <Reveal delay={0.08} className="mx-auto w-3/5 sm:w-2/5 md:w-full"><Reel id={m.videos[1][0]} title={m.videos[1][1]} label={m.vidNew} /></Reveal>
+          </div>
           <div className="reel-slider mx-auto max-w-4xl">
             {t.home.reels.map(([id, title], i) => (
               <Reveal key={id} delay={i * 0.08} className="reel-slide"><Reel id={id} title={title} /></Reveal>
