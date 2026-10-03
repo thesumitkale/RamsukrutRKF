@@ -299,6 +299,8 @@ export default {
   pressTitle: 'Ramsukrut in the <span class="title-grad">news</span>',
   pressSub: 'Our work and events as covered by local newspapers and the press.',
   press: [
+    ['/img/press-8.jpg', 'Lokmat', '02 Oct 2026'],
+    ['/img/press-9.jpg', 'Sakal', '02 Oct 2026'],
     ['/img/press-7.jpg', 'Lokmat', '09 Aug 2026'],
     ['/img/press-6.jpg', 'Sakal', '12 Jul 2026'],
     ['/img/press-5.jpg', 'Sanvidhan News', '02 Jul 2026'],
