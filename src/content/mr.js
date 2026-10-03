@@ -295,6 +295,11 @@ export default {
   vidTitle: 'बदलाच्या <span class="title-grad">गोष्टी</span>',
   vidSub: 'आमच्या प्रत्यक्ष कामाची झलक, YouTube व्हिडिओंमधून.',
   galEyebrow: 'फोटो गॅलरी',
+  vidNew: 'नवीन',
+  videos: [
+   ['OULMLWNtxow', 'रामसुकृत फाउंडेशन, नवीन व्हिडिओ'],
+   ['gQkoDhlzonI', 'रामसुकृत फाउंडेशन, नवीन शॉर्ट']
+  ],
   pressEyebrow: 'प्रसिद्धी माध्यमे',
   pressTitle: 'वृत्तपत्रांत <span class="title-grad">रामसुकृत</span>',
   pressSub: 'स्थानिक वृत्तपत्रांनी आणि माध्यमांनी आमच्या कामाची घेतलेली दखल.',
