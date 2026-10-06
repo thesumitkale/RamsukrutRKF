@@ -25,8 +25,8 @@ export default function Nav() {
   const links = [
     ['/', t.nav.home], ['/about', t.nav.about], ['/work', t.nav.work],
     ['/impact', t.nav.impact], ['/media', t.nav.media], ['/involved', t.nav.involved],
-    // Live event page, removed once the fair is over
-    ['/job-fair', jf.navLabel],
+    // Job fair page hidden after the event. Restore this line to show it again.
+    // ['/job-fair', jf.navLabel],
   ]
   const langLabel = lang === 'en' ? 'मराठी' : 'EN'
 
