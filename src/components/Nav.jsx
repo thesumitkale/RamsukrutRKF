@@ -25,6 +25,8 @@ export default function Nav() {
   const links = [
     ['/', t.nav.home], ['/about', t.nav.about], ['/work', t.nav.work],
     ['/impact', t.nav.impact], ['/media', t.nav.media], ['/involved', t.nav.involved],
+    // Games for Good is shared by link only. Uncomment to add it to the menu.
+    // ['/games-for-good', 'Games for Good'],
     // Job fair page hidden after the event. Restore this line to show it again.
     // ['/job-fair', jf.navLabel],
   ]

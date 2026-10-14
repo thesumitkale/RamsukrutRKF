@@ -20,6 +20,8 @@ const Contact = lazy(() => import('./pages/Contact.jsx'))
 const MyOptions = lazy(() => import('./pages/MyOptions.jsx'))
 const Desk = lazy(() => import('./pages/Desk.jsx'))
 const Feedback = lazy(() => import('./pages/Feedback.jsx'))
+const GamesForGood = lazy(() => import('./pages/GamesForGood.jsx'))
+const GfgDesk = lazy(() => import('./pages/GfgDesk.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 const Loader = () => (
@@ -42,6 +44,8 @@ function AnimatedRoutes() {
         <Suspense fallback={<Loader />}>
           {/* ramsukrut.com/jobfairfeedback serves this same app; with no hash route it opens the feedback form. */}
           {typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/jobfairfeedback' && location.pathname === '/' ? <Feedback /> :
+          /* ramsukrut.com/gamesforgood is a short link for posters and LinkedIn. */
+          typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/gamesforgood' && location.pathname === '/' ? <GamesForGood /> :
           <Routes location={location}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -57,6 +61,10 @@ function AnimatedRoutes() {
             {/* Anything that does not match a real page lands here instead of a blank screen. */}
             <Route path="/desk" element={<Desk />} />
             <Route path="/feedback" element={<Feedback />} />
+            {/* Ramsukrut Games for Good, 5 and 12 December 2026. */}
+            <Route path="/games-for-good" element={<GamesForGood />} />
+            {/* Private desk for Games for Good registrations. Passcode checked on the server. */}
+            <Route path="/gfg-desk" element={<GfgDesk />} />
             <Route path="*" element={<NotFound />} />
           </Routes>}
         </Suspense>
