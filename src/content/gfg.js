@@ -45,12 +45,14 @@ export const gfg = {
   },
   days: [
     {
-      tag: 'Day 1 \u00b7 Badminton', name: 'Rally for Health', date: 'Saturday, 5 December 2026',
+      tag: 'Day 1 \u00b7 Badminton', name: 'Rally for Health',
+      img: '/img/gfg/day-badminton.jpg', alt: 'A shuttlecock resting on a badminton racket', date: 'Saturday, 5 December 2026',
       why: 'In a village, when an older person falls ill, the whole family feels it. Rally for Health supports health camps and regular checkups for rural families, with special attention to older people.',
       how: ['8 company teams of 6 players, at least 3 women', 'Each tie: men\u2019s doubles, women\u2019s doubles, mixed doubles', 'One match at a time, everyone else courtside', 'An open pickleball court for a casual game'],
     },
     {
-      tag: 'Day 2 \u00b7 Box cricket', name: 'Run for Education', date: 'Saturday, 12 December 2026',
+      tag: 'Day 2 \u00b7 Box cricket', name: 'Run for Education',
+      img: '/img/gfg/day-cricket.jpg', alt: 'A floodlit cricket turf in the city at dusk', date: 'Saturday, 12 December 2026',
       why: 'Rural young people have the ability. What they often don\u2019t have is good schooling, guidance and a way to reach employers. Run for Education supports the path from the classroom to a first job.',
       how: ['8 company teams, 8 players a side, 6 overs', 'At least 2 women in every playing side', 'Runs scored by women count double', 'A women\u2019s showcase match at lunch'],
     },
@@ -58,6 +60,12 @@ export const gfg = {
   included: {
     eyebrow: 'The day',
     title: 'One match at a time. Everyone else courtside.',
+    // Stock photos (CC0, via Openverse). Swap for event photos after 5 December.
+    photos: [
+      ['/img/gfg/strip-rackets.jpg', 'Two badminton rackets and a shuttlecock on grass', 'Rally for Health \u00b7 5 Dec'],
+      ['/img/gfg/strip-pickleball.jpg', 'Pickleballs on a court', 'Open pickleball court \u00b7 5 Dec'],
+      ['/img/gfg/strip-ball.jpg', 'A hand holding a red cricket ball against the sky', 'Run for Education \u00b7 12 Dec'],
+    ],
     items: [
       ['Courtside lounge', 'Seating facing the court, a coffee counter and a \u201cNext on court\u201d board.'],
       ['Food all day', 'Breakfast, snacks, lunch and evening chai for every team.'],

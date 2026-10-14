@@ -213,8 +213,12 @@ export default function GamesForGood() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden bg-teal-ink pb-16 pt-32 text-white md:pb-24 md:pt-44">
-        <div aria-hidden="true" className="pointer-events-none absolute -right-24 top-10 h-[420px] w-[420px] rounded-full border-[28px] border-white/[.04]" />
-        <div aria-hidden="true" className="pointer-events-none absolute -right-4 top-36 h-[220px] w-[220px] rounded-full border-[16px] border-yellow/10" />
+        {/* Stock photo (CC0). Darkened on the left so the text always reads. */}
+        <motion.img src="/img/gfg/hero-rackets.jpg" alt="" aria-hidden="true"
+          initial={{ scale: 1.06 }} animate={{ scale: 1 }} transition={{ duration: 2.2, ease: [0.22, 1, 0.36, 1] }}
+          className="absolute inset-0 h-full w-full object-cover object-[70%_center]" />
+        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(90deg,rgba(11,58,56,.97)_0%,rgba(11,58,56,.9)_38%,rgba(11,58,56,.55)_68%,rgba(11,58,56,.35)_100%)]" />
+        <div aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(180deg,rgba(11,58,56,.5)_0%,rgba(11,58,56,0)_30%,rgba(11,58,56,.6)_100%)] md:hidden" />
         <div className="container-x relative">
           <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: .6 }}
             className="font-sans text-[.76rem] font-bold uppercase tracking-[.16em] text-yellow">{h.eyebrow}</motion.p>
@@ -226,7 +230,7 @@ export default function GamesForGood() {
 
           <div className="mt-9 grid max-w-3xl gap-4 sm:grid-cols-2">
             {gfg.days.map((d) => (
-              <div key={d.name} className="rounded-[8px] border border-white/15 bg-white/[.04] p-5">
+              <div key={d.name} className="rounded-[8px] border border-white/15 bg-teal-ink/70 p-5 backdrop-blur-sm">
                 <p className="font-sans text-[.72rem] font-bold uppercase tracking-[.14em] text-yellow">{d.tag}</p>
                 <p className="mt-2 font-display text-[1.45rem] font-bold leading-tight">{d.name}</p>
                 <p className="mt-1 flex items-center gap-2 text-[.92rem] text-white/75"><Calendar className="h-4 w-4" />{d.date}</p>
@@ -276,6 +280,9 @@ export default function GamesForGood() {
             {gfg.days.map((d, i) => (
               <Reveal key={d.name} delay={i * .08}>
                 <article className="h-full overflow-hidden rounded-[8px] border border-sand bg-white shadow-soft">
+                  <div className="relative h-52 overflow-hidden md:h-60">
+                    <img src={d.img} alt={d.alt} loading="lazy" className="h-full w-full object-cover transition duration-700 hover:scale-[1.03]" />
+                  </div>
                   <div className="bg-teal-ink p-6 text-white md:p-7">
                     <p className="font-sans text-[.72rem] font-bold uppercase tracking-[.14em] text-yellow">{d.tag}</p>
                     <h3 className="mt-2 font-display text-[1.8rem] font-bold leading-tight">{d.name}</h3>
@@ -306,6 +313,16 @@ export default function GamesForGood() {
             <p className="eyebrow">{gfg.included.eyebrow}</p>
             <h2 className="display mt-4 max-w-3xl text-[2rem] text-ink sm:text-[2.6rem] md:text-[3rem]">{gfg.included.title}</h2>
           </Reveal>
+          <div className="mt-12 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+            {gfg.included.photos.map(([src, alt, label], i) => (
+              <Reveal key={src} delay={i * .06} className={i === 0 ? 'col-span-2 md:col-span-1' : ''}>
+                <figure className="group relative overflow-hidden rounded-[8px]">
+                  <img src={src} alt={alt} loading="lazy" className="aspect-[4/3] w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
+                  <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent px-4 pb-3 pt-10 font-sans text-[.82rem] font-semibold text-white">{label}</figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
           <div className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {gfg.included.items.map(([t, b], i) => (
               <Reveal key={t} delay={i * .06}>
