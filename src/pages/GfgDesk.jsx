@@ -103,7 +103,9 @@ export default function GfgDesk() {
 
   if (!authed) {
     return (
-      <section className="grid min-h-[80vh] place-items-center bg-paper px-5 pt-28">
+      <>
+      <div className="h-20 bg-teal-ink" aria-hidden="true" />
+      <section className="grid min-h-[80vh] place-items-center bg-paper px-5 pb-16 pt-12">
         <form onSubmit={(e) => { e.preventDefault(); setGateErr(''); load(code) }}
           className="w-full max-w-sm rounded-[8px] border border-sand bg-white p-7 shadow-soft">
           <p className="font-sans text-[.74rem] font-bold uppercase tracking-[.14em] text-teal-deep">Games for Good</p>
@@ -115,12 +117,15 @@ export default function GfgDesk() {
           <button className="btn-primary mt-5 w-full" disabled={busy}>{busy ? 'Checking' : 'Open desk'}</button>
         </form>
       </section>
+      </>
     )
   }
 
   const cols = COLS[tab]
   return (
-    <section className="bg-paper px-4 pb-16 pt-28 md:px-8">
+    <>
+    <div className="h-20 bg-teal-ink" aria-hidden="true" />
+    <section className="bg-paper px-4 pb-16 pt-8 md:px-8">
       <div className="mx-auto max-w-[1400px]">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
@@ -193,5 +198,6 @@ export default function GfgDesk() {
         </div>
       </div>
     </section>
+    </>
   )
 }
