@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && mkdir -p dist/jobfairfeedback && cp dist/index.html dist/jobfairfeedback/index.html && mkdir -p dist/gamesforgood && cp dist/index.html dist/gamesforgood/index.html",
+    "build": "vite build && mkdir -p dist/jobfairfeedback && cp dist/index.html dist/jobfairfeedback/index.html && mkdir -p dist/gamesforgood && cp dist/index.html dist/gamesforgood/index.html && node scripts/gfg-meta.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
