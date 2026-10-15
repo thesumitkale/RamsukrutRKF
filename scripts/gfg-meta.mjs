@@ -4,11 +4,11 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 
 const file = 'dist/gamesforgood/index.html'
-const url = 'https://www.ramsukrut.com/gamesforgood'
+const url = 'https://ramsukrut.com/gamesforgood'
 const title = 'Games for Good 2026 | Ramsukrut Kalyan Foundation'
 const ogTitle = 'Games for Good: company sport for rural health and education'
 const desc = 'Rally for Health (badminton, Sat 5 Dec) and Run for Education (box cricket, Sat 12 Dec) at LSBI Badminton Arena, Pune. Register your company, join as a player or volunteer.'
-const img = 'https://www.ramsukrut.com/og-gamesforgood.jpg'
+const img = 'https://ramsukrut.com/og-gamesforgood.jpg'
 const alt = 'Games for Good by Ramsukrut Kalyan Foundation: Rally for Health on 5 December and Run for Education on 12 December, Pune'
 
 let html = readFileSync(file, 'utf8')
