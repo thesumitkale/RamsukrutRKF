@@ -119,9 +119,10 @@ function RegForm({ kind }) {
     for (const f of fields) {
       if (f.type === 'multi' && f.req && !(picked[f.name] || []).length) { setErr(r.pickDay); return }
     }
+    if (kind === 'company' && !form.fee_ack.checked) { setErr(r.needFee); return }
     if (!form.consent.checked) { setErr(r.needConsent); return }
     const fd = new FormData(form)
-    fd.delete('consent')
+    fd.delete('consent'); fd.delete('fee_ack')
     fields.filter((f) => f.type === 'multi').forEach((f) => fd.set(f.name, (picked[f.name] || []).join('; ')))
     fd.set('kind', kind)
     fd.set('source', readSource())
@@ -171,7 +172,13 @@ function RegForm({ kind }) {
       {/* Honeypot. Hidden from people, filled by bots. */}
       <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true"
         className="absolute left-[-9999px] h-0 w-0 opacity-0" />
-      <label className="mt-6 flex items-start gap-3 text-[.92rem] leading-snug text-ink-2">
+      {kind === 'company' && (
+        <label className="mt-6 flex items-start gap-3 text-[.92rem] leading-snug text-ink-2">
+          <input type="checkbox" name="fee_ack" className="mt-0.5 h-5 w-5 shrink-0 accent-[#089E93]" />
+          {r.feeAck}
+        </label>
+      )}
+      <label className="mt-4 flex items-start gap-3 text-[.92rem] leading-snug text-ink-2">
         <input type="checkbox" name="consent" className="mt-0.5 h-5 w-5 shrink-0 accent-[#089E93]" />
         {r.consent}
       </label>
@@ -323,7 +330,10 @@ export default function GamesForGood() {
               </Reveal>
             ))}
           </div>
-          <div className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <p className="mt-3 text-right text-[.72rem] text-muted">
+            <a href={gfg.included.creditUrl} target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">{gfg.included.credit}</a>
+          </p>
+          <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {gfg.included.items.map(([t, b], i) => (
               <Reveal key={t} delay={i * .06}>
                 <div className="border-t-2 border-ink/10 pt-5">

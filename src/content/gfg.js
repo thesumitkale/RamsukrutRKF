@@ -15,7 +15,7 @@ export const GFG_DESK = 'https://agsnioiywaowamemocck.supabase.co/functions/v1/r
 export const GFG_WA = '917277404040'
 export const GFG_PHONE = '+91 72774 04040'
 
-export const DAY_HEALTH = 'Rally for Health (Badminton, Sat 5 Dec)'
+export const DAY_HEALTH = 'Rally for Health (Badminton and Kho-Kho, Sat 5 Dec)'
 export const DAY_EDU = 'Run for Education (Box cricket, Sat 12 Dec)'
 export const DAYS = [DAY_HEALTH, DAY_EDU]
 
@@ -24,7 +24,7 @@ const TSHIRT = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
 export const gfg = {
   meta: {
     title: 'Games for Good 2026 | Ramsukrut Kalyan Foundation',
-    description: 'Two Saturdays of company sport in Pune for rural health and education. Register your company, join as a player or volunteer.',
+    description: 'Badminton, Kho-Kho and box cricket. Two Saturdays of company sport in Pune for rural health and education. Register your company, join as a player or volunteer.',
   },
   hero: {
     eyebrow: 'Ramsukrut Kalyan Foundation presents',
@@ -45,10 +45,10 @@ export const gfg = {
   },
   days: [
     {
-      tag: 'Day 1 \u00b7 Badminton', name: 'Rally for Health',
+      tag: 'Day 1 \u00b7 Badminton and Kho-Kho', name: 'Rally for Health',
       img: '/img/gfg/day-badminton.jpg', alt: 'A shuttlecock resting on a badminton racket', date: 'Saturday, 5 December 2026',
       why: 'In a village, when an older person falls ill, the whole family feels it. Rally for Health supports health camps and regular checkups for rural families, with special attention to older people.',
-      how: ['8 company teams of 6 players, at least 3 women', 'Each tie: men\u2019s doubles, women\u2019s doubles, mixed doubles', 'One match at a time, everyone else courtside', 'An open pickleball court for a casual game'],
+      how: ['8 company squads of up to 12 players, at least 4 women', 'Quarter-finals: badminton ties of men\u2019s, women\u2019s and mixed doubles', 'Semi-finals and final add a Kho-Kho match, worth 2 points', 'Every company fields a Kho-Kho side of 7, at least 2 women'],
     },
     {
       tag: 'Day 2 \u00b7 Box cricket', name: 'Run for Education',
@@ -60,12 +60,15 @@ export const gfg = {
   included: {
     eyebrow: 'The day',
     title: 'One match at a time. Everyone else courtside.',
-    // Stock photos (CC0, via Openverse). Swap for event photos after 5 December.
+    // Stock photos via Openverse. Rackets and ball are CC0. The Kho-Kho photo is CC BY-SA and
+    // needs the credit line below it. Swap for event photos after 5 December.
     photos: [
       ['/img/gfg/strip-rackets.jpg', 'Two badminton rackets and a shuttlecock on grass', 'Rally for Health \u00b7 5 Dec'],
-      ['/img/gfg/strip-pickleball.jpg', 'Pickleballs on a court', 'Open pickleball court \u00b7 5 Dec'],
+      ['/img/gfg/strip-khokho.jpg', 'A Kho-Kho chaser diving to tag a runner during a match', 'Kho-Kho \u00b7 5 Dec'],
       ['/img/gfg/strip-ball.jpg', 'A hand holding a red cricket ball against the sky', 'Run for Education \u00b7 12 Dec'],
     ],
+    credit: 'Kho-Kho photo: Khokhofederation, CC BY-SA, via Wikimedia Commons',
+    creditUrl: 'https://commons.wikimedia.org/w/index.php?curid=145538491',
     items: [
       ['Courtside lounge', 'Seating facing the court, a coffee counter and a \u201cNext on court\u201d board.'],
       ['Food all day', 'Breakfast, snacks, lunch and evening chai for every team.'],
@@ -79,11 +82,13 @@ export const gfg = {
     sub: 'Pick the form that fits you. It takes two minutes.',
     tabs: { company: 'Company', player: 'Player', volunteer: 'Volunteer' },
     intro: {
-      company: 'For HR, people teams or leaders entering a company team. There are 8 places on each day.',
+      company: 'For HR, people teams or leaders entering a company team. There are 8 places on each day. Each company pays a participation fee for every sport it enters: badminton, Kho-Kho and cricket. The fee is based on the actual cost of running the day, and we\u2019ll share the amount when we confirm your place.',
       player: 'Playing for your company? Register here so your captain and our team have your details. Your company also needs to register.',
       volunteer: 'Help run the day: welcome, courts, lounge, photos. Open to employees, students and friends of Ramsukrut.',
     },
     consent: 'I agree that Ramsukrut Kalyan Foundation can contact me about Games for Good.',
+    feeAck: 'I understand that each sport we enter has a participation fee, shared when our place is confirmed.',
+    needFee: 'Please confirm you\u2019ve read the participation fee note.',
     send: 'Submit', sending: 'Submitting',
     done: {
       company: ['Your company is registered', 'Thank you. Our team will call you within two working days to confirm your place and next steps.'],
@@ -122,7 +127,8 @@ export const playerFields = [
   { name: 'days', label: 'Which days do you want to play?', req: true, type: 'multi', options: DAYS, full: true },
   { name: 'badminton_level', label: 'Badminton level', type: 'select', options: ['Beginner', 'Intermediate', 'Advanced', 'Not playing badminton'] },
   { name: 'cricket_role', label: 'Cricket role', type: 'select', options: ['Batter', 'Bowler', 'All-rounder', 'Wicketkeeper', 'Not playing cricket'] },
-  { name: 'pickleball', label: 'Want a game on the open pickleball court?', type: 'select', options: ['Yes', 'Maybe', 'No'] },
+  // Saved in the existing "pickleball" column, which now holds the Kho-Kho answer.
+  { name: 'pickleball', label: 'Want to play Kho-Kho?', type: 'select', options: ['Yes', 'If needed', 'No'] },
   { name: 'notes', label: 'Anything we should know?', ph: 'Injuries, preferred partner, questions', type: 'textarea', full: true },
 ]
 

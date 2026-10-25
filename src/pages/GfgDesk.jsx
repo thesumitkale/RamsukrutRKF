@@ -17,7 +17,7 @@ const COLS = {
   players: [
     ['created_at', 'Registered'], ['name', 'Name'], ['company', 'Company'], ['gender', 'Gender'],
     ['mobile', 'Mobile'], ['email', 'Email'], ['days', 'Days'], ['badminton_level', 'Badminton'],
-    ['cricket_role', 'Cricket'], ['pickleball', 'Pickleball'], ['tshirt', 'T-shirt'], ['notes', 'Notes'], ['source', 'Source'],
+    ['cricket_role', 'Cricket'], ['pickleball', 'Kho-Kho'], ['tshirt', 'T-shirt'], ['notes', 'Notes'], ['source', 'Source'],
   ],
   volunteers: [
     ['created_at', 'Registered'], ['name', 'Name'], ['organization', 'Company or college'], ['mobile', 'Mobile'],
@@ -35,7 +35,8 @@ function download(name, cols, rows) {
   const url = URL.createObjectURL(new Blob(['\ufeff' + body], { type: 'text/csv;charset=utf-8' }))
   const a = document.createElement('a'); a.href = url; a.download = name; a.click(); URL.revokeObjectURL(url)
 }
-const hasDay = (r, d) => String(r.days || '').includes(d)
+// Match on the day name so entries saved before the Kho-Kho wording change still count.
+const hasDay = (r, d) => String(r.days || '').includes(d.split(' (')[0])
 
 export default function GfgDesk() {
   const [code, setCode] = useState(() => sessionStorage.getItem('gfg-desk') || '')
