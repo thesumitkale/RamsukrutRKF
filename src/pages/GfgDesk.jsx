@@ -19,12 +19,18 @@ const COLS = {
     ['mobile', 'Mobile'], ['email', 'Email'], ['days', 'Days'], ['badminton_level', 'Badminton'],
     ['cricket_role', 'Cricket'], ['pickleball', 'Kho-Kho'], ['tshirt', 'T-shirt'], ['notes', 'Notes'], ['source', 'Source'],
   ],
+  roster: [
+    ['created_at', 'Added'], ['company', 'Company'], ['name', 'Name'], ['employee_id', 'Employee ID'], ['gender', 'Gender'],
+    ['mobile', 'Mobile'], ['tshirt', 'T-shirt'], ['shirt_number', 'No.'], ['mixed_doubles', 'Mixed'], ['mixed_partner', 'Mixed partner'],
+    ['womens_doubles', 'Women\u2019s'], ['womens_partner', 'Women\u2019s partner'], ['cricket', 'Cricket'], ['cricket_team', 'Team'],
+    ['cricket_role', 'Role'], ['captain_name', 'Captain'], ['entered_by', 'Entered by'], ['notes', 'Notes'], ['source', 'Source'],
+  ],
   volunteers: [
     ['created_at', 'Registered'], ['name', 'Name'], ['organization', 'Company or college'], ['mobile', 'Mobile'],
     ['email', 'Email'], ['days', 'Days'], ['roles', 'Roles'], ['tshirt', 'T-shirt'], ['notes', 'Notes'], ['source', 'Source'],
   ],
 }
-const TAB_LABEL = { companies: 'Companies', players: 'Players', volunteers: 'Volunteers' }
+const TAB_LABEL = { companies: 'Companies', roster: 'Team sheet', players: 'Players (old form)', volunteers: 'Volunteers' }
 
 const fmt = (iso) => iso ? new Date(iso).toLocaleString('en-IN', {
   day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Kolkata',
@@ -43,7 +49,7 @@ export default function GfgDesk() {
   const [authed, setAuthed] = useState(false)
   const [gateErr, setGateErr] = useState('')
   const [tab, setTab] = useState('companies')
-  const [data, setData] = useState({ companies: [], players: [], volunteers: [] })
+  const [data, setData] = useState({ companies: [], roster: [], players: [], volunteers: [] })
   const [at, setAt] = useState(null)
   const [err, setErr] = useState('')
   const [q, setQ] = useState('')
@@ -67,7 +73,7 @@ export default function GfgDesk() {
     setBusy(true)
     try {
       const out = await post(theCode, { action: 'list' })
-      setData(out.data); setAt(new Date()); setErr(''); setAuthed(true)
+      setData({ roster: [], ...out.data }); setAt(new Date()); setErr(''); setAuthed(true)
       sessionStorage.setItem('gfg-desk', theCode.trim())
     } catch (e) {
       if (e.message === 'bad_code') { setAuthed(false); setGateErr('That passcode is not right.'); sessionStorage.removeItem('gfg-desk') }
@@ -91,12 +97,18 @@ export default function GfgDesk() {
     const all = data[tab] || []
     const needle = q.trim().toLowerCase()
     return all.filter((r) => (showRemoved ? r.removed_at : !r.removed_at))
-      .filter((r) => !day || hasDay(r, day))
+      .filter((r) => !day || (tab === 'roster'
+        ? (day === DAY_HEALTH ? (r.mixed_doubles || r.womens_doubles) : r.cricket)
+        : hasDay(r, day)))
       .filter((r) => !needle || Object.values(r).some((v) => String(v ?? '').toLowerCase().includes(needle)))
   }, [data, tab, q, day, showRemoved])
 
   const live = (k) => (data[k] || []).filter((r) => !r.removed_at)
+  const ros = live('roster')
+  const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'].map((z) => `${z} ${ros.filter((r) => r.tshirt === z).length}`).join(' · ')
   const stats = [
+    ['Team sheet', ros.length, `${ros.filter((r) => r.mixed_doubles).length} mixed · ${ros.filter((r) => r.womens_doubles).length} women\u2019s doubles · ${ros.filter((r) => r.cricket).length} cricket · ${new Set(ros.filter((r) => r.cricket_role === 'Captain').map((r) => r.company + r.cricket)).size} captains`],
+    ['T-shirts', ros.length, sizes],
     ['Companies', live('companies').length, `${live('companies').filter((r) => hasDay(r, DAY_HEALTH)).length} badminton · ${live('companies').filter((r) => hasDay(r, DAY_EDU)).length} cricket`],
     ['Players', live('players').length, `${live('players').filter((r) => r.gender === 'Woman').length} women · ${live('players').filter((r) => hasDay(r, DAY_HEALTH)).length} badminton · ${live('players').filter((r) => hasDay(r, DAY_EDU)).length} cricket`],
     ['Volunteers', live('volunteers').length, `${live('volunteers').filter((r) => hasDay(r, DAY_HEALTH)).length} on 5 Dec · ${live('volunteers').filter((r) => hasDay(r, DAY_EDU)).length} on 12 Dec`],
@@ -136,7 +148,7 @@ export default function GfgDesk() {
           <p className="text-[.85rem] text-muted">{at ? `Updated ${fmt(at.toISOString())} · refreshes every 30s` : ''}{err && <span className="ml-2 text-clay-deep">{err}</span>}</p>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-3">
+        <div className="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {stats.map(([t, n, sub]) => (
             <div key={t} className="rounded-[8px] border border-sand bg-white p-4">
               <p className="text-[.8rem] font-semibold uppercase tracking-wide text-muted">{t}</p>

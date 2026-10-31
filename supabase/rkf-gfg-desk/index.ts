@@ -11,6 +11,7 @@ const TABLES = {
   companies: "rkf_gfg_companies",
   players: "rkf_gfg_players",
   volunteers: "rkf_gfg_volunteers",
+  roster: "rkf_gfg_roster",
 } as const;
 type Which = keyof typeof TABLES;
 

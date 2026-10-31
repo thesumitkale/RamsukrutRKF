@@ -197,6 +197,20 @@ function RegForm({ kind }) {
   )
 }
 
+/* Players and cricket captains use the team sheet, which collects employee ID,
+   T-shirt size and the lucky number printed on the T-shirt. */
+function PlayerCta() {
+  return (
+    <div className="rounded-[8px] border border-sand bg-white p-6 shadow-soft md:p-9">
+      <p className="text-[.98rem] leading-[1.6] text-ink-2">{gfg.register.intro.player}</p>
+      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+        <a href="#/games-for-good/team-sheet?mode=player" className="btn-primary justify-center">I’m a player <Arrow className="h-4 w-4" /></a>
+        <a href="#/games-for-good/team-sheet?mode=captain" className="btn-outline justify-center">I’m a cricket captain</a>
+      </div>
+    </div>
+  )
+}
+
 export default function GamesForGood() {
   const [tab, setTab] = useState(() => readForm() || 'company')
   const h = gfg.hero
@@ -248,7 +262,7 @@ export default function GamesForGood() {
 
           <div className="mt-9 flex flex-wrap gap-3">
             <button onClick={() => go('company')} className="btn-primary">{h.ctas.company} <Arrow className="h-4 w-4" /></button>
-            <button onClick={() => go('player')} className="btn-ghost">{h.ctas.player}</button>
+            <a href="#/games-for-good/team-sheet?mode=player" className="btn-ghost">{h.ctas.player}</a>
             <button onClick={() => go('volunteer')} className="btn-ghost">{h.ctas.volunteer}</button>
           </div>
         </div>
@@ -330,10 +344,7 @@ export default function GamesForGood() {
               </Reveal>
             ))}
           </div>
-          <p className="mt-3 text-right text-[.72rem] text-muted">
-            <a href={gfg.included.creditUrl} target="_blank" rel="noreferrer" className="underline-offset-2 hover:underline">{gfg.included.credit}</a>
-          </p>
-          <div className="mt-10 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-12 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
             {gfg.included.items.map(([t, b], i) => (
               <Reveal key={t} delay={i * .06}>
                 <div className="border-t-2 border-ink/10 pt-5">
@@ -363,7 +374,7 @@ export default function GamesForGood() {
             ))}
           </div>
           <div className="relative mt-6">
-            <RegForm key={tab} kind={tab} />
+            {tab === 'player' ? <PlayerCta /> : <RegForm key={tab} kind={tab} />}
           </div>
         </div>
       </section>

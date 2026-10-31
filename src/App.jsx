@@ -22,6 +22,7 @@ const Desk = lazy(() => import('./pages/Desk.jsx'))
 const Feedback = lazy(() => import('./pages/Feedback.jsx'))
 const GamesForGood = lazy(() => import('./pages/GamesForGood.jsx'))
 const GfgDesk = lazy(() => import('./pages/GfgDesk.jsx'))
+const TeamSheet = lazy(() => import('./pages/TeamSheet.jsx'))
 const NotFound = lazy(() => import('./pages/NotFound.jsx'))
 
 const Loader = () => (
@@ -46,6 +47,8 @@ function AnimatedRoutes() {
           {typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/jobfairfeedback' && location.pathname === '/' ? <Feedback /> :
           /* ramsukrut.com/gamesforgood is a short link for posters and LinkedIn. */
           typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/gamesforgood' && location.pathname === '/' ? <GamesForGood /> :
+          /* ramsukrut.com/gfgteams is the short link for the team sheet. */
+          typeof window !== 'undefined' && window.location.pathname.replace(/\/+$/, '') === '/gfgteams' && location.pathname === '/' ? <TeamSheet /> :
           <Routes location={location}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
@@ -63,6 +66,8 @@ function AnimatedRoutes() {
             <Route path="/feedback" element={<Feedback />} />
             {/* Ramsukrut Games for Good, 5 and 12 December 2026. */}
             <Route path="/games-for-good" element={<GamesForGood />} />
+            {/* Team sheet: players and cricket captains. */}
+            <Route path="/games-for-good/team-sheet" element={<TeamSheet />} />
             {/* Private desk for Games for Good registrations. Passcode checked on the server. */}
             <Route path="/gfg-desk" element={<GfgDesk />} />
             <Route path="*" element={<NotFound />} />
