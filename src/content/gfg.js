@@ -57,7 +57,7 @@ export const gfg = {
       tag: 'Day 2 \u00b7 Box cricket', name: 'Run for Education',
       img: '/img/gfg/day-cricket.jpg', alt: 'A floodlit cricket turf in the city at dusk', date: 'Saturday, 12 December 2026',
       why: 'Rural young people have the ability. What they often don\u2019t have is good schooling, guidance and a way to reach employers. Run for Education supports the path from the classroom to a first job.',
-      how: ['6 company teams, each led by a captain', 'Every team plays every other team once', 'Top four go through to the semi-finals, then the final', 'Two separate women\u2019s matches on the day'],
+      how: ['Company men\u2019s cricket: 6 teams, each led by a captain', 'Every team plays every other team once', 'Top four go through to the semi-finals, then the final', 'Two separate women\u2019s matches on the day'],
     },
   ],
   included: {

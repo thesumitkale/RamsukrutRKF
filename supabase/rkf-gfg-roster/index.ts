@@ -14,7 +14,7 @@ const TABLE = "rkf_gfg_roster";
 const MAX_PLAYERS = 12;
 const SIZES = new Set(["XS", "S", "M", "L", "XL", "XXL", "XXXL"]);
 const GENDERS = new Set(["Woman", "Man"]);
-const CRICKET = new Set(["", "Company team", "Women\u2019s match"]);
+const CRICKET = new Set(["", "Company men\u2019s cricket", "Women\u2019s match"]);
 
 const cors = {
   "Access-Control-Allow-Origin": "*",
@@ -107,7 +107,7 @@ Deno.serve(async (req) => {
       let cricket = clean(b.cricket, 30);
       if (!CRICKET.has(cricket)) cricket = "";
       if (cricket === "Women\u2019s match" && p.gender !== "Woman") cricket = "";
-      if (cricket === "Company team" && clean(b.cricket_women_too, 4) === "Yes" && p.gender === "Woman") cricket = "Company team + Women\u2019s match";
+      if (cricket === "Company men\u2019s cricket" && clean(b.cricket_women_too, 4) === "Yes" && p.gender === "Woman") cricket = "Company men\u2019s cricket + Women\u2019s match";
       if (!mixed && !womens && !cricket) return reply(400, { ok: false, error: "no_event" });
       const row = {
         ...p, source, entered_by: "Self",

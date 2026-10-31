@@ -19,7 +19,7 @@ const req = <span className="text-clay"> *</span>
 const EVENTS = [
   { key: 'mixed', label: 'Badminton: mixed doubles', day: 'Sat 5 Dec', women: false },
   { key: 'womens', label: 'Badminton: women\u2019s doubles', day: 'Sat 5 Dec', women: true },
-  { key: 'cricket_men', label: 'Cricket: company team', day: 'Sat 12 Dec', women: false },
+  { key: 'cricket_men', label: 'Cricket: company men\u2019s cricket', day: 'Sat 12 Dec', women: false },
   { key: 'cricket_women', label: 'Cricket: women\u2019s match', day: 'Sat 12 Dec', women: true },
 ]
 
@@ -127,7 +127,7 @@ function PlayerForm() {
       await send({
         mode: 'player', ...f,
         mixed_doubles: has('mixed') ? 'Yes' : '', womens_doubles: has('womens') ? 'Yes' : '',
-        cricket: has('cricket_men') ? 'Company team' : has('cricket_women') ? 'Women\u2019s match' : '',
+        cricket: has('cricket_men') ? 'Company men\u2019s cricket' : has('cricket_women') ? 'Women\u2019s match' : '',
         cricket_women_too: has('cricket_men') && has('cricket_women') ? 'Yes' : '',
       })
       setState('done'); window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -255,7 +255,7 @@ function CaptainForm() {
       <div className="grid gap-5 sm:grid-cols-2">
         <Text label="Company" value={c.company} onChange={setCap('company')} required ph="Company name" />
         <Text label="Team name" value={c.team_name} onChange={setCap('team_name')} ph="Optional, e.g. company name XI" />
-        <Select label="Which team is this?" value={c.cricket} onChange={setCap('cricket')} options={['Company team', 'Women\u2019s match']} required className="sm:col-span-2" />
+        <Select label="Which team is this?" value={c.cricket} onChange={setCap('cricket')} options={['Company men\u2019s cricket', 'Women\u2019s match']} required className="sm:col-span-2" />
       </div>
 
       <p className="mb-5 mt-8 font-sans text-[.78rem] font-bold uppercase tracking-[.14em] text-teal-deep">You, the captain</p>
@@ -334,7 +334,7 @@ export default function TeamSheet() {
           </p>
           <div className="mt-6 grid max-w-xl gap-2 text-[.92rem] text-white/80 sm:grid-cols-2">
             <p><span className="font-semibold text-white">Sat 5 Dec</span> · Badminton: mixed doubles, women&rsquo;s doubles</p>
-            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: 6 company teams, plus women&rsquo;s matches</p>
+            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: company men&rsquo;s cricket (6 teams), plus women&rsquo;s matches</p>
           </div>
         </div>
       </section>
