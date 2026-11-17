@@ -270,7 +270,7 @@ function CaptainForm() {
 
       <div className="mt-8 flex items-end justify-between gap-3">
         <p className="font-sans text-[.78rem] font-bold uppercase tracking-[.14em] text-teal-deep">Your players</p>
-        <p className="text-[.82rem] text-muted">{filled.length} added · up to {MAX_PLAYERS}</p>
+        <p className="text-[.82rem] text-muted">{filled.length} added · up to {MAX_PLAYERS} · 8 play per match</p>
       </div>
       <p className="mt-1 text-[.85rem] text-muted">Players can also fill the player form themselves. Matching employee IDs are merged, never doubled.</p>
       <div className="mt-4 space-y-3">
@@ -334,7 +334,7 @@ export default function TeamSheet() {
           </p>
           <div className="mt-6 grid max-w-xl gap-2 text-[.92rem] text-white/80 sm:grid-cols-2">
             <p><span className="font-semibold text-white">Sat 5 Dec</span> · Badminton: mixed doubles, women&rsquo;s doubles</p>
-            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: company men&rsquo;s cricket (6 teams), plus women&rsquo;s matches</p>
+            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: company men&rsquo;s cricket (6 teams, 8 a side), plus women&rsquo;s matches</p>
           </div>
         </div>
       </section>
