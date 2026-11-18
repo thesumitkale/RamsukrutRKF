@@ -333,8 +333,8 @@ export default function TeamSheet() {
             Name, employee ID, T-shirt size and the lucky number you want printed on your T-shirt. It takes two minutes.
           </p>
           <div className="mt-6 grid max-w-xl gap-2 text-[.92rem] text-white/80 sm:grid-cols-2">
-            <p><span className="font-semibold text-white">Sat 5 Dec</span> · Badminton: mixed doubles, women&rsquo;s doubles</p>
-            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: company men&rsquo;s cricket (6 teams, 8 a side), plus women&rsquo;s matches</p>
+            <p><span className="font-semibold text-white">Sat 5 Dec</span> · Badminton: mixed doubles, women&rsquo;s doubles · LSBI Sports Club, Viman Nagar</p>
+            <p><span className="font-semibold text-white">Sat 12 Dec</span> · Box cricket: company men&rsquo;s cricket (6 teams, 8 a side), plus women&rsquo;s matches · Box cricket turf, Viman Nagar</p>
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-/* Ramsukrut Games for Good, 5 and 12 December 2026, LSBI Badminton Arena, Pune.
+/* Ramsukrut Games for Good, 5 and 12 December 2026, Viman Nagar, Pune.
    Public page with three registration forms: company, player, volunteer.
    Submissions post to the rkf-gfg-submit edge function, which writes one row
    per person or company. A repeat on the same mobile (or company name) updates
@@ -255,11 +255,11 @@ export default function GamesForGood() {
                 <p className="font-sans text-[.72rem] font-bold uppercase tracking-[.14em] text-yellow">{d.tag}</p>
                 <p className="mt-2 font-display text-[1.45rem] font-bold leading-tight">{d.name}</p>
                 <p className="mt-1 flex items-center gap-2 text-[.92rem] text-white/75"><Calendar className="h-4 w-4" />{d.date}</p>
+                <a href={d.map} target="_blank" rel="noreferrer" className="mt-1 flex items-start gap-2 text-[.92rem] text-white/75 underline-offset-2 hover:text-white hover:underline"><MapPin className="mt-0.5 h-4 w-4 shrink-0" />{d.venue}</a>
               </div>
             ))}
           </div>
-          <p className="mt-5 flex items-center gap-2 text-[.95rem] text-white/75"><MapPin className="h-4 w-4" />{h.venue}</p>
-
+          
           <div className="mt-9 flex flex-wrap gap-3">
             <button onClick={() => go('company')} className="btn-primary">{h.ctas.company} <Arrow className="h-4 w-4" /></button>
             <a href="#/games-for-good/team-sheet?mode=player" className="btn-ghost">{h.ctas.player}</a>
@@ -308,6 +308,7 @@ export default function GamesForGood() {
                     <p className="font-sans text-[.72rem] font-bold uppercase tracking-[.14em] text-yellow">{d.tag}</p>
                     <h3 className="mt-2 font-display text-[1.8rem] font-bold leading-tight">{d.name}</h3>
                     <p className="mt-1 text-[.95rem] text-white/75">{d.date}</p>
+                    <a href={d.map} target="_blank" rel="noreferrer" className="mt-2 flex items-start gap-2 text-[.92rem] text-white/85 underline underline-offset-2 hover:text-white"><MapPin className="mt-0.5 h-4 w-4 shrink-0" />{d.venue} · Directions</a>
                   </div>
                   <div className="p-6 md:p-7">
                     <p className="text-[1rem] leading-[1.65] text-ink-2">{d.why}</p>

@@ -12,7 +12,7 @@ const pages = [
     url: 'https://ramsukrut.com/gamesforgood',
     title: 'Games for Good 2026 | Ramsukrut Kalyan Foundation',
     ogTitle: 'Games for Good: company sport for rural health and education',
-    desc: 'Rally for Health (badminton, Sat 5 Dec) and Run for Education (box cricket, Sat 12 Dec) at LSBI Badminton Arena, Pune. Register your company, join as a player or volunteer.',
+    desc: 'Rally for Health (badminton, Sat 5 Dec) and Run for Education (box cricket, Sat 12 Dec) in Viman Nagar, Pune. Register your company, join as a player or volunteer.',
   },
   {
     file: 'dist/gfgteams/index.html',

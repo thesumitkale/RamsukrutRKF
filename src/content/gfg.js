@@ -33,7 +33,7 @@ export const gfg = {
     eyebrow: 'Ramsukrut Kalyan Foundation presents',
     title: 'Games for Good',
     lead: 'Two Saturdays of company sport for rural health and education in Maharashtra.',
-    venue: 'LSBI Badminton Arena, Vadgaon Sheri, Pune',
+    venue: 'Viman Nagar, Pune',
     ctas: { company: 'Register your company', player: 'Join as a player', volunteer: 'Volunteer' },
   },
   why: {
@@ -50,12 +50,14 @@ export const gfg = {
     {
       tag: 'Day 1 \u00b7 Badminton', name: 'Rally for Health',
       img: '/img/gfg/day-badminton.jpg', alt: 'A shuttlecock resting on a badminton racket', date: 'Saturday, 5 December 2026',
+      venue: 'LSBI Sports Club, Konark Nagar Road, Viman Nagar', map: 'https://maps.app.goo.gl/SXJKR2F3p8ePJxd76',
       why: 'In a village, when an older person falls ill, the whole family feels it. Rally for Health supports health camps and regular checkups for rural families, with special attention to older people.',
       how: ['Two events: mixed doubles and women\u2019s doubles', 'Companies enter pairs in one or both events', 'One match at a time, everyone else courtside', 'Every player gets a T-shirt with their lucky number'],
     },
     {
       tag: 'Day 2 \u00b7 Box cricket', name: 'Run for Education',
       img: '/img/gfg/day-cricket.jpg', alt: 'A floodlit cricket turf in the city at dusk', date: 'Saturday, 12 December 2026',
+      venue: 'Box cricket turf, Viman Nagar', map: 'https://maps.app.goo.gl/YAV2ugSeTfXHEzu1A',
       why: 'Rural young people have the ability. What they often don\u2019t have is good schooling, guidance and a way to reach employers. Run for Education supports the path from the classroom to a first job.',
       how: ['Company men\u2019s cricket: 6 teams, 8 a side', 'Squads of up to 12 players plus the captain', 'Two groups of three, then semi-finals and the final', 'Two separate women\u2019s matches on the day'],
     },
