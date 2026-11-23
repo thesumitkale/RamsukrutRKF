@@ -29,6 +29,15 @@ export default function Nav() {
     // Job fair page hidden after the event. Restore this line to show it again.
     // ['/job-fair', jf.navLabel],
   ]
+  /* Games for Good opens its real address (ramsukrut.com/gamesforgood), so a link copied
+     from the address bar shows the Games for Good preview card. On short-link pages
+     (/gamesforgood, /gfgteams), the other items do a full load back to the main site. */
+  const path = typeof window !== 'undefined' ? window.location.pathname.replace(/\/+$/, '') : ''
+  const onShort = path !== ''
+  const realHref = (to) => to === '/games-for-good' ? '/gamesforgood' : onShort ? '/#' + to : null
+  const isOn = (to) => to === '/games-for-good'
+    ? (path === '/gamesforgood' && pathname === '/') || pathname.startsWith('/games-for-good')
+    : !onShort && pathname === to
   const langLabel = lang === 'en' ? 'मराठी' : 'EN'
 
   return (
@@ -41,12 +50,12 @@ export default function Nav() {
           </Link>
 
           <nav className="hidden items-center gap-7 lg:flex">
-            {links.map(([to, label]) => (
-              <NavLink key={to} to={to} end={to === '/'}
-                className={({ isActive }) => `navlink ${glass ? 'text-white' : 'text-ink'} ${isActive ? (glass ? 'active' : 'active !text-orange') : glass ? 'hover:!text-yellow' : 'hover:!text-orange'}`}>
-                {label}
-              </NavLink>
-            ))}
+            {links.map(([to, label]) => {
+              const cls = (isActive) => `navlink ${glass ? 'text-white' : 'text-ink'} ${isActive ? (glass ? 'active' : 'active !text-orange') : glass ? 'hover:!text-yellow' : 'hover:!text-orange'}`
+              return realHref(to)
+                ? <a key={to} href={realHref(to)} className={cls(isOn(to))}>{label}</a>
+                : <NavLink key={to} to={to} end={to === '/'} className={({ isActive }) => cls(isActive)}>{label}</NavLink>
+            })}
             <span className={`h-4 w-px ${glass ? 'bg-white/30' : 'bg-sand'}`} />
             <button onClick={toggle} className={`font-sans text-[.82rem] font-semibold uppercase tracking-wider transition-colors ${glass ? 'text-white hover:text-yellow' : 'text-ink hover:text-orange'}`}
               aria-label={lang === 'en' ? 'Marathi version' : 'English version'}>
@@ -71,10 +80,12 @@ export default function Nav() {
             className="fixed inset-0 z-[105] flex flex-col items-center justify-center gap-1 bg-paper lg:hidden">
             {links.map(([to, label], i) => (
               <motion.div key={to} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .05 * i }}>
-                <NavLink to={to} end={to === '/'}
-                  className={({ isActive }) => `font-display text-[1.7rem] font-semibold px-6 py-2 ${isActive ? 'text-orange' : 'text-ink'}`}>
-                  {label}
-                </NavLink>
+                {realHref(to)
+                  ? <a href={realHref(to)} className={`font-display text-[1.7rem] font-semibold px-6 py-2 ${isOn(to) ? 'text-orange' : 'text-ink'}`}>{label}</a>
+                  : <NavLink to={to} end={to === '/'}
+                      className={({ isActive }) => `font-display text-[1.7rem] font-semibold px-6 py-2 ${isActive ? 'text-orange' : 'text-ink'}`}>
+                      {label}
+                    </NavLink>}
               </motion.div>
             ))}
             <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: .34 }} className="mt-6 flex flex-col items-center gap-4">

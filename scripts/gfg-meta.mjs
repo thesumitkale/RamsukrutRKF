@@ -3,7 +3,7 @@
 // Runs after vite build and rewrites dist/gamesforgood/index.html and dist/gfgteams/index.html.
 import { readFileSync, writeFileSync } from 'node:fs'
 
-const img = 'https://ramsukrut.com/og-gamesforgood.jpg'
+const img = 'https://ramsukrut.com/og-gamesforgood-v2.jpg'
 const alt = 'Games for Good by Ramsukrut Kalyan Foundation: Rally for Health on 5 December and Run for Education on 12 December, Pune'
 
 const pages = [
